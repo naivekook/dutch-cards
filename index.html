@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Grimoire of Dutch Words</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;700&family=IM+Fell+English:ital@0;1&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #1a0e0a;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(139, 69, 19, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(75, 0, 130, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 0%, rgba(218, 165, 32, 0.08) 0%, transparent 40%);
+    font-family: 'IM Fell English', serif;
+    color: #d4c4a0;
+    overflow-x: hidden;
+  }
+
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    width: 3px; height: 3px;
+    background: rgba(218, 165, 32, 0.6);
+    border-radius: 50%;
+    animation: floatUp linear infinite;
+    box-shadow: 0 0 6px rgba(218, 165, 32, 0.4);
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .header h1 {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    color: transparent;
+    background: linear-gradient(180deg, #f5d98e 0%, #daa520 40%, #b8860b 70%, #8b6914 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 8px rgba(218, 165, 32, 0.4));
+    letter-spacing: 2px;
+    line-height: 1.3;
+  }
+  .header .subtitle {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: #a89060;
+    font-size: 1.05rem;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 16px 0;
+    color: #8b6914;
+    font-size: 1.2rem;
+  }
+  .ornament::before, .ornament::after {
+    content: '';
+    height: 1px;
+    width: 80px;
+    background: linear-gradient(90deg, transparent, #8b6914, transparent);
+  }
+
+  /* Progress */
+  .progress-section {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .progress-text {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    color: #a89060;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .progress-bar-outer {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    height: 8px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 4px;
+    border: 1px solid #5a3a1a;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, #8b6914, #daa520, #f5d98e);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+  }
+
+  /* Score display */
+  .score-display {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+  }
+  .score-icon {
+    font-size: 1.2rem;
+  }
+  .score-known { color: #6aaa64; }
+  .score-learning { color: #c9b458; }
+  .score-remaining { color: #888; }
+
+  /* Card container */
+  .card-container {
+    perspective: 1200px;
+    width: 100%;
+    max-width: 480px;
+    height: 320px;
+    margin: 0 auto 30px;
+    cursor: pointer;
+  }
+  .card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  .card.flipped {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .card-front {
+    background:
+      linear-gradient(135deg, #2a1810 0%, #1e1008 50%, #2a1810 100%);
+    border: 2px solid #5a3a1a;
+    box-shadow:
+      0 0 30px rgba(0,0,0,0.6),
+      inset 0 0 60px rgba(139, 69, 19, 0.1),
+      0 0 2px #8b6914;
+  }
+  .card-back {
+    background:
+      linear-gradient(135deg, #1a0e2e 0%, #0e0818 50%, #1a0e2e 100%);
+    border: 2px solid #4a2a6a;
+    box-shadow:
+      0 0 30px rgba(0,0,0,0.6),
+      inset 0 0 60px rgba(75, 0, 130, 0.15),
+      0 0 2px #7b52a0;
+    transform: rotateY(180deg);
+  }
+
+  /* Card corner ornaments */
+  .card-face::before, .card-face::after {
+    position: absolute;
+    font-size: 1.6rem;
+    opacity: 0.25;
+    line-height: 1;
+  }
+  .card-front::before { content: '⚜'; top: 12px; left: 16px; color: #daa520; }
+  .card-front::after { content: '⚜'; bottom: 12px; right: 16px; color: #daa520; transform: rotate(180deg); }
+  .card-back::before { content: '✦'; top: 12px; left: 16px; color: #9b72cf; }
+  .card-back::after { content: '✦'; bottom: 12px; right: 16px; color: #9b72cf; }
+
+  /* Card border glow */
+  .card-front .border-glow {
+    position: absolute;
+    inset: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(218, 165, 32, 0.15);
+    pointer-events: none;
+  }
+  .card-back .border-glow {
+    position: absolute;
+    inset: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(155, 114, 207, 0.15);
+    pointer-events: none;
+  }
+
+  .card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    opacity: 0.6;
+  }
+  .card-front .card-label { color: #daa520; }
+  .card-back .card-label { color: #9b72cf; }
+
+  .card-word {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  .card-front .card-word {
+    color: #f5d98e;
+    text-shadow: 0 0 20px rgba(218, 165, 32, 0.3);
+  }
+  .card-back .card-word {
+    color: #c9a8f0;
+    text-shadow: 0 0 20px rgba(155, 114, 207, 0.3);
+  }
+
+  .card-extra {
+    font-style: italic;
+    font-size: 1rem;
+    opacity: 0.65;
+    margin-top: 4px;
+  }
+  .card-front .card-extra { color: #c9a870; }
+  .card-back .card-extra { color: #a88ac0; }
+
+  .card-example {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    max-width: 90%;
+    line-height: 1.5;
+  }
+  .card-back .card-example { color: #b8a0d0; }
+
+  .flip-hint {
+    font-size: 0.8rem;
+    opacity: 0.4;
+    margin-top: 14px;
+    font-style: italic;
+  }
+
+  /* Buttons */
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    transition: left 0.5s ease;
+  }
+  .btn:hover::before { left: 100%; }
+
+  .btn-know {
+    background: linear-gradient(180deg, #2a5a2a, #1a3a1a);
+    color: #8fce8f;
+    border: 1px solid #3a7a3a;
+    box-shadow: 0 4px 15px rgba(42, 90, 42, 0.3);
+  }
+  .btn-know:hover {
+    background: linear-gradient(180deg, #3a7a3a, #2a5a2a);
+    box-shadow: 0 4px 20px rgba(42, 90, 42, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-learning {
+    background: linear-gradient(180deg, #5a4a1a, #3a300a);
+    color: #dcc070;
+    border: 1px solid #7a6a2a;
+    box-shadow: 0 4px 15px rgba(90, 74, 26, 0.3);
+  }
+  .btn-learning:hover {
+    background: linear-gradient(180deg, #7a6a2a, #5a4a1a);
+    box-shadow: 0 4px 20px rgba(90, 74, 26, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-skip {
+    background: linear-gradient(180deg, #3a2a1a, #2a1a0a);
+    color: #a89060;
+    border: 1px solid #5a4a3a;
+    box-shadow: 0 4px 15px rgba(58, 42, 26, 0.3);
+  }
+  .btn-skip:hover {
+    background: linear-gradient(180deg, #4a3a2a, #3a2a1a);
+    box-shadow: 0 4px 20px rgba(58, 42, 26, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-shuffle {
+    background: linear-gradient(180deg, #2a1a4a, #1a0e2e);
+    color: #b090d0;
+    border: 1px solid #4a3a6a;
+    box-shadow: 0 4px 15px rgba(42, 26, 74, 0.3);
+  }
+  .btn-shuffle:hover {
+    background: linear-gradient(180deg, #3a2a5a, #2a1a4a);
+    box-shadow: 0 4px 20px rgba(42, 26, 74, 0.5);
+    transform: translateY(-2px);
+  }
+
+  /* Direction toggle */
+  .direction-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .direction-toggle .dir-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: #a89060;
+    transition: color 0.3s ease;
+    min-width: 70px;
+  }
+  .direction-toggle .dir-label.left { text-align: right; }
+  .direction-toggle .dir-label.right { text-align: left; }
+  .direction-toggle .dir-label.active {
+    color: #f5d98e;
+    text-shadow: 0 0 8px rgba(218, 165, 32, 0.3);
+  }
+  .toggle-track {
+    width: 64px;
+    height: 30px;
+    background: rgba(30, 16, 8, 0.9);
+    border: 1px solid #5a3a1a;
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.4s ease;
+    flex-shrink: 0;
+  }
+  .toggle-track:hover {
+    border-color: #8b6914;
+    box-shadow: 0 0 12px rgba(218, 165, 32, 0.15);
+  }
+  .toggle-track.reversed {
+    background: rgba(26, 14, 46, 0.9);
+    border-color: #4a3a6a;
+  }
+  .toggle-track.reversed:hover {
+    border-color: #7b52a0;
+    box-shadow: 0 0 12px rgba(155, 114, 207, 0.15);
+  }
+  .toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f5d98e, #daa520);
+    box-shadow: 0 0 8px rgba(218, 165, 32, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .toggle-track.reversed .toggle-knob {
+    left: 37px;
+    background: linear-gradient(135deg, #c9a8f0, #9b72cf);
+    box-shadow: 0 0 8px rgba(155, 114, 207, 0.5);
+  }
+  .toggle-arrow {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: #8b6914;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+  .toggle-track.reversed ~ .toggle-arrow,
+  .direction-toggle.reversed .toggle-arrow {
+    color: #7b52a0;
+  }
+
+  /* Pack selector */
+  .pack-selector {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+  .pack-btn {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 0.85rem;
+    padding: 10px 24px;
+    background: rgba(20, 10, 5, 0.8);
+    color: #7a6a50;
+    border: 1px solid #3a2a1a;
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .pack-btn:hover {
+    color: #c9a870;
+    background: rgba(40, 24, 12, 0.9);
+  }
+  .pack-btn.active {
+    background: rgba(50, 30, 15, 0.95);
+    color: #f5d98e;
+    border-color: #8b6914;
+    box-shadow: 0 -2px 12px rgba(218, 165, 32, 0.15);
+  }
+  .pack-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: rgba(50, 30, 15, 0.95);
+  }
+  .pack-divider {
+    width: 100%;
+    max-width: 500px;
+    margin: -1px auto 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #8b6914, transparent);
+  }
+  .pack-count {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.7rem;
+    display: block;
+    margin-top: 2px;
+    opacity: 0.5;
+  }
+
+  /* Category filter */
+  .categories {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .cat-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    padding: 6px 16px;
+    background: rgba(30, 16, 8, 0.8);
+    color: #a89060;
+    border: 1px solid #5a3a1a;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+  }
+  .cat-btn:hover, .cat-btn.active {
+    background: rgba(138, 105, 20, 0.2);
+    border-color: #daa520;
+    color: #f5d98e;
+    box-shadow: 0 0 10px rgba(218, 165, 32, 0.2);
+  }
+
+  /* Completion screen */
+  .completion {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .completion.visible { display: block; }
+  .completion h2 {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 2rem;
+    color: #f5d98e;
+    margin-bottom: 16px;
+    text-shadow: 0 0 20px rgba(218, 165, 32, 0.4);
+  }
+  .completion p {
+    font-size: 1.1rem;
+    color: #a89060;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .completion .btn {
+    margin-top: 10px;
+  }
+
+  /* Keyboard hint */
+  .keyboard-hints {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: #5a4a3a;
+    font-style: italic;
+  }
+  .keyboard-hints kbd {
+    display: inline-block;
+    padding: 2px 7px;
+    background: rgba(90, 58, 26, 0.3);
+    border: 1px solid #5a3a1a;
+    border-radius: 4px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: #a89060;
+    margin: 0 2px;
+  }
+
+  /* Responsive */
+  @media (max-width: 520px) {
+    .card-container { height: 280px; }
+    .controls { gap: 10px; }
+    .btn { padding: 10px 18px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="app">
+  <div class="header">
+    <h1>The Grimoire<br>of Dutch Words</h1>
+    <div class="ornament">✧</div>
+    <p class="subtitle">Master the ancient tongue of the Lowlands</p>
+  </div>
+
+  <div class="pack-selector" id="packSelector"></div>
+  <div class="pack-divider"></div>
+
+  <div class="categories" id="categories"></div>
+
+  <div class="direction-toggle" id="directionToggle">
+    <span class="dir-label left active" id="dirLabelLeft">Dutch</span>
+    <div class="toggle-track" id="toggleTrack" onclick="toggleDirection()">
+      <div class="toggle-knob"></div>
+    </div>
+    <span class="dir-label right" id="dirLabelRight">English</span>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-text" id="progressText">Card 1 of 50</div>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <div class="score-display">
+    <div class="score-item score-known">
+      <span class="score-icon">✦</span> Known: <strong id="knownCount">0</strong>
+    </div>
+    <div class="score-item score-learning">
+      <span class="score-icon">◈</span> Learning: <strong id="learningCount">0</strong>
+    </div>
+    <div class="score-item score-remaining">
+      <span class="score-icon">○</span> Remaining: <strong id="remainingCount">50</strong>
+    </div>
+  </div>
+
+  <div class="card-container" id="cardContainer" onclick="flipCard()">
+    <div class="card" id="card">
+      <div class="card-face card-front">
+        <div class="border-glow"></div>
+        <div class="card-label">Dutch Verb</div>
+        <div class="card-word" id="frontWord">zijn</div>
+        <div class="card-extra" id="frontExtra">(irregular)</div>
+        <div class="flip-hint">~ tap to reveal ~</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="border-glow"></div>
+        <div class="card-label">English Translation</div>
+        <div class="card-word" id="backWord">to be</div>
+        <div class="card-example" id="backExample">"Ik ben blij" — I am happy</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls" id="controls">
+    <button class="btn btn-know" onclick="markKnown()">✦ I Know This</button>
+    <button class="btn btn-learning" onclick="markLearning()">◈ Still Learning</button>
+    <button class="btn btn-skip" onclick="nextCard()">→ Next</button>
+  </div>
+
+  <div style="display:flex; justify-content:center; gap:12px; margin-bottom:10px;">
+    <button class="btn btn-shuffle" onclick="shuffleDeck()">⟳ Shuffle</button>
+    <button class="btn btn-skip" onclick="resetAll()">↺ Reset</button>
+  </div>
+
+  <div class="keyboard-hints">
+    <kbd>Space</kbd> flip &nbsp; <kbd>→</kbd> next &nbsp;
+    <kbd>1</kbd> know &nbsp; <kbd>2</kbd> learning &nbsp; <kbd>D</kbd> switch direction
+  </div>
+
+  <div class="completion" id="completion">
+    <h2>✦ Spell Complete ✦</h2>
+    <p>You have studied all the words in this chapter.<br>
+    Your mastery of the Dutch tongue grows stronger.</p>
+    <div id="completionStats"></div>
+    <button class="btn btn-shuffle" onclick="resetAll()" style="margin-top:20px;">↺ Study Again</button>
+    <button class="btn btn-learning" onclick="reviewLearning()" style="margin-top:20px;">◈ Review Learning</button>
+  </div>
+</div>
+
+<script>
+// ── VERBS ──
+const VERBS = [
+  { dutch: "zijn", english: "to be", type: "irregular", example: "Ik ben blij — I am happy", cat: "essentials" },
+  { dutch: "hebben", english: "to have", type: "irregular", example: "Ik heb een boek — I have a book", cat: "essentials" },
+  { dutch: "worden", english: "to become", type: "irregular", example: "Het wordt koud — It is getting cold", cat: "essentials" },
+  { dutch: "kunnen", english: "can / to be able", type: "modal", example: "Ik kan zwemmen — I can swim", cat: "essentials" },
+  { dutch: "zullen", english: "shall / will", type: "modal", example: "Ik zal komen — I will come", cat: "essentials" },
+  { dutch: "moeten", english: "must / to have to", type: "modal", example: "Ik moet werken — I must work", cat: "essentials" },
+  { dutch: "mogen", english: "may / to be allowed", type: "modal", example: "Mag ik? — May I?", cat: "essentials" },
+  { dutch: "willen", english: "to want", type: "modal", example: "Ik wil slapen — I want to sleep", cat: "essentials" },
+  { dutch: "doen", english: "to do", type: "irregular", example: "Wat doe je? — What are you doing?", cat: "essentials" },
+  { dutch: "gaan", english: "to go", type: "irregular", example: "Ik ga naar huis — I go home", cat: "essentials" },
+  { dutch: "komen", english: "to come", type: "irregular", example: "Kom je morgen? — Are you coming tomorrow?", cat: "daily" },
+  { dutch: "maken", english: "to make", type: "regular", example: "Ik maak eten — I make food", cat: "daily" },
+  { dutch: "zien", english: "to see", type: "irregular", example: "Ik zie je — I see you", cat: "daily" },
+  { dutch: "geven", english: "to give", type: "irregular", example: "Geef me water — Give me water", cat: "daily" },
+  { dutch: "nemen", english: "to take", type: "irregular", example: "Neem een stoel — Take a seat", cat: "daily" },
+  { dutch: "vinden", english: "to find / think", type: "irregular", example: "Ik vind het leuk — I like it", cat: "daily" },
+  { dutch: "zeggen", english: "to say", type: "irregular", example: "Wat zeg je? — What do you say?", cat: "daily" },
+  { dutch: "weten", english: "to know (fact)", type: "irregular", example: "Ik weet het niet — I don't know", cat: "daily" },
+  { dutch: "kennen", english: "to know (person)", type: "regular", example: "Ken je hem? — Do you know him?", cat: "daily" },
+  { dutch: "denken", english: "to think", type: "regular", example: "Ik denk het wel — I think so", cat: "daily" },
+  { dutch: "lopen", english: "to walk / run", type: "irregular", example: "Ik loop naar school — I walk to school", cat: "movement" },
+  { dutch: "rijden", english: "to drive / ride", type: "irregular", example: "Hij rijdt snel — He drives fast", cat: "movement" },
+  { dutch: "vliegen", english: "to fly", type: "irregular", example: "De vogel vliegt — The bird flies", cat: "movement" },
+  { dutch: "zwemmen", english: "to swim", type: "regular", example: "Ik zwem graag — I like to swim", cat: "movement" },
+  { dutch: "staan", english: "to stand", type: "irregular", example: "Ik sta hier — I stand here", cat: "movement" },
+  { dutch: "zitten", english: "to sit", type: "irregular", example: "Zij zit op de stoel — She sits on the chair", cat: "movement" },
+  { dutch: "liggen", english: "to lie (down)", type: "irregular", example: "De kat ligt op bed — The cat lies on the bed", cat: "movement" },
+  { dutch: "vallen", english: "to fall", type: "irregular", example: "De bladeren vallen — The leaves fall", cat: "movement" },
+  { dutch: "brengen", english: "to bring", type: "irregular", example: "Breng je mee? — Will you bring it?", cat: "movement" },
+  { dutch: "vertrekken", english: "to depart", type: "irregular", example: "De trein vertrekt — The train departs", cat: "movement" },
+  { dutch: "spreken", english: "to speak", type: "irregular", example: "Spreekt u Engels? — Do you speak English?", cat: "communication" },
+  { dutch: "praten", english: "to talk", type: "regular", example: "We praten veel — We talk a lot", cat: "communication" },
+  { dutch: "schrijven", english: "to write", type: "irregular", example: "Ik schrijf een brief — I write a letter", cat: "communication" },
+  { dutch: "lezen", english: "to read", type: "irregular", example: "Zij leest een boek — She reads a book", cat: "communication" },
+  { dutch: "luisteren", english: "to listen", type: "regular", example: "Luister naar mij — Listen to me", cat: "communication" },
+  { dutch: "vragen", english: "to ask", type: "regular", example: "Mag ik iets vragen? — May I ask something?", cat: "communication" },
+  { dutch: "antwoorden", english: "to answer", type: "regular", example: "Antwoord alsjeblieft — Please answer", cat: "communication" },
+  { dutch: "begrijpen", english: "to understand", type: "irregular", example: "Ik begrijp het — I understand", cat: "communication" },
+  { dutch: "leren", english: "to learn / teach", type: "regular", example: "Ik leer Nederlands — I learn Dutch", cat: "communication" },
+  { dutch: "vertellen", english: "to tell", type: "regular", example: "Vertel me alles — Tell me everything", cat: "communication" },
+  { dutch: "leven", english: "to live", type: "regular", example: "Ik leef in Amsterdam — I live in Amsterdam", cat: "life" },
+  { dutch: "werken", english: "to work", type: "regular", example: "Ik werk thuis — I work at home", cat: "life" },
+  { dutch: "spelen", english: "to play", type: "regular", example: "Kinderen spelen buiten — Children play outside", cat: "life" },
+  { dutch: "eten", english: "to eat", type: "irregular", example: "Ik eet brood — I eat bread", cat: "life" },
+  { dutch: "drinken", english: "to drink", type: "irregular", example: "Ik drink koffie — I drink coffee", cat: "life" },
+  { dutch: "slapen", english: "to sleep", type: "irregular", example: "Ik slaap goed — I sleep well", cat: "life" },
+  { dutch: "voelen", english: "to feel", type: "regular", example: "Ik voel me goed — I feel good", cat: "life" },
+  { dutch: "houden van", english: "to love", type: "irregular", example: "Ik houd van jou — I love you", cat: "life" },
+  { dutch: "geloven", english: "to believe", type: "regular", example: "Ik geloof je — I believe you", cat: "life" },
+  { dutch: "proberen", english: "to try", type: "regular", example: "Ik probeer het — I try it", cat: "life" },
+];
+
+// ── ADJECTIVES ──
+const ADJECTIVES = [
+  // Basics
+  { dutch: "groot", english: "big / large", type: "common", example: "Een groot huis — A big house", cat: "basics" },
+  { dutch: "klein", english: "small / little", type: "common", example: "Een klein kind — A small child", cat: "basics" },
+  { dutch: "goed", english: "good", type: "common", example: "Het eten is goed — The food is good", cat: "basics" },
+  { dutch: "slecht", english: "bad", type: "common", example: "Slecht weer vandaag — Bad weather today", cat: "basics" },
+  { dutch: "nieuw", english: "new", type: "common", example: "Een nieuwe auto — A new car", cat: "basics" },
+  { dutch: "oud", english: "old", type: "common", example: "Een oud boek — An old book", cat: "basics" },
+  { dutch: "jong", english: "young", type: "common", example: "Een jonge vrouw — A young woman", cat: "basics" },
+  { dutch: "lang", english: "long / tall", type: "common", example: "Hij is lang — He is tall", cat: "basics" },
+  { dutch: "kort", english: "short / brief", type: "common", example: "Een kort verhaal — A short story", cat: "basics" },
+  { dutch: "mooi", english: "beautiful / nice", type: "common", example: "Een mooie dag — A beautiful day", cat: "basics" },
+
+  // Feelings & character
+  { dutch: "blij", english: "happy / glad", type: "common", example: "Ik ben blij — I am happy", cat: "feelings" },
+  { dutch: "verdrietig", english: "sad", type: "common", example: "Hij is verdrietig — He is sad", cat: "feelings" },
+  { dutch: "boos", english: "angry", type: "common", example: "Ze is boos — She is angry", cat: "feelings" },
+  { dutch: "bang", english: "afraid / scared", type: "common", example: "Ik ben bang — I am scared", cat: "feelings" },
+  { dutch: "moe", english: "tired", type: "common", example: "Ik ben moe — I am tired", cat: "feelings" },
+  { dutch: "ziek", english: "sick / ill", type: "common", example: "Hij is ziek — He is sick", cat: "feelings" },
+  { dutch: "gezond", english: "healthy", type: "common", example: "Gezond eten — Healthy food", cat: "feelings" },
+  { dutch: "sterk", english: "strong", type: "common", example: "Een sterke man — A strong man", cat: "feelings" },
+  { dutch: "zwak", english: "weak", type: "common", example: "Een zwak signaal — A weak signal", cat: "feelings" },
+  { dutch: "lief", english: "sweet / kind", type: "common", example: "Een lief meisje — A sweet girl", cat: "feelings" },
+
+  // Appearance & senses
+  { dutch: "warm", english: "warm / hot", type: "common", example: "Het is warm buiten — It is warm outside", cat: "senses" },
+  { dutch: "koud", english: "cold", type: "common", example: "Het water is koud — The water is cold", cat: "senses" },
+  { dutch: "licht", english: "light / bright", type: "common", example: "Een lichte kamer — A bright room", cat: "senses" },
+  { dutch: "donker", english: "dark", type: "common", example: "Een donkere nacht — A dark night", cat: "senses" },
+  { dutch: "hard", english: "hard / loud", type: "common", example: "Harde muziek — Loud music", cat: "senses" },
+  { dutch: "zacht", english: "soft / gentle", type: "common", example: "Een zacht kussen — A soft pillow", cat: "senses" },
+  { dutch: "lekker", english: "tasty / nice", type: "common", example: "Lekker eten — Tasty food", cat: "senses" },
+  { dutch: "vies", english: "dirty / gross", type: "common", example: "Vieze handen — Dirty hands", cat: "senses" },
+  { dutch: "schoon", english: "clean", type: "common", example: "Een schone keuken — A clean kitchen", cat: "senses" },
+  { dutch: "luid", english: "loud", type: "common", example: "Een luide knal — A loud bang", cat: "senses" },
+
+  // Quantity & quality
+  { dutch: "veel", english: "much / many", type: "common", example: "Veel mensen — Many people", cat: "quantity" },
+  { dutch: "weinig", english: "few / little", type: "common", example: "Weinig tijd — Little time", cat: "quantity" },
+  { dutch: "snel", english: "fast / quick", type: "common", example: "Een snelle auto — A fast car", cat: "quantity" },
+  { dutch: "langzaam", english: "slow", type: "common", example: "Langzaam lopen — Walk slowly", cat: "quantity" },
+  { dutch: "duur", english: "expensive", type: "common", example: "Een duur restaurant — An expensive restaurant", cat: "quantity" },
+  { dutch: "goedkoop", english: "cheap", type: "common", example: "Goedkope kleren — Cheap clothes", cat: "quantity" },
+  { dutch: "makkelijk", english: "easy", type: "common", example: "Een makkelijke vraag — An easy question", cat: "quantity" },
+  { dutch: "moeilijk", english: "difficult", type: "common", example: "Een moeilijk examen — A difficult exam", cat: "quantity" },
+  { dutch: "belangrijk", english: "important", type: "common", example: "Een belangrijk besluit — An important decision", cat: "quantity" },
+  { dutch: "mogelijk", english: "possible", type: "common", example: "Alles is mogelijk — Everything is possible", cat: "quantity" },
+
+  // Colours & description
+  { dutch: "rood", english: "red", type: "colour", example: "Een rode roos — A red rose", cat: "colours" },
+  { dutch: "blauw", english: "blue", type: "colour", example: "Een blauwe lucht — A blue sky", cat: "colours" },
+  { dutch: "groen", english: "green", type: "colour", example: "Groen gras — Green grass", cat: "colours" },
+  { dutch: "geel", english: "yellow", type: "colour", example: "De zon is geel — The sun is yellow", cat: "colours" },
+  { dutch: "wit", english: "white", type: "colour", example: "Witte sneeuw — White snow", cat: "colours" },
+  { dutch: "zwart", english: "black", type: "colour", example: "Een zwarte kat — A black cat", cat: "colours" },
+  { dutch: "bruin", english: "brown", type: "colour", example: "Bruine ogen — Brown eyes", cat: "colours" },
+  { dutch: "grijs", english: "grey", type: "colour", example: "Grijze wolken — Grey clouds", cat: "colours" },
+  { dutch: "roze", english: "pink", type: "colour", example: "Een roze bloem — A pink flower", cat: "colours" },
+  { dutch: "oranje", english: "orange", type: "colour", example: "Een oranje trui — An orange sweater", cat: "colours" },
+];
+
+// ── NOUNS ──
+const NOUNS = [
+  // People & family
+  { dutch: "de man", english: "the man", type: "de-word", example: "De man loopt — The man walks", cat: "people" },
+  { dutch: "de vrouw", english: "the woman", type: "de-word", example: "De vrouw lacht — The woman laughs", cat: "people" },
+  { dutch: "het kind", english: "the child", type: "het-word", example: "Het kind speelt — The child plays", cat: "people" },
+  { dutch: "de vriend", english: "the friend", type: "de-word", example: "Mijn vriend komt — My friend is coming", cat: "people" },
+  { dutch: "de familie", english: "the family", type: "de-word", example: "Mijn familie is groot — My family is big", cat: "people" },
+  { dutch: "de moeder", english: "the mother", type: "de-word", example: "Mijn moeder kookt — My mother cooks", cat: "people" },
+  { dutch: "de vader", english: "the father", type: "de-word", example: "Mijn vader werkt — My father works", cat: "people" },
+  { dutch: "de broer", english: "the brother", type: "de-word", example: "Mijn broer is jong — My brother is young", cat: "people" },
+  { dutch: "de zus", english: "the sister", type: "de-word", example: "Mijn zus studeert — My sister studies", cat: "people" },
+  { dutch: "het meisje", english: "the girl", type: "het-word", example: "Het meisje zingt — The girl sings", cat: "people" },
+
+  // Home & places
+  { dutch: "het huis", english: "the house", type: "het-word", example: "Het huis is groot — The house is big", cat: "home" },
+  { dutch: "de kamer", english: "the room", type: "de-word", example: "De kamer is schoon — The room is clean", cat: "home" },
+  { dutch: "de keuken", english: "the kitchen", type: "de-word", example: "Ik ben in de keuken — I am in the kitchen", cat: "home" },
+  { dutch: "de deur", english: "the door", type: "de-word", example: "Doe de deur dicht — Close the door", cat: "home" },
+  { dutch: "het raam", english: "the window", type: "het-word", example: "Open het raam — Open the window", cat: "home" },
+  { dutch: "de tafel", english: "the table", type: "de-word", example: "De tafel is rond — The table is round", cat: "home" },
+  { dutch: "de stoel", english: "the chair", type: "de-word", example: "Zit op de stoel — Sit on the chair", cat: "home" },
+  { dutch: "het bed", english: "the bed", type: "het-word", example: "Ik lig in bed — I lie in bed", cat: "home" },
+  { dutch: "de stad", english: "the city", type: "de-word", example: "Amsterdam is een mooie stad — Amsterdam is a beautiful city", cat: "home" },
+  { dutch: "de straat", english: "the street", type: "de-word", example: "De straat is lang — The street is long", cat: "home" },
+
+  // Food & drink
+  { dutch: "het water", english: "the water", type: "het-word", example: "Ik drink water — I drink water", cat: "food" },
+  { dutch: "het brood", english: "the bread", type: "het-word", example: "Ik eet brood — I eat bread", cat: "food" },
+  { dutch: "de kaas", english: "the cheese", type: "de-word", example: "Nederlandse kaas is lekker — Dutch cheese is tasty", cat: "food" },
+  { dutch: "de melk", english: "the milk", type: "de-word", example: "Ik drink melk — I drink milk", cat: "food" },
+  { dutch: "de koffie", english: "the coffee", type: "de-word", example: "Wil je koffie? — Do you want coffee?", cat: "food" },
+  { dutch: "de thee", english: "the tea", type: "de-word", example: "Een kopje thee — A cup of tea", cat: "food" },
+  { dutch: "het vlees", english: "the meat", type: "het-word", example: "Ik eet geen vlees — I don't eat meat", cat: "food" },
+  { dutch: "de appel", english: "the apple", type: "de-word", example: "De appel is rood — The apple is red", cat: "food" },
+  { dutch: "het ei", english: "the egg", type: "het-word", example: "Ik wil een ei — I want an egg", cat: "food" },
+  { dutch: "de soep", english: "the soup", type: "de-word", example: "De soep is warm — The soup is hot", cat: "food" },
+
+  // Time & nature
+  { dutch: "de dag", english: "the day", type: "de-word", example: "Een mooie dag — A beautiful day", cat: "time" },
+  { dutch: "de week", english: "the week", type: "de-word", example: "Volgende week — Next week", cat: "time" },
+  { dutch: "het jaar", english: "the year", type: "het-word", example: "Dit jaar — This year", cat: "time" },
+  { dutch: "de ochtend", english: "the morning", type: "de-word", example: "Goedemorgen! — Good morning!", cat: "time" },
+  { dutch: "de avond", english: "the evening", type: "de-word", example: "Goedenavond! — Good evening!", cat: "time" },
+  { dutch: "de zon", english: "the sun", type: "de-word", example: "De zon schijnt — The sun shines", cat: "time" },
+  { dutch: "de regen", english: "the rain", type: "de-word", example: "Het regent — It rains", cat: "time" },
+  { dutch: "de boom", english: "the tree", type: "de-word", example: "Een grote boom — A big tree", cat: "time" },
+  { dutch: "de bloem", english: "the flower", type: "de-word", example: "Een mooie bloem — A beautiful flower", cat: "time" },
+  { dutch: "het weer", english: "the weather", type: "het-word", example: "Het weer is goed — The weather is good", cat: "time" },
+
+  // Daily life & objects
+  { dutch: "het boek", english: "the book", type: "het-word", example: "Ik lees een boek — I read a book", cat: "objects" },
+  { dutch: "de telefoon", english: "the phone", type: "de-word", example: "Mijn telefoon rinkelt — My phone rings", cat: "objects" },
+  { dutch: "de auto", english: "the car", type: "de-word", example: "De auto is nieuw — The car is new", cat: "objects" },
+  { dutch: "de fiets", english: "the bicycle", type: "de-word", example: "Ik ga met de fiets — I go by bike", cat: "objects" },
+  { dutch: "de trein", english: "the train", type: "de-word", example: "De trein is laat — The train is late", cat: "objects" },
+  { dutch: "het geld", english: "the money", type: "het-word", example: "Ik heb geen geld — I have no money", cat: "objects" },
+  { dutch: "de tas", english: "the bag", type: "de-word", example: "Mijn tas is zwaar — My bag is heavy", cat: "objects" },
+  { dutch: "de sleutel", english: "the key", type: "de-word", example: "Waar is de sleutel? — Where is the key?", cat: "objects" },
+  { dutch: "het werk", english: "the work / job", type: "het-word", example: "Ik ga naar het werk — I go to work", cat: "objects" },
+  { dutch: "de school", english: "the school", type: "de-word", example: "De school is dichtbij — The school is nearby", cat: "objects" },
+];
+
+// ── PACKS ──
+const PACKS = {
+  verbs: {
+    label: "Verbs",
+    icon: "⚔",
+    data: VERBS,
+    wordLabel: "Verb",
+    categories: {
+      all: "All Verbs",
+      essentials: "Essentials",
+      daily: "Daily Actions",
+      movement: "Movement",
+      communication: "Communication",
+      life: "Life & Feelings"
+    }
+  },
+  adjectives: {
+    label: "Adjectives",
+    icon: "✧",
+    data: ADJECTIVES,
+    wordLabel: "Adjective",
+    categories: {
+      all: "All Adjectives",
+      basics: "Basics",
+      feelings: "Feelings",
+      senses: "Senses",
+      quantity: "Quantity",
+      colours: "Colours"
+    }
+  },
+  nouns: {
+    label: "Nouns",
+    icon: "📜",
+    data: NOUNS,
+    wordLabel: "Noun",
+    categories: {
+      all: "All Nouns",
+      people: "People & Family",
+      home: "Home & Places",
+      food: "Food & Drink",
+      time: "Time & Nature",
+      objects: "Daily Objects"
+    }
+  }
+};
+
+let currentPack = "verbs";
+
+let currentCategory = "all";
+let deck = [];
+let currentIndex = 0;
+let known = new Set();
+let learning = new Set();
+let isFlipped = false;
+let direction = "nl-en"; // "nl-en" = Dutch front, English back  |  "en-nl" = English front, Dutch back
+
+function initParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 12) + 's';
+    p.style.animationDelay = Math.random() * 10 + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    container.appendChild(p);
+  }
+}
+
+function initPacks() {
+  const el = document.getElementById('packSelector');
+  el.innerHTML = '';
+  for (const [key, pack] of Object.entries(PACKS)) {
+    const btn = document.createElement('button');
+    btn.className = 'pack-btn' + (key === currentPack ? ' active' : '');
+    btn.innerHTML = `${pack.icon} ${pack.label}<span class="pack-count">${pack.data.length} cards</span>`;
+    btn.onclick = () => setPack(key);
+    el.appendChild(btn);
+  }
+}
+
+function setPack(packKey) {
+  if (packKey === currentPack) return;
+  currentPack = packKey;
+  currentCategory = "all";
+  known.clear();
+  learning.clear();
+  initPacks();
+  initCategories();
+  buildDeck();
+  shuffleDeck();
+}
+
+function initCategories() {
+  const pack = PACKS[currentPack];
+  const el = document.getElementById('categories');
+  el.innerHTML = '';
+  for (const [key, label] of Object.entries(pack.categories)) {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn' + (key === currentCategory ? ' active' : '');
+    btn.textContent = label;
+    btn.onclick = () => setCategory(key);
+    el.appendChild(btn);
+  }
+}
+
+function setCategory(cat) {
+  currentCategory = cat;
+  initCategories();
+  buildDeck();
+  currentIndex = 0;
+  updateCard();
+  updateUI();
+  document.getElementById('completion').classList.remove('visible');
+  document.getElementById('cardContainer').style.display = '';
+  document.getElementById('controls').style.display = '';
+}
+
+function buildDeck() {
+  const data = PACKS[currentPack].data;
+  if (currentCategory === 'all') {
+    deck = [...data];
+  } else {
+    deck = data.filter(v => v.cat === currentCategory);
+  }
+}
+
+function shuffleDeck() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  currentIndex = 0;
+  if (isFlipped) flipCard();
+  updateCard();
+  updateUI();
+  document.getElementById('completion').classList.remove('visible');
+  document.getElementById('cardContainer').style.display = '';
+  document.getElementById('controls').style.display = '';
+}
+
+function toggleDirection() {
+  direction = direction === "nl-en" ? "en-nl" : "nl-en";
+  const track = document.getElementById('toggleTrack');
+  const lblLeft = document.getElementById('dirLabelLeft');
+  const lblRight = document.getElementById('dirLabelRight');
+  const toggle = document.getElementById('directionToggle');
+
+  if (direction === "en-nl") {
+    track.classList.add('reversed');
+    toggle.classList.add('reversed');
+    lblLeft.textContent = "English";
+    lblRight.textContent = "Dutch";
+    lblLeft.classList.add('active');
+    lblRight.classList.remove('active');
+  } else {
+    track.classList.remove('reversed');
+    toggle.classList.remove('reversed');
+    lblLeft.textContent = "Dutch";
+    lblRight.textContent = "English";
+    lblLeft.classList.add('active');
+    lblRight.classList.remove('active');
+  }
+
+  // Update the current card without resetting position
+  updateCardContent();
+}
+
+function flipCard() {
+  isFlipped = !isFlipped;
+  document.getElementById('card').classList.toggle('flipped', isFlipped);
+}
+
+function updateCardContent() {
+  if (currentIndex >= deck.length) return;
+  const word = deck[currentIndex];
+  const wLabel = PACKS[currentPack].wordLabel;
+
+  const frontLabel = document.querySelector('.card-front .card-label');
+  const backLabel = document.querySelector('.card-back .card-label');
+
+  if (direction === "nl-en") {
+    document.getElementById('frontWord').textContent = word.dutch;
+    document.getElementById('frontExtra').textContent = `(${word.type})`;
+    frontLabel.textContent = `Dutch ${wLabel}`;
+    document.getElementById('backWord').textContent = word.english;
+    document.getElementById('backExample').textContent = `"${word.example}"`;
+    backLabel.textContent = "English Translation";
+  } else {
+    document.getElementById('frontWord').textContent = word.english;
+    document.getElementById('frontExtra').textContent = `(${word.type})`;
+    frontLabel.textContent = `English ${wLabel}`;
+    document.getElementById('backWord').textContent = word.dutch;
+    document.getElementById('backExample').textContent = `"${word.example}"`;
+    backLabel.textContent = "Dutch Translation";
+  }
+}
+
+function updateCard() {
+  if (currentIndex >= deck.length) {
+    showCompletion();
+    return;
+  }
+
+  if (isFlipped) {
+    isFlipped = false;
+    document.getElementById('card').classList.remove('flipped');
+    // Wait for the flip animation to finish before showing new content
+    setTimeout(updateCardContent, 350);
+  } else {
+    updateCardContent();
+  }
+}
+
+function updateUI() {
+  const total = deck.length;
+  const idx = Math.min(currentIndex + 1, total);
+  document.getElementById('progressText').textContent = `Card ${idx} of ${total}`;
+  document.getElementById('progressBar').style.width = (idx / total * 100) + '%';
+
+  const deckKeys = new Set(deck.map(v => v.dutch));
+  let k = 0, l = 0;
+  known.forEach(v => { if (deckKeys.has(v)) k++; });
+  learning.forEach(v => { if (deckKeys.has(v)) l++; });
+
+  document.getElementById('knownCount').textContent = k;
+  document.getElementById('learningCount').textContent = l;
+  document.getElementById('remainingCount').textContent = total - k - l;
+}
+
+function markKnown() {
+  if (currentIndex >= deck.length) return;
+  const verb = deck[currentIndex];
+  known.add(verb.dutch);
+  learning.delete(verb.dutch);
+  currentIndex++;
+  updateCard();
+  updateUI();
+}
+
+function markLearning() {
+  if (currentIndex >= deck.length) return;
+  const verb = deck[currentIndex];
+  learning.add(verb.dutch);
+  known.delete(verb.dutch);
+  currentIndex++;
+  updateCard();
+  updateUI();
+}
+
+function nextCard() {
+  if (currentIndex >= deck.length) return;
+  currentIndex++;
+  updateCard();
+  updateUI();
+}
+
+function showCompletion() {
+  document.getElementById('cardContainer').style.display = 'none';
+  document.getElementById('controls').style.display = 'none';
+  const comp = document.getElementById('completion');
+  comp.classList.add('visible');
+
+  const deckKeys = new Set(deck.map(v => v.dutch));
+  let k = 0, l = 0;
+  known.forEach(v => { if (deckKeys.has(v)) k++; });
+  learning.forEach(v => { if (deckKeys.has(v)) l++; });
+
+  document.getElementById('completionStats').innerHTML =
+    `<p style="color:#6aaa64">✦ Known: ${k}</p>
+     <p style="color:#c9b458">◈ Still Learning: ${l}</p>
+     <p style="color:#888">○ Unmarked: ${deck.length - k - l}</p>`;
+}
+
+function reviewLearning() {
+  deck = PACKS[currentPack].data.filter(v => learning.has(v.dutch));
+  if (deck.length === 0) {
+    alert('No words marked as learning!');
+    return;
+  }
+  currentIndex = 0;
+  updateCard();
+  updateUI();
+  document.getElementById('completion').classList.remove('visible');
+  document.getElementById('cardContainer').style.display = '';
+  document.getElementById('controls').style.display = '';
+}
+
+function resetAll() {
+  known.clear();
+  learning.clear();
+  buildDeck();
+  shuffleDeck();
+}
+
+// Keyboard controls
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+  if (e.code === 'ArrowRight' || e.code === 'ArrowDown') { e.preventDefault(); nextCard(); }
+  if (e.key === '1') markKnown();
+  if (e.key === '2') markLearning();
+  if (e.key === 'd' || e.key === 'D') toggleDirection();
+});
+
+// Init
+initParticles();
+initPacks();
+initCategories();
+buildDeck();
+shuffleDeck();
+</script>
+</body>
+</html>
