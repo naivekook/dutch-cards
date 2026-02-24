@@ -488,6 +488,51 @@
     opacity: 0.5;
   }
 
+  /* Level selector */
+  .level-selector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .level-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    padding: 8px 20px;
+    background: rgba(20, 10, 5, 0.7);
+    color: #7a6a50;
+    border: 1px solid #3a2a1a;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .level-btn:hover {
+    color: #c9a870;
+    background: rgba(40, 24, 12, 0.9);
+    border-color: #5a4a3a;
+  }
+  .level-btn.active {
+    background: linear-gradient(180deg, rgba(60, 35, 15, 0.95), rgba(40, 22, 8, 0.95));
+    color: #f5d98e;
+    border-color: #8b6914;
+    box-shadow: 0 0 12px rgba(218, 165, 32, 0.15), inset 0 1px 0 rgba(218, 165, 32, 0.1);
+  }
+  .level-btn .level-icon {
+    margin-right: 5px;
+    font-size: 0.85rem;
+  }
+  .level-btn .level-count {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.65rem;
+    opacity: 0.5;
+    display: block;
+    margin-top: 1px;
+  }
+  .level-btn.active .level-count { opacity: 0.7; }
+
   /* Category filter */
   .categories {
     display: flex;
@@ -581,6 +626,8 @@
   <div class="pack-selector" id="packSelector"></div>
   <div class="pack-divider"></div>
 
+  <div class="level-selector" id="levelSelector"></div>
+
   <div class="categories" id="categories"></div>
 
   <div class="direction-toggle" id="directionToggle">
@@ -657,347 +704,347 @@
 <script>
 // ── VERBS ──
 const VERBS = [
-  { dutch: "zijn", english: "to be", type: "irregular", example: "Ik ben blij — I am happy", cat: "essentials" },
-  { dutch: "hebben", english: "to have", type: "irregular", example: "Ik heb een boek — I have a book", cat: "essentials" },
-  { dutch: "worden", english: "to become", type: "irregular", example: "Het wordt koud — It is getting cold", cat: "essentials" },
-  { dutch: "kunnen", english: "can / to be able", type: "modal", example: "Ik kan zwemmen — I can swim", cat: "essentials" },
-  { dutch: "zullen", english: "shall / will", type: "modal", example: "Ik zal komen — I will come", cat: "essentials" },
-  { dutch: "moeten", english: "must / to have to", type: "modal", example: "Ik moet werken — I must work", cat: "essentials" },
-  { dutch: "mogen", english: "may / to be allowed", type: "modal", example: "Mag ik? — May I?", cat: "essentials" },
-  { dutch: "willen", english: "to want", type: "modal", example: "Ik wil slapen — I want to sleep", cat: "essentials" },
-  { dutch: "doen", english: "to do", type: "irregular", example: "Wat doe je? — What are you doing?", cat: "essentials" },
-  { dutch: "gaan", english: "to go", type: "irregular", example: "Ik ga naar huis — I go home", cat: "essentials" },
-  { dutch: "komen", english: "to come", type: "irregular", example: "Kom je morgen? — Are you coming tomorrow?", cat: "daily" },
-  { dutch: "maken", english: "to make", type: "regular", example: "Ik maak eten — I make food", cat: "daily" },
-  { dutch: "zien", english: "to see", type: "irregular", example: "Ik zie je — I see you", cat: "daily" },
-  { dutch: "geven", english: "to give", type: "irregular", example: "Geef me water — Give me water", cat: "daily" },
-  { dutch: "nemen", english: "to take", type: "irregular", example: "Neem een stoel — Take a seat", cat: "daily" },
-  { dutch: "vinden", english: "to find / think", type: "irregular", example: "Ik vind het leuk — I like it", cat: "daily" },
-  { dutch: "zeggen", english: "to say", type: "irregular", example: "Wat zeg je? — What do you say?", cat: "daily" },
-  { dutch: "weten", english: "to know (fact)", type: "irregular", example: "Ik weet het niet — I don't know", cat: "daily" },
-  { dutch: "kennen", english: "to know (person)", type: "regular", example: "Ken je hem? — Do you know him?", cat: "daily" },
-  { dutch: "denken", english: "to think", type: "regular", example: "Ik denk het wel — I think so", cat: "daily" },
-  { dutch: "lopen", english: "to walk / run", type: "irregular", example: "Ik loop naar school — I walk to school", cat: "movement" },
-  { dutch: "rijden", english: "to drive / ride", type: "irregular", example: "Hij rijdt snel — He drives fast", cat: "movement" },
-  { dutch: "vliegen", english: "to fly", type: "irregular", example: "De vogel vliegt — The bird flies", cat: "movement" },
-  { dutch: "zwemmen", english: "to swim", type: "regular", example: "Ik zwem graag — I like to swim", cat: "movement" },
-  { dutch: "staan", english: "to stand", type: "irregular", example: "Ik sta hier — I stand here", cat: "movement" },
-  { dutch: "zitten", english: "to sit", type: "irregular", example: "Zij zit op de stoel — She sits on the chair", cat: "movement" },
-  { dutch: "liggen", english: "to lie (down)", type: "irregular", example: "De kat ligt op bed — The cat lies on the bed", cat: "movement" },
-  { dutch: "vallen", english: "to fall", type: "irregular", example: "De bladeren vallen — The leaves fall", cat: "movement" },
-  { dutch: "brengen", english: "to bring", type: "irregular", example: "Breng je mee? — Will you bring it?", cat: "movement" },
-  { dutch: "vertrekken", english: "to depart", type: "irregular", example: "De trein vertrekt — The train departs", cat: "movement" },
-  { dutch: "spreken", english: "to speak", type: "irregular", example: "Spreekt u Engels? — Do you speak English?", cat: "communication" },
-  { dutch: "praten", english: "to talk", type: "regular", example: "We praten veel — We talk a lot", cat: "communication" },
-  { dutch: "schrijven", english: "to write", type: "irregular", example: "Ik schrijf een brief — I write a letter", cat: "communication" },
-  { dutch: "lezen", english: "to read", type: "irregular", example: "Zij leest een boek — She reads a book", cat: "communication" },
-  { dutch: "luisteren", english: "to listen", type: "regular", example: "Luister naar mij — Listen to me", cat: "communication" },
-  { dutch: "vragen", english: "to ask", type: "regular", example: "Mag ik iets vragen? — May I ask something?", cat: "communication" },
-  { dutch: "antwoorden", english: "to answer", type: "regular", example: "Antwoord alsjeblieft — Please answer", cat: "communication" },
-  { dutch: "begrijpen", english: "to understand", type: "irregular", example: "Ik begrijp het — I understand", cat: "communication" },
-  { dutch: "leren", english: "to learn / teach", type: "regular", example: "Ik leer Nederlands — I learn Dutch", cat: "communication" },
-  { dutch: "vertellen", english: "to tell", type: "regular", example: "Vertel me alles — Tell me everything", cat: "communication" },
-  { dutch: "leven", english: "to live", type: "regular", example: "Ik leef in Amsterdam — I live in Amsterdam", cat: "life" },
-  { dutch: "werken", english: "to work", type: "regular", example: "Ik werk thuis — I work at home", cat: "life" },
-  { dutch: "spelen", english: "to play", type: "regular", example: "Kinderen spelen buiten — Children play outside", cat: "life" },
-  { dutch: "eten", english: "to eat", type: "irregular", example: "Ik eet brood — I eat bread", cat: "life" },
-  { dutch: "drinken", english: "to drink", type: "irregular", example: "Ik drink koffie — I drink coffee", cat: "life" },
-  { dutch: "slapen", english: "to sleep", type: "irregular", example: "Ik slaap goed — I sleep well", cat: "life" },
-  { dutch: "voelen", english: "to feel", type: "regular", example: "Ik voel me goed — I feel good", cat: "life" },
-  { dutch: "houden van", english: "to love", type: "irregular", example: "Ik houd van jou — I love you", cat: "life" },
-  { dutch: "geloven", english: "to believe", type: "regular", example: "Ik geloof je — I believe you", cat: "life" },
-  { dutch: "proberen", english: "to try", type: "regular", example: "Ik probeer het — I try it", cat: "life" },
+  { dutch: "zijn", english: "to be", type: "irregular", example: "Ik ben blij — I am happy", level: 1, cat: "essentials" },
+  { dutch: "hebben", english: "to have", type: "irregular", example: "Ik heb een boek — I have a book", level: 1, cat: "essentials" },
+  { dutch: "worden", english: "to become", type: "irregular", example: "Het wordt koud — It is getting cold", level: 1, cat: "essentials" },
+  { dutch: "kunnen", english: "can / to be able", type: "modal", example: "Ik kan zwemmen — I can swim", level: 1, cat: "essentials" },
+  { dutch: "zullen", english: "shall / will", type: "modal", example: "Ik zal komen — I will come", level: 1, cat: "essentials" },
+  { dutch: "moeten", english: "must / to have to", type: "modal", example: "Ik moet werken — I must work", level: 1, cat: "essentials" },
+  { dutch: "mogen", english: "may / to be allowed", type: "modal", example: "Mag ik? — May I?", level: 1, cat: "essentials" },
+  { dutch: "willen", english: "to want", type: "modal", example: "Ik wil slapen — I want to sleep", level: 1, cat: "essentials" },
+  { dutch: "doen", english: "to do", type: "irregular", example: "Wat doe je? — What are you doing?", level: 1, cat: "essentials" },
+  { dutch: "gaan", english: "to go", type: "irregular", example: "Ik ga naar huis — I go home", level: 1, cat: "essentials" },
+  { dutch: "komen", english: "to come", type: "irregular", example: "Kom je morgen? — Are you coming tomorrow?", level: 1, cat: "daily" },
+  { dutch: "maken", english: "to make", type: "regular", example: "Ik maak eten — I make food", level: 1, cat: "daily" },
+  { dutch: "zien", english: "to see", type: "irregular", example: "Ik zie je — I see you", level: 1, cat: "daily" },
+  { dutch: "geven", english: "to give", type: "irregular", example: "Geef me water — Give me water", level: 1, cat: "daily" },
+  { dutch: "nemen", english: "to take", type: "irregular", example: "Neem een stoel — Take a seat", level: 1, cat: "daily" },
+  { dutch: "vinden", english: "to find / think", type: "irregular", example: "Ik vind het leuk — I like it", level: 1, cat: "daily" },
+  { dutch: "zeggen", english: "to say", type: "irregular", example: "Wat zeg je? — What do you say?", level: 1, cat: "daily" },
+  { dutch: "weten", english: "to know (fact)", type: "irregular", example: "Ik weet het niet — I don't know", level: 1, cat: "daily" },
+  { dutch: "kennen", english: "to know (person)", type: "regular", example: "Ken je hem? — Do you know him?", level: 1, cat: "daily" },
+  { dutch: "denken", english: "to think", type: "regular", example: "Ik denk het wel — I think so", level: 1, cat: "daily" },
+  { dutch: "lopen", english: "to walk / run", type: "irregular", example: "Ik loop naar school — I walk to school", level: 1, cat: "movement" },
+  { dutch: "rijden", english: "to drive / ride", type: "irregular", example: "Hij rijdt snel — He drives fast", level: 1, cat: "movement" },
+  { dutch: "vliegen", english: "to fly", type: "irregular", example: "De vogel vliegt — The bird flies", level: 1, cat: "movement" },
+  { dutch: "zwemmen", english: "to swim", type: "regular", example: "Ik zwem graag — I like to swim", level: 1, cat: "movement" },
+  { dutch: "staan", english: "to stand", type: "irregular", example: "Ik sta hier — I stand here", level: 1, cat: "movement" },
+  { dutch: "zitten", english: "to sit", type: "irregular", example: "Zij zit op de stoel — She sits on the chair", level: 1, cat: "movement" },
+  { dutch: "liggen", english: "to lie (down)", type: "irregular", example: "De kat ligt op bed — The cat lies on the bed", level: 1, cat: "movement" },
+  { dutch: "vallen", english: "to fall", type: "irregular", example: "De bladeren vallen — The leaves fall", level: 1, cat: "movement" },
+  { dutch: "brengen", english: "to bring", type: "irregular", example: "Breng je mee? — Will you bring it?", level: 1, cat: "movement" },
+  { dutch: "vertrekken", english: "to depart", type: "irregular", example: "De trein vertrekt — The train departs", level: 1, cat: "movement" },
+  { dutch: "spreken", english: "to speak", type: "irregular", example: "Spreekt u Engels? — Do you speak English?", level: 1, cat: "communication" },
+  { dutch: "praten", english: "to talk", type: "regular", example: "We praten veel — We talk a lot", level: 1, cat: "communication" },
+  { dutch: "schrijven", english: "to write", type: "irregular", example: "Ik schrijf een brief — I write a letter", level: 1, cat: "communication" },
+  { dutch: "lezen", english: "to read", type: "irregular", example: "Zij leest een boek — She reads a book", level: 1, cat: "communication" },
+  { dutch: "luisteren", english: "to listen", type: "regular", example: "Luister naar mij — Listen to me", level: 1, cat: "communication" },
+  { dutch: "vragen", english: "to ask", type: "regular", example: "Mag ik iets vragen? — May I ask something?", level: 1, cat: "communication" },
+  { dutch: "antwoorden", english: "to answer", type: "regular", example: "Antwoord alsjeblieft — Please answer", level: 1, cat: "communication" },
+  { dutch: "begrijpen", english: "to understand", type: "irregular", example: "Ik begrijp het — I understand", level: 1, cat: "communication" },
+  { dutch: "leren", english: "to learn / teach", type: "regular", example: "Ik leer Nederlands — I learn Dutch", level: 1, cat: "communication" },
+  { dutch: "vertellen", english: "to tell", type: "regular", example: "Vertel me alles — Tell me everything", level: 1, cat: "communication" },
+  { dutch: "leven", english: "to live", type: "regular", example: "Ik leef in Amsterdam — I live in Amsterdam", level: 1, cat: "life" },
+  { dutch: "werken", english: "to work", type: "regular", example: "Ik werk thuis — I work at home", level: 1, cat: "life" },
+  { dutch: "spelen", english: "to play", type: "regular", example: "Kinderen spelen buiten — Children play outside", level: 1, cat: "life" },
+  { dutch: "eten", english: "to eat", type: "irregular", example: "Ik eet brood — I eat bread", level: 1, cat: "life" },
+  { dutch: "drinken", english: "to drink", type: "irregular", example: "Ik drink koffie — I drink coffee", level: 1, cat: "life" },
+  { dutch: "slapen", english: "to sleep", type: "irregular", example: "Ik slaap goed — I sleep well", level: 1, cat: "life" },
+  { dutch: "voelen", english: "to feel", type: "regular", example: "Ik voel me goed — I feel good", level: 1, cat: "life" },
+  { dutch: "houden van", english: "to love", type: "irregular", example: "Ik houd van jou — I love you", level: 1, cat: "life" },
+  { dutch: "geloven", english: "to believe", type: "regular", example: "Ik geloof je — I believe you", level: 1, cat: "life" },
+  { dutch: "proberen", english: "to try", type: "regular", example: "Ik probeer het — I try it", level: 1, cat: "life" },
   // Essentials (extra)
-  { dutch: "laten", english: "to let / leave", type: "irregular", example: "Laat me gaan — Let me go", cat: "essentials" },
-  { dutch: "blijven", english: "to stay / remain", type: "irregular", example: "Ik blijf thuis — I stay home", cat: "essentials" },
-  { dutch: "lijken", english: "to seem / appear", type: "irregular", example: "Het lijkt goed — It seems good", cat: "essentials" },
-  { dutch: "hoeven", english: "to need (neg.)", type: "modal", example: "Je hoeft niet — You don't need to", cat: "essentials" },
-  { dutch: "heten", english: "to be called", type: "irregular", example: "Ik heet Jan — My name is Jan", cat: "essentials" },
-  { dutch: "bestaan", english: "to exist", type: "irregular", example: "Het bestaat echt — It really exists", cat: "essentials" },
-  { dutch: "betekenen", english: "to mean", type: "regular", example: "Wat betekent dit? — What does this mean?", cat: "essentials" },
-  { dutch: "wonen", english: "to live (reside)", type: "regular", example: "Ik woon in Utrecht — I live in Utrecht", cat: "essentials" },
-  { dutch: "krijgen", english: "to get / receive", type: "irregular", example: "Ik krijg een cadeau — I get a gift", cat: "essentials" },
-  { dutch: "horen", english: "to hear / belong", type: "regular", example: "Ik hoor muziek — I hear music", cat: "essentials" },
+  { dutch: "laten", english: "to let / leave", type: "irregular", example: "Laat me gaan — Let me go", level: 2, cat: "essentials" },
+  { dutch: "blijven", english: "to stay / remain", type: "irregular", example: "Ik blijf thuis — I stay home", level: 2, cat: "essentials" },
+  { dutch: "lijken", english: "to seem / appear", type: "irregular", example: "Het lijkt goed — It seems good", level: 2, cat: "essentials" },
+  { dutch: "hoeven", english: "to need (neg.)", type: "modal", example: "Je hoeft niet — You don't need to", level: 2, cat: "essentials" },
+  { dutch: "heten", english: "to be called", type: "irregular", example: "Ik heet Jan — My name is Jan", level: 2, cat: "essentials" },
+  { dutch: "bestaan", english: "to exist", type: "irregular", example: "Het bestaat echt — It really exists", level: 2, cat: "essentials" },
+  { dutch: "betekenen", english: "to mean", type: "regular", example: "Wat betekent dit? — What does this mean?", level: 2, cat: "essentials" },
+  { dutch: "wonen", english: "to live (reside)", type: "regular", example: "Ik woon in Utrecht — I live in Utrecht", level: 2, cat: "essentials" },
+  { dutch: "krijgen", english: "to get / receive", type: "irregular", example: "Ik krijg een cadeau — I get a gift", level: 2, cat: "essentials" },
+  { dutch: "horen", english: "to hear / belong", type: "regular", example: "Ik hoor muziek — I hear music", level: 2, cat: "essentials" },
   // Daily actions (extra)
-  { dutch: "kopen", english: "to buy", type: "irregular", example: "Ik koop brood — I buy bread", cat: "daily" },
-  { dutch: "verkopen", english: "to sell", type: "irregular", example: "Hij verkoopt auto's — He sells cars", cat: "daily" },
-  { dutch: "betalen", english: "to pay", type: "regular", example: "Ik betaal de rekening — I pay the bill", cat: "daily" },
-  { dutch: "wachten", english: "to wait", type: "regular", example: "Wacht even — Wait a moment", cat: "daily" },
-  { dutch: "zoeken", english: "to search / look for", type: "irregular", example: "Ik zoek mijn sleutel — I search for my key", cat: "daily" },
-  { dutch: "gebruiken", english: "to use", type: "regular", example: "Ik gebruik de computer — I use the computer", cat: "daily" },
-  { dutch: "helpen", english: "to help", type: "irregular", example: "Kun je me helpen? — Can you help me?", cat: "daily" },
-  { dutch: "kijken", english: "to look / watch", type: "regular", example: "Ik kijk televisie — I watch television", cat: "daily" },
-  { dutch: "houden", english: "to hold / keep", type: "irregular", example: "Houd dit vast — Hold this", cat: "daily" },
-  { dutch: "vergeten", english: "to forget", type: "irregular", example: "Ik vergeet het altijd — I always forget", cat: "daily" },
+  { dutch: "kopen", english: "to buy", type: "irregular", example: "Ik koop brood — I buy bread", level: 2, cat: "daily" },
+  { dutch: "verkopen", english: "to sell", type: "irregular", example: "Hij verkoopt auto's — He sells cars", level: 2, cat: "daily" },
+  { dutch: "betalen", english: "to pay", type: "regular", example: "Ik betaal de rekening — I pay the bill", level: 2, cat: "daily" },
+  { dutch: "wachten", english: "to wait", type: "regular", example: "Wacht even — Wait a moment", level: 2, cat: "daily" },
+  { dutch: "zoeken", english: "to search / look for", type: "irregular", example: "Ik zoek mijn sleutel — I search for my key", level: 2, cat: "daily" },
+  { dutch: "gebruiken", english: "to use", type: "regular", example: "Ik gebruik de computer — I use the computer", level: 2, cat: "daily" },
+  { dutch: "helpen", english: "to help", type: "irregular", example: "Kun je me helpen? — Can you help me?", level: 2, cat: "daily" },
+  { dutch: "kijken", english: "to look / watch", type: "regular", example: "Ik kijk televisie — I watch television", level: 2, cat: "daily" },
+  { dutch: "houden", english: "to hold / keep", type: "irregular", example: "Houd dit vast — Hold this", level: 2, cat: "daily" },
+  { dutch: "vergeten", english: "to forget", type: "irregular", example: "Ik vergeet het altijd — I always forget", level: 2, cat: "daily" },
   // Movement (extra)
-  { dutch: "rennen", english: "to run (fast)", type: "regular", example: "De kinderen rennen — The children run", cat: "movement" },
-  { dutch: "klimmen", english: "to climb", type: "irregular", example: "Ik klim de berg op — I climb the mountain", cat: "movement" },
-  { dutch: "springen", english: "to jump", type: "irregular", example: "De kat springt hoog — The cat jumps high", cat: "movement" },
-  { dutch: "draaien", english: "to turn / rotate", type: "regular", example: "Draai naar links — Turn left", cat: "movement" },
-  { dutch: "stoppen", english: "to stop", type: "regular", example: "De bus stopt hier — The bus stops here", cat: "movement" },
-  { dutch: "trekken", english: "to pull", type: "irregular", example: "Trek de deur open — Pull the door open", cat: "movement" },
-  { dutch: "duwen", english: "to push", type: "regular", example: "Duw de deur dicht — Push the door shut", cat: "movement" },
-  { dutch: "dragen", english: "to carry / wear", type: "irregular", example: "Ik draag een tas — I carry a bag", cat: "movement" },
-  { dutch: "gooien", english: "to throw", type: "regular", example: "Gooi de bal — Throw the ball", cat: "movement" },
-  { dutch: "volgen", english: "to follow", type: "regular", example: "Volg mij — Follow me", cat: "movement" },
+  { dutch: "rennen", english: "to run (fast)", type: "regular", example: "De kinderen rennen — The children run", level: 2, cat: "movement" },
+  { dutch: "klimmen", english: "to climb", type: "irregular", example: "Ik klim de berg op — I climb the mountain", level: 2, cat: "movement" },
+  { dutch: "springen", english: "to jump", type: "irregular", example: "De kat springt hoog — The cat jumps high", level: 2, cat: "movement" },
+  { dutch: "draaien", english: "to turn / rotate", type: "regular", example: "Draai naar links — Turn left", level: 2, cat: "movement" },
+  { dutch: "stoppen", english: "to stop", type: "regular", example: "De bus stopt hier — The bus stops here", level: 2, cat: "movement" },
+  { dutch: "trekken", english: "to pull", type: "irregular", example: "Trek de deur open — Pull the door open", level: 2, cat: "movement" },
+  { dutch: "duwen", english: "to push", type: "regular", example: "Duw de deur dicht — Push the door shut", level: 2, cat: "movement" },
+  { dutch: "dragen", english: "to carry / wear", type: "irregular", example: "Ik draag een tas — I carry a bag", level: 2, cat: "movement" },
+  { dutch: "gooien", english: "to throw", type: "regular", example: "Gooi de bal — Throw the ball", level: 2, cat: "movement" },
+  { dutch: "volgen", english: "to follow", type: "regular", example: "Volg mij — Follow me", level: 2, cat: "movement" },
   // Communication (extra)
-  { dutch: "roepen", english: "to call / shout", type: "irregular", example: "Roep de dokter — Call the doctor", cat: "communication" },
-  { dutch: "fluisteren", english: "to whisper", type: "regular", example: "Zij fluistert zachtjes — She whispers softly", cat: "communication" },
-  { dutch: "zingen", english: "to sing", type: "irregular", example: "Ik zing een lied — I sing a song", cat: "communication" },
-  { dutch: "beloven", english: "to promise", type: "regular", example: "Ik beloof het — I promise", cat: "communication" },
-  { dutch: "uitleggen", english: "to explain", type: "regular", example: "Leg het uit — Explain it", cat: "communication" },
-  { dutch: "bedoelen", english: "to mean (intend)", type: "regular", example: "Wat bedoel je? — What do you mean?", cat: "communication" },
-  { dutch: "bellen", english: "to call (phone)", type: "regular", example: "Ik bel je morgen — I'll call you tomorrow", cat: "communication" },
-  { dutch: "sturen", english: "to send", type: "regular", example: "Ik stuur een bericht — I send a message", cat: "communication" },
-  { dutch: "klagen", english: "to complain", type: "regular", example: "Hij klaagt altijd — He always complains", cat: "communication" },
-  { dutch: "schreeuwen", english: "to scream / yell", type: "regular", example: "Schreeuw niet zo — Don't yell like that", cat: "communication" },
+  { dutch: "roepen", english: "to call / shout", type: "irregular", example: "Roep de dokter — Call the doctor", level: 2, cat: "communication" },
+  { dutch: "fluisteren", english: "to whisper", type: "regular", example: "Zij fluistert zachtjes — She whispers softly", level: 2, cat: "communication" },
+  { dutch: "zingen", english: "to sing", type: "irregular", example: "Ik zing een lied — I sing a song", level: 2, cat: "communication" },
+  { dutch: "beloven", english: "to promise", type: "regular", example: "Ik beloof het — I promise", level: 2, cat: "communication" },
+  { dutch: "uitleggen", english: "to explain", type: "regular", example: "Leg het uit — Explain it", level: 2, cat: "communication" },
+  { dutch: "bedoelen", english: "to mean (intend)", type: "regular", example: "Wat bedoel je? — What do you mean?", level: 2, cat: "communication" },
+  { dutch: "bellen", english: "to call (phone)", type: "regular", example: "Ik bel je morgen — I'll call you tomorrow", level: 2, cat: "communication" },
+  { dutch: "sturen", english: "to send", type: "regular", example: "Ik stuur een bericht — I send a message", level: 2, cat: "communication" },
+  { dutch: "klagen", english: "to complain", type: "regular", example: "Hij klaagt altijd — He always complains", level: 2, cat: "communication" },
+  { dutch: "schreeuwen", english: "to scream / yell", type: "regular", example: "Schreeuw niet zo — Don't yell like that", level: 2, cat: "communication" },
   // Life & feelings (extra)
-  { dutch: "koken", english: "to cook", type: "regular", example: "Ik kook vanavond — I cook tonight", cat: "life" },
-  { dutch: "wassen", english: "to wash", type: "irregular", example: "Ik was mijn handen — I wash my hands", cat: "life" },
-  { dutch: "schoonmaken", english: "to clean", type: "regular", example: "Ik maak het huis schoon — I clean the house", cat: "life" },
-  { dutch: "huilen", english: "to cry", type: "regular", example: "Het kind huilt — The child cries", cat: "life" },
-  { dutch: "lachen", english: "to laugh", type: "regular", example: "Wij lachen samen — We laugh together", cat: "life" },
-  { dutch: "dromen", english: "to dream", type: "regular", example: "Ik droom over vakantie — I dream about vacation", cat: "life" },
-  { dutch: "trouwen", english: "to marry", type: "regular", example: "Zij trouwen in juni — They marry in June", cat: "life" },
-  { dutch: "sterven", english: "to die", type: "irregular", example: "De bloem sterft — The flower dies", cat: "life" },
-  { dutch: "rusten", english: "to rest", type: "regular", example: "Ik moet rusten — I need to rest", cat: "life" },
-  { dutch: "zorgen", english: "to care / worry", type: "regular", example: "Ik zorg voor je — I take care of you", cat: "life" },
+  { dutch: "koken", english: "to cook", type: "regular", example: "Ik kook vanavond — I cook tonight", level: 2, cat: "life" },
+  { dutch: "wassen", english: "to wash", type: "irregular", example: "Ik was mijn handen — I wash my hands", level: 2, cat: "life" },
+  { dutch: "schoonmaken", english: "to clean", type: "regular", example: "Ik maak het huis schoon — I clean the house", level: 2, cat: "life" },
+  { dutch: "huilen", english: "to cry", type: "regular", example: "Het kind huilt — The child cries", level: 2, cat: "life" },
+  { dutch: "lachen", english: "to laugh", type: "regular", example: "Wij lachen samen — We laugh together", level: 2, cat: "life" },
+  { dutch: "dromen", english: "to dream", type: "regular", example: "Ik droom over vakantie — I dream about vacation", level: 2, cat: "life" },
+  { dutch: "trouwen", english: "to marry", type: "regular", example: "Zij trouwen in juni — They marry in June", level: 2, cat: "life" },
+  { dutch: "sterven", english: "to die", type: "irregular", example: "De bloem sterft — The flower dies", level: 2, cat: "life" },
+  { dutch: "rusten", english: "to rest", type: "regular", example: "Ik moet rusten — I need to rest", level: 2, cat: "life" },
+  { dutch: "zorgen", english: "to care / worry", type: "regular", example: "Ik zorg voor je — I take care of you", level: 2, cat: "life" },
 ];
 
 // ── ADJECTIVES ──
 const ADJECTIVES = [
   // Basics
-  { dutch: "groot", english: "big / large", type: "common", example: "Een groot huis — A big house", cat: "basics" },
-  { dutch: "klein", english: "small / little", type: "common", example: "Een klein kind — A small child", cat: "basics" },
-  { dutch: "goed", english: "good", type: "common", example: "Het eten is goed — The food is good", cat: "basics" },
-  { dutch: "slecht", english: "bad", type: "common", example: "Slecht weer vandaag — Bad weather today", cat: "basics" },
-  { dutch: "nieuw", english: "new", type: "common", example: "Een nieuwe auto — A new car", cat: "basics" },
-  { dutch: "oud", english: "old", type: "common", example: "Een oud boek — An old book", cat: "basics" },
-  { dutch: "jong", english: "young", type: "common", example: "Een jonge vrouw — A young woman", cat: "basics" },
-  { dutch: "lang", english: "long / tall", type: "common", example: "Hij is lang — He is tall", cat: "basics" },
-  { dutch: "kort", english: "short / brief", type: "common", example: "Een kort verhaal — A short story", cat: "basics" },
-  { dutch: "mooi", english: "beautiful / nice", type: "common", example: "Een mooie dag — A beautiful day", cat: "basics" },
+  { dutch: "groot", english: "big / large", type: "common", example: "Een groot huis — A big house", level: 1, cat: "basics" },
+  { dutch: "klein", english: "small / little", type: "common", example: "Een klein kind — A small child", level: 1, cat: "basics" },
+  { dutch: "goed", english: "good", type: "common", example: "Het eten is goed — The food is good", level: 1, cat: "basics" },
+  { dutch: "slecht", english: "bad", type: "common", example: "Slecht weer vandaag — Bad weather today", level: 1, cat: "basics" },
+  { dutch: "nieuw", english: "new", type: "common", example: "Een nieuwe auto — A new car", level: 1, cat: "basics" },
+  { dutch: "oud", english: "old", type: "common", example: "Een oud boek — An old book", level: 1, cat: "basics" },
+  { dutch: "jong", english: "young", type: "common", example: "Een jonge vrouw — A young woman", level: 1, cat: "basics" },
+  { dutch: "lang", english: "long / tall", type: "common", example: "Hij is lang — He is tall", level: 1, cat: "basics" },
+  { dutch: "kort", english: "short / brief", type: "common", example: "Een kort verhaal — A short story", level: 1, cat: "basics" },
+  { dutch: "mooi", english: "beautiful / nice", type: "common", example: "Een mooie dag — A beautiful day", level: 1, cat: "basics" },
 
   // Feelings & character
-  { dutch: "blij", english: "happy / glad", type: "common", example: "Ik ben blij — I am happy", cat: "feelings" },
-  { dutch: "verdrietig", english: "sad", type: "common", example: "Hij is verdrietig — He is sad", cat: "feelings" },
-  { dutch: "boos", english: "angry", type: "common", example: "Ze is boos — She is angry", cat: "feelings" },
-  { dutch: "bang", english: "afraid / scared", type: "common", example: "Ik ben bang — I am scared", cat: "feelings" },
-  { dutch: "moe", english: "tired", type: "common", example: "Ik ben moe — I am tired", cat: "feelings" },
-  { dutch: "ziek", english: "sick / ill", type: "common", example: "Hij is ziek — He is sick", cat: "feelings" },
-  { dutch: "gezond", english: "healthy", type: "common", example: "Gezond eten — Healthy food", cat: "feelings" },
-  { dutch: "sterk", english: "strong", type: "common", example: "Een sterke man — A strong man", cat: "feelings" },
-  { dutch: "zwak", english: "weak", type: "common", example: "Een zwak signaal — A weak signal", cat: "feelings" },
-  { dutch: "lief", english: "sweet / kind", type: "common", example: "Een lief meisje — A sweet girl", cat: "feelings" },
+  { dutch: "blij", english: "happy / glad", type: "common", example: "Ik ben blij — I am happy", level: 1, cat: "feelings" },
+  { dutch: "verdrietig", english: "sad", type: "common", example: "Hij is verdrietig — He is sad", level: 1, cat: "feelings" },
+  { dutch: "boos", english: "angry", type: "common", example: "Ze is boos — She is angry", level: 1, cat: "feelings" },
+  { dutch: "bang", english: "afraid / scared", type: "common", example: "Ik ben bang — I am scared", level: 1, cat: "feelings" },
+  { dutch: "moe", english: "tired", type: "common", example: "Ik ben moe — I am tired", level: 1, cat: "feelings" },
+  { dutch: "ziek", english: "sick / ill", type: "common", example: "Hij is ziek — He is sick", level: 1, cat: "feelings" },
+  { dutch: "gezond", english: "healthy", type: "common", example: "Gezond eten — Healthy food", level: 1, cat: "feelings" },
+  { dutch: "sterk", english: "strong", type: "common", example: "Een sterke man — A strong man", level: 1, cat: "feelings" },
+  { dutch: "zwak", english: "weak", type: "common", example: "Een zwak signaal — A weak signal", level: 1, cat: "feelings" },
+  { dutch: "lief", english: "sweet / kind", type: "common", example: "Een lief meisje — A sweet girl", level: 1, cat: "feelings" },
 
   // Appearance & senses
-  { dutch: "warm", english: "warm / hot", type: "common", example: "Het is warm buiten — It is warm outside", cat: "senses" },
-  { dutch: "koud", english: "cold", type: "common", example: "Het water is koud — The water is cold", cat: "senses" },
-  { dutch: "licht", english: "light / bright", type: "common", example: "Een lichte kamer — A bright room", cat: "senses" },
-  { dutch: "donker", english: "dark", type: "common", example: "Een donkere nacht — A dark night", cat: "senses" },
-  { dutch: "hard", english: "hard / loud", type: "common", example: "Harde muziek — Loud music", cat: "senses" },
-  { dutch: "zacht", english: "soft / gentle", type: "common", example: "Een zacht kussen — A soft pillow", cat: "senses" },
-  { dutch: "lekker", english: "tasty / nice", type: "common", example: "Lekker eten — Tasty food", cat: "senses" },
-  { dutch: "vies", english: "dirty / gross", type: "common", example: "Vieze handen — Dirty hands", cat: "senses" },
-  { dutch: "schoon", english: "clean", type: "common", example: "Een schone keuken — A clean kitchen", cat: "senses" },
-  { dutch: "luid", english: "loud", type: "common", example: "Een luide knal — A loud bang", cat: "senses" },
+  { dutch: "warm", english: "warm / hot", type: "common", example: "Het is warm buiten — It is warm outside", level: 1, cat: "senses" },
+  { dutch: "koud", english: "cold", type: "common", example: "Het water is koud — The water is cold", level: 1, cat: "senses" },
+  { dutch: "licht", english: "light / bright", type: "common", example: "Een lichte kamer — A bright room", level: 1, cat: "senses" },
+  { dutch: "donker", english: "dark", type: "common", example: "Een donkere nacht — A dark night", level: 1, cat: "senses" },
+  { dutch: "hard", english: "hard / loud", type: "common", example: "Harde muziek — Loud music", level: 1, cat: "senses" },
+  { dutch: "zacht", english: "soft / gentle", type: "common", example: "Een zacht kussen — A soft pillow", level: 1, cat: "senses" },
+  { dutch: "lekker", english: "tasty / nice", type: "common", example: "Lekker eten — Tasty food", level: 1, cat: "senses" },
+  { dutch: "vies", english: "dirty / gross", type: "common", example: "Vieze handen — Dirty hands", level: 1, cat: "senses" },
+  { dutch: "schoon", english: "clean", type: "common", example: "Een schone keuken — A clean kitchen", level: 1, cat: "senses" },
+  { dutch: "luid", english: "loud", type: "common", example: "Een luide knal — A loud bang", level: 1, cat: "senses" },
 
   // Quantity & quality
-  { dutch: "veel", english: "much / many", type: "common", example: "Veel mensen — Many people", cat: "quantity" },
-  { dutch: "weinig", english: "few / little", type: "common", example: "Weinig tijd — Little time", cat: "quantity" },
-  { dutch: "snel", english: "fast / quick", type: "common", example: "Een snelle auto — A fast car", cat: "quantity" },
-  { dutch: "langzaam", english: "slow", type: "common", example: "Langzaam lopen — Walk slowly", cat: "quantity" },
-  { dutch: "duur", english: "expensive", type: "common", example: "Een duur restaurant — An expensive restaurant", cat: "quantity" },
-  { dutch: "goedkoop", english: "cheap", type: "common", example: "Goedkope kleren — Cheap clothes", cat: "quantity" },
-  { dutch: "makkelijk", english: "easy", type: "common", example: "Een makkelijke vraag — An easy question", cat: "quantity" },
-  { dutch: "moeilijk", english: "difficult", type: "common", example: "Een moeilijk examen — A difficult exam", cat: "quantity" },
-  { dutch: "belangrijk", english: "important", type: "common", example: "Een belangrijk besluit — An important decision", cat: "quantity" },
-  { dutch: "mogelijk", english: "possible", type: "common", example: "Alles is mogelijk — Everything is possible", cat: "quantity" },
+  { dutch: "veel", english: "much / many", type: "common", example: "Veel mensen — Many people", level: 1, cat: "quantity" },
+  { dutch: "weinig", english: "few / little", type: "common", example: "Weinig tijd — Little time", level: 1, cat: "quantity" },
+  { dutch: "snel", english: "fast / quick", type: "common", example: "Een snelle auto — A fast car", level: 1, cat: "quantity" },
+  { dutch: "langzaam", english: "slow", type: "common", example: "Langzaam lopen — Walk slowly", level: 1, cat: "quantity" },
+  { dutch: "duur", english: "expensive", type: "common", example: "Een duur restaurant — An expensive restaurant", level: 1, cat: "quantity" },
+  { dutch: "goedkoop", english: "cheap", type: "common", example: "Goedkope kleren — Cheap clothes", level: 1, cat: "quantity" },
+  { dutch: "makkelijk", english: "easy", type: "common", example: "Een makkelijke vraag — An easy question", level: 1, cat: "quantity" },
+  { dutch: "moeilijk", english: "difficult", type: "common", example: "Een moeilijk examen — A difficult exam", level: 1, cat: "quantity" },
+  { dutch: "belangrijk", english: "important", type: "common", example: "Een belangrijk besluit — An important decision", level: 1, cat: "quantity" },
+  { dutch: "mogelijk", english: "possible", type: "common", example: "Alles is mogelijk — Everything is possible", level: 1, cat: "quantity" },
 
   // Colours & description
-  { dutch: "rood", english: "red", type: "colour", example: "Een rode roos — A red rose", cat: "colours" },
-  { dutch: "blauw", english: "blue", type: "colour", example: "Een blauwe lucht — A blue sky", cat: "colours" },
-  { dutch: "groen", english: "green", type: "colour", example: "Groen gras — Green grass", cat: "colours" },
-  { dutch: "geel", english: "yellow", type: "colour", example: "De zon is geel — The sun is yellow", cat: "colours" },
-  { dutch: "wit", english: "white", type: "colour", example: "Witte sneeuw — White snow", cat: "colours" },
-  { dutch: "zwart", english: "black", type: "colour", example: "Een zwarte kat — A black cat", cat: "colours" },
-  { dutch: "bruin", english: "brown", type: "colour", example: "Bruine ogen — Brown eyes", cat: "colours" },
-  { dutch: "grijs", english: "grey", type: "colour", example: "Grijze wolken — Grey clouds", cat: "colours" },
-  { dutch: "roze", english: "pink", type: "colour", example: "Een roze bloem — A pink flower", cat: "colours" },
-  { dutch: "oranje", english: "orange", type: "colour", example: "Een oranje trui — An orange sweater", cat: "colours" },
+  { dutch: "rood", english: "red", type: "colour", example: "Een rode roos — A red rose", level: 1, cat: "colours" },
+  { dutch: "blauw", english: "blue", type: "colour", example: "Een blauwe lucht — A blue sky", level: 1, cat: "colours" },
+  { dutch: "groen", english: "green", type: "colour", example: "Groen gras — Green grass", level: 1, cat: "colours" },
+  { dutch: "geel", english: "yellow", type: "colour", example: "De zon is geel — The sun is yellow", level: 1, cat: "colours" },
+  { dutch: "wit", english: "white", type: "colour", example: "Witte sneeuw — White snow", level: 1, cat: "colours" },
+  { dutch: "zwart", english: "black", type: "colour", example: "Een zwarte kat — A black cat", level: 1, cat: "colours" },
+  { dutch: "bruin", english: "brown", type: "colour", example: "Bruine ogen — Brown eyes", level: 1, cat: "colours" },
+  { dutch: "grijs", english: "grey", type: "colour", example: "Grijze wolken — Grey clouds", level: 1, cat: "colours" },
+  { dutch: "roze", english: "pink", type: "colour", example: "Een roze bloem — A pink flower", level: 1, cat: "colours" },
+  { dutch: "oranje", english: "orange", type: "colour", example: "Een oranje trui — An orange sweater", level: 1, cat: "colours" },
   // Basics (extra)
-  { dutch: "breed", english: "wide / broad", type: "common", example: "Een brede rivier — A wide river", cat: "basics" },
-  { dutch: "smal", english: "narrow", type: "common", example: "Een smalle straat — A narrow street", cat: "basics" },
-  { dutch: "dik", english: "thick / fat", type: "common", example: "Een dik boek — A thick book", cat: "basics" },
-  { dutch: "dun", english: "thin", type: "common", example: "Een dunne lijn — A thin line", cat: "basics" },
-  { dutch: "hoog", english: "high / tall", type: "common", example: "Een hoog gebouw — A tall building", cat: "basics" },
-  { dutch: "laag", english: "low", type: "common", example: "Een lage prijs — A low price", cat: "basics" },
-  { dutch: "diep", english: "deep", type: "common", example: "Het water is diep — The water is deep", cat: "basics" },
-  { dutch: "rond", english: "round", type: "common", example: "Een ronde tafel — A round table", cat: "basics" },
-  { dutch: "plat", english: "flat", type: "common", example: "Nederland is plat — The Netherlands is flat", cat: "basics" },
-  { dutch: "recht", english: "straight", type: "common", example: "Een rechte weg — A straight road", cat: "basics" },
+  { dutch: "breed", english: "wide / broad", type: "common", example: "Een brede rivier — A wide river", level: 2, cat: "basics" },
+  { dutch: "smal", english: "narrow", type: "common", example: "Een smalle straat — A narrow street", level: 2, cat: "basics" },
+  { dutch: "dik", english: "thick / fat", type: "common", example: "Een dik boek — A thick book", level: 2, cat: "basics" },
+  { dutch: "dun", english: "thin", type: "common", example: "Een dunne lijn — A thin line", level: 2, cat: "basics" },
+  { dutch: "hoog", english: "high / tall", type: "common", example: "Een hoog gebouw — A tall building", level: 2, cat: "basics" },
+  { dutch: "laag", english: "low", type: "common", example: "Een lage prijs — A low price", level: 2, cat: "basics" },
+  { dutch: "diep", english: "deep", type: "common", example: "Het water is diep — The water is deep", level: 2, cat: "basics" },
+  { dutch: "rond", english: "round", type: "common", example: "Een ronde tafel — A round table", level: 2, cat: "basics" },
+  { dutch: "plat", english: "flat", type: "common", example: "Nederland is plat — The Netherlands is flat", level: 2, cat: "basics" },
+  { dutch: "recht", english: "straight", type: "common", example: "Een rechte weg — A straight road", level: 2, cat: "basics" },
   // Feelings (extra)
-  { dutch: "gelukkig", english: "happy / fortunate", type: "common", example: "Ik ben gelukkig — I am happy", cat: "feelings" },
-  { dutch: "nerveus", english: "nervous", type: "common", example: "Ik ben nerveus — I am nervous", cat: "feelings" },
-  { dutch: "rustig", english: "calm / quiet", type: "common", example: "Blijf rustig — Stay calm", cat: "feelings" },
-  { dutch: "trots", english: "proud", type: "common", example: "Ik ben trots op je — I am proud of you", cat: "feelings" },
-  { dutch: "jaloers", english: "jealous", type: "common", example: "Hij is jaloers — He is jealous", cat: "feelings" },
-  { dutch: "eenzaam", english: "lonely", type: "common", example: "Ik voel me eenzaam — I feel lonely", cat: "feelings" },
-  { dutch: "dapper", english: "brave", type: "common", example: "Een dapper kind — A brave child", cat: "feelings" },
-  { dutch: "dom", english: "stupid / dumb", type: "common", example: "Dat was dom — That was stupid", cat: "feelings" },
-  { dutch: "slim", english: "smart / clever", type: "common", example: "Een slim meisje — A smart girl", cat: "feelings" },
-  { dutch: "vriendelijk", english: "friendly / kind", type: "common", example: "Een vriendelijke buurman — A friendly neighbour", cat: "feelings" },
+  { dutch: "gelukkig", english: "happy / fortunate", type: "common", example: "Ik ben gelukkig — I am happy", level: 2, cat: "feelings" },
+  { dutch: "nerveus", english: "nervous", type: "common", example: "Ik ben nerveus — I am nervous", level: 2, cat: "feelings" },
+  { dutch: "rustig", english: "calm / quiet", type: "common", example: "Blijf rustig — Stay calm", level: 2, cat: "feelings" },
+  { dutch: "trots", english: "proud", type: "common", example: "Ik ben trots op je — I am proud of you", level: 2, cat: "feelings" },
+  { dutch: "jaloers", english: "jealous", type: "common", example: "Hij is jaloers — He is jealous", level: 2, cat: "feelings" },
+  { dutch: "eenzaam", english: "lonely", type: "common", example: "Ik voel me eenzaam — I feel lonely", level: 2, cat: "feelings" },
+  { dutch: "dapper", english: "brave", type: "common", example: "Een dapper kind — A brave child", level: 2, cat: "feelings" },
+  { dutch: "dom", english: "stupid / dumb", type: "common", example: "Dat was dom — That was stupid", level: 2, cat: "feelings" },
+  { dutch: "slim", english: "smart / clever", type: "common", example: "Een slim meisje — A smart girl", level: 2, cat: "feelings" },
+  { dutch: "vriendelijk", english: "friendly / kind", type: "common", example: "Een vriendelijke buurman — A friendly neighbour", level: 2, cat: "feelings" },
   // Senses (extra)
-  { dutch: "nat", english: "wet", type: "common", example: "De straat is nat — The street is wet", cat: "senses" },
-  { dutch: "droog", english: "dry", type: "common", example: "Het is droog buiten — It is dry outside", cat: "senses" },
-  { dutch: "scherp", english: "sharp", type: "common", example: "Een scherp mes — A sharp knife", cat: "senses" },
-  { dutch: "glad", english: "smooth / slippery", type: "common", example: "De weg is glad — The road is slippery", cat: "senses" },
-  { dutch: "ruw", english: "rough", type: "common", example: "Een ruw oppervlak — A rough surface", cat: "senses" },
-  { dutch: "zwaar", english: "heavy", type: "common", example: "Een zware koffer — A heavy suitcase", cat: "senses" },
-  { dutch: "stil", english: "quiet / silent", type: "common", example: "Wees stil — Be quiet", cat: "senses" },
-  { dutch: "bitter", english: "bitter", type: "common", example: "Bittere koffie — Bitter coffee", cat: "senses" },
-  { dutch: "zoet", english: "sweet (taste)", type: "common", example: "Zoete aardbeien — Sweet strawberries", cat: "senses" },
-  { dutch: "fris", english: "fresh / cool", type: "common", example: "Frisse lucht — Fresh air", cat: "senses" },
+  { dutch: "nat", english: "wet", type: "common", example: "De straat is nat — The street is wet", level: 2, cat: "senses" },
+  { dutch: "droog", english: "dry", type: "common", example: "Het is droog buiten — It is dry outside", level: 2, cat: "senses" },
+  { dutch: "scherp", english: "sharp", type: "common", example: "Een scherp mes — A sharp knife", level: 2, cat: "senses" },
+  { dutch: "glad", english: "smooth / slippery", type: "common", example: "De weg is glad — The road is slippery", level: 2, cat: "senses" },
+  { dutch: "ruw", english: "rough", type: "common", example: "Een ruw oppervlak — A rough surface", level: 2, cat: "senses" },
+  { dutch: "zwaar", english: "heavy", type: "common", example: "Een zware koffer — A heavy suitcase", level: 2, cat: "senses" },
+  { dutch: "stil", english: "quiet / silent", type: "common", example: "Wees stil — Be quiet", level: 2, cat: "senses" },
+  { dutch: "bitter", english: "bitter", type: "common", example: "Bittere koffie — Bitter coffee", level: 2, cat: "senses" },
+  { dutch: "zoet", english: "sweet (taste)", type: "common", example: "Zoete aardbeien — Sweet strawberries", level: 2, cat: "senses" },
+  { dutch: "fris", english: "fresh / cool", type: "common", example: "Frisse lucht — Fresh air", level: 2, cat: "senses" },
   // Quantity (extra)
-  { dutch: "gratis", english: "free (no cost)", type: "common", example: "Het is gratis — It is free", cat: "quantity" },
-  { dutch: "vol", english: "full", type: "common", example: "De bus is vol — The bus is full", cat: "quantity" },
-  { dutch: "leeg", english: "empty", type: "common", example: "Het glas is leeg — The glass is empty", cat: "quantity" },
-  { dutch: "nodig", english: "necessary / needed", type: "common", example: "Het is nodig — It is necessary", cat: "quantity" },
-  { dutch: "klaar", english: "ready / done", type: "common", example: "Het eten is klaar — The food is ready", cat: "quantity" },
-  { dutch: "veilig", english: "safe", type: "common", example: "De buurt is veilig — The neighbourhood is safe", cat: "quantity" },
-  { dutch: "gevaarlijk", english: "dangerous", type: "common", example: "Het is gevaarlijk — It is dangerous", cat: "quantity" },
-  { dutch: "anders", english: "different / else", type: "common", example: "Iets anders — Something else", cat: "quantity" },
-  { dutch: "zeker", english: "sure / certain", type: "common", example: "Ik weet het zeker — I am sure", cat: "quantity" },
-  { dutch: "eigen", english: "own", type: "common", example: "Mijn eigen huis — My own house", cat: "quantity" },
+  { dutch: "gratis", english: "free (no cost)", type: "common", example: "Het is gratis — It is free", level: 2, cat: "quantity" },
+  { dutch: "vol", english: "full", type: "common", example: "De bus is vol — The bus is full", level: 2, cat: "quantity" },
+  { dutch: "leeg", english: "empty", type: "common", example: "Het glas is leeg — The glass is empty", level: 2, cat: "quantity" },
+  { dutch: "nodig", english: "necessary / needed", type: "common", example: "Het is nodig — It is necessary", level: 2, cat: "quantity" },
+  { dutch: "klaar", english: "ready / done", type: "common", example: "Het eten is klaar — The food is ready", level: 2, cat: "quantity" },
+  { dutch: "veilig", english: "safe", type: "common", example: "De buurt is veilig — The neighbourhood is safe", level: 2, cat: "quantity" },
+  { dutch: "gevaarlijk", english: "dangerous", type: "common", example: "Het is gevaarlijk — It is dangerous", level: 2, cat: "quantity" },
+  { dutch: "anders", english: "different / else", type: "common", example: "Iets anders — Something else", level: 2, cat: "quantity" },
+  { dutch: "zeker", english: "sure / certain", type: "common", example: "Ik weet het zeker — I am sure", level: 2, cat: "quantity" },
+  { dutch: "eigen", english: "own", type: "common", example: "Mijn eigen huis — My own house", level: 2, cat: "quantity" },
   // Colours (extra)
-  { dutch: "paars", english: "purple", type: "colour", example: "Een paarse jurk — A purple dress", cat: "colours" },
-  { dutch: "gouden", english: "golden", type: "colour", example: "Een gouden ring — A golden ring", cat: "colours" },
-  { dutch: "zilveren", english: "silver", type: "colour", example: "Een zilveren ketting — A silver necklace", cat: "colours" },
-  { dutch: "lelijk", english: "ugly", type: "common", example: "Een lelijk gebouw — An ugly building", cat: "colours" },
-  { dutch: "helder", english: "clear / bright", type: "common", example: "Een heldere lucht — A clear sky", cat: "colours" },
-  { dutch: "dof", english: "dull / dim", type: "common", example: "Een dof licht — A dim light", cat: "colours" },
-  { dutch: "vrolijk", english: "cheerful / merry", type: "common", example: "Vrolijke kleuren — Cheerful colours", cat: "colours" },
-  { dutch: "saai", english: "boring / dull", type: "common", example: "Een saaie film — A boring movie", cat: "colours" },
-  { dutch: "leuk", english: "fun / nice", type: "common", example: "Een leuk feest — A fun party", cat: "colours" },
-  { dutch: "vreemd", english: "strange / weird", type: "common", example: "Een vreemd geluid — A strange sound", cat: "colours" },
+  { dutch: "paars", english: "purple", type: "colour", example: "Een paarse jurk — A purple dress", level: 2, cat: "colours" },
+  { dutch: "gouden", english: "golden", type: "colour", example: "Een gouden ring — A golden ring", level: 2, cat: "colours" },
+  { dutch: "zilveren", english: "silver", type: "colour", example: "Een zilveren ketting — A silver necklace", level: 2, cat: "colours" },
+  { dutch: "lelijk", english: "ugly", type: "common", example: "Een lelijk gebouw — An ugly building", level: 2, cat: "colours" },
+  { dutch: "helder", english: "clear / bright", type: "common", example: "Een heldere lucht — A clear sky", level: 2, cat: "colours" },
+  { dutch: "dof", english: "dull / dim", type: "common", example: "Een dof licht — A dim light", level: 2, cat: "colours" },
+  { dutch: "vrolijk", english: "cheerful / merry", type: "common", example: "Vrolijke kleuren — Cheerful colours", level: 2, cat: "colours" },
+  { dutch: "saai", english: "boring / dull", type: "common", example: "Een saaie film — A boring movie", level: 2, cat: "colours" },
+  { dutch: "leuk", english: "fun / nice", type: "common", example: "Een leuk feest — A fun party", level: 2, cat: "colours" },
+  { dutch: "vreemd", english: "strange / weird", type: "common", example: "Een vreemd geluid — A strange sound", level: 2, cat: "colours" },
 ];
 
 // ── NOUNS ──
 const NOUNS = [
   // People & family
-  { dutch: "de man", english: "the man", type: "de-word", example: "De man loopt — The man walks", cat: "people" },
-  { dutch: "de vrouw", english: "the woman", type: "de-word", example: "De vrouw lacht — The woman laughs", cat: "people" },
-  { dutch: "het kind", english: "the child", type: "het-word", example: "Het kind speelt — The child plays", cat: "people" },
-  { dutch: "de vriend", english: "the friend", type: "de-word", example: "Mijn vriend komt — My friend is coming", cat: "people" },
-  { dutch: "de familie", english: "the family", type: "de-word", example: "Mijn familie is groot — My family is big", cat: "people" },
-  { dutch: "de moeder", english: "the mother", type: "de-word", example: "Mijn moeder kookt — My mother cooks", cat: "people" },
-  { dutch: "de vader", english: "the father", type: "de-word", example: "Mijn vader werkt — My father works", cat: "people" },
-  { dutch: "de broer", english: "the brother", type: "de-word", example: "Mijn broer is jong — My brother is young", cat: "people" },
-  { dutch: "de zus", english: "the sister", type: "de-word", example: "Mijn zus studeert — My sister studies", cat: "people" },
-  { dutch: "het meisje", english: "the girl", type: "het-word", example: "Het meisje zingt — The girl sings", cat: "people" },
+  { dutch: "de man", english: "the man", type: "de-word", example: "De man loopt — The man walks", level: 1, cat: "people" },
+  { dutch: "de vrouw", english: "the woman", type: "de-word", example: "De vrouw lacht — The woman laughs", level: 1, cat: "people" },
+  { dutch: "het kind", english: "the child", type: "het-word", example: "Het kind speelt — The child plays", level: 1, cat: "people" },
+  { dutch: "de vriend", english: "the friend", type: "de-word", example: "Mijn vriend komt — My friend is coming", level: 1, cat: "people" },
+  { dutch: "de familie", english: "the family", type: "de-word", example: "Mijn familie is groot — My family is big", level: 1, cat: "people" },
+  { dutch: "de moeder", english: "the mother", type: "de-word", example: "Mijn moeder kookt — My mother cooks", level: 1, cat: "people" },
+  { dutch: "de vader", english: "the father", type: "de-word", example: "Mijn vader werkt — My father works", level: 1, cat: "people" },
+  { dutch: "de broer", english: "the brother", type: "de-word", example: "Mijn broer is jong — My brother is young", level: 1, cat: "people" },
+  { dutch: "de zus", english: "the sister", type: "de-word", example: "Mijn zus studeert — My sister studies", level: 1, cat: "people" },
+  { dutch: "het meisje", english: "the girl", type: "het-word", example: "Het meisje zingt — The girl sings", level: 1, cat: "people" },
 
   // Home & places
-  { dutch: "het huis", english: "the house", type: "het-word", example: "Het huis is groot — The house is big", cat: "home" },
-  { dutch: "de kamer", english: "the room", type: "de-word", example: "De kamer is schoon — The room is clean", cat: "home" },
-  { dutch: "de keuken", english: "the kitchen", type: "de-word", example: "Ik ben in de keuken — I am in the kitchen", cat: "home" },
-  { dutch: "de deur", english: "the door", type: "de-word", example: "Doe de deur dicht — Close the door", cat: "home" },
-  { dutch: "het raam", english: "the window", type: "het-word", example: "Open het raam — Open the window", cat: "home" },
-  { dutch: "de tafel", english: "the table", type: "de-word", example: "De tafel is rond — The table is round", cat: "home" },
-  { dutch: "de stoel", english: "the chair", type: "de-word", example: "Zit op de stoel — Sit on the chair", cat: "home" },
-  { dutch: "het bed", english: "the bed", type: "het-word", example: "Ik lig in bed — I lie in bed", cat: "home" },
-  { dutch: "de stad", english: "the city", type: "de-word", example: "Amsterdam is een mooie stad — Amsterdam is a beautiful city", cat: "home" },
-  { dutch: "de straat", english: "the street", type: "de-word", example: "De straat is lang — The street is long", cat: "home" },
+  { dutch: "het huis", english: "the house", type: "het-word", example: "Het huis is groot — The house is big", level: 1, cat: "home" },
+  { dutch: "de kamer", english: "the room", type: "de-word", example: "De kamer is schoon — The room is clean", level: 1, cat: "home" },
+  { dutch: "de keuken", english: "the kitchen", type: "de-word", example: "Ik ben in de keuken — I am in the kitchen", level: 1, cat: "home" },
+  { dutch: "de deur", english: "the door", type: "de-word", example: "Doe de deur dicht — Close the door", level: 1, cat: "home" },
+  { dutch: "het raam", english: "the window", type: "het-word", example: "Open het raam — Open the window", level: 1, cat: "home" },
+  { dutch: "de tafel", english: "the table", type: "de-word", example: "De tafel is rond — The table is round", level: 1, cat: "home" },
+  { dutch: "de stoel", english: "the chair", type: "de-word", example: "Zit op de stoel — Sit on the chair", level: 1, cat: "home" },
+  { dutch: "het bed", english: "the bed", type: "het-word", example: "Ik lig in bed — I lie in bed", level: 1, cat: "home" },
+  { dutch: "de stad", english: "the city", type: "de-word", example: "Amsterdam is een mooie stad — Amsterdam is a beautiful city", level: 1, cat: "home" },
+  { dutch: "de straat", english: "the street", type: "de-word", example: "De straat is lang — The street is long", level: 1, cat: "home" },
 
   // Food & drink
-  { dutch: "het water", english: "the water", type: "het-word", example: "Ik drink water — I drink water", cat: "food" },
-  { dutch: "het brood", english: "the bread", type: "het-word", example: "Ik eet brood — I eat bread", cat: "food" },
-  { dutch: "de kaas", english: "the cheese", type: "de-word", example: "Nederlandse kaas is lekker — Dutch cheese is tasty", cat: "food" },
-  { dutch: "de melk", english: "the milk", type: "de-word", example: "Ik drink melk — I drink milk", cat: "food" },
-  { dutch: "de koffie", english: "the coffee", type: "de-word", example: "Wil je koffie? — Do you want coffee?", cat: "food" },
-  { dutch: "de thee", english: "the tea", type: "de-word", example: "Een kopje thee — A cup of tea", cat: "food" },
-  { dutch: "het vlees", english: "the meat", type: "het-word", example: "Ik eet geen vlees — I don't eat meat", cat: "food" },
-  { dutch: "de appel", english: "the apple", type: "de-word", example: "De appel is rood — The apple is red", cat: "food" },
-  { dutch: "het ei", english: "the egg", type: "het-word", example: "Ik wil een ei — I want an egg", cat: "food" },
-  { dutch: "de soep", english: "the soup", type: "de-word", example: "De soep is warm — The soup is hot", cat: "food" },
+  { dutch: "het water", english: "the water", type: "het-word", example: "Ik drink water — I drink water", level: 1, cat: "food" },
+  { dutch: "het brood", english: "the bread", type: "het-word", example: "Ik eet brood — I eat bread", level: 1, cat: "food" },
+  { dutch: "de kaas", english: "the cheese", type: "de-word", example: "Nederlandse kaas is lekker — Dutch cheese is tasty", level: 1, cat: "food" },
+  { dutch: "de melk", english: "the milk", type: "de-word", example: "Ik drink melk — I drink milk", level: 1, cat: "food" },
+  { dutch: "de koffie", english: "the coffee", type: "de-word", example: "Wil je koffie? — Do you want coffee?", level: 1, cat: "food" },
+  { dutch: "de thee", english: "the tea", type: "de-word", example: "Een kopje thee — A cup of tea", level: 1, cat: "food" },
+  { dutch: "het vlees", english: "the meat", type: "het-word", example: "Ik eet geen vlees — I don't eat meat", level: 1, cat: "food" },
+  { dutch: "de appel", english: "the apple", type: "de-word", example: "De appel is rood — The apple is red", level: 1, cat: "food" },
+  { dutch: "het ei", english: "the egg", type: "het-word", example: "Ik wil een ei — I want an egg", level: 1, cat: "food" },
+  { dutch: "de soep", english: "the soup", type: "de-word", example: "De soep is warm — The soup is hot", level: 1, cat: "food" },
 
   // Time & nature
-  { dutch: "de dag", english: "the day", type: "de-word", example: "Een mooie dag — A beautiful day", cat: "time" },
-  { dutch: "de week", english: "the week", type: "de-word", example: "Volgende week — Next week", cat: "time" },
-  { dutch: "het jaar", english: "the year", type: "het-word", example: "Dit jaar — This year", cat: "time" },
-  { dutch: "de ochtend", english: "the morning", type: "de-word", example: "Goedemorgen! — Good morning!", cat: "time" },
-  { dutch: "de avond", english: "the evening", type: "de-word", example: "Goedenavond! — Good evening!", cat: "time" },
-  { dutch: "de zon", english: "the sun", type: "de-word", example: "De zon schijnt — The sun shines", cat: "time" },
-  { dutch: "de regen", english: "the rain", type: "de-word", example: "Het regent — It rains", cat: "time" },
-  { dutch: "de boom", english: "the tree", type: "de-word", example: "Een grote boom — A big tree", cat: "time" },
-  { dutch: "de bloem", english: "the flower", type: "de-word", example: "Een mooie bloem — A beautiful flower", cat: "time" },
-  { dutch: "het weer", english: "the weather", type: "het-word", example: "Het weer is goed — The weather is good", cat: "time" },
+  { dutch: "de dag", english: "the day", type: "de-word", example: "Een mooie dag — A beautiful day", level: 1, cat: "time" },
+  { dutch: "de week", english: "the week", type: "de-word", example: "Volgende week — Next week", level: 1, cat: "time" },
+  { dutch: "het jaar", english: "the year", type: "het-word", example: "Dit jaar — This year", level: 1, cat: "time" },
+  { dutch: "de ochtend", english: "the morning", type: "de-word", example: "Goedemorgen! — Good morning!", level: 1, cat: "time" },
+  { dutch: "de avond", english: "the evening", type: "de-word", example: "Goedenavond! — Good evening!", level: 1, cat: "time" },
+  { dutch: "de zon", english: "the sun", type: "de-word", example: "De zon schijnt — The sun shines", level: 1, cat: "time" },
+  { dutch: "de regen", english: "the rain", type: "de-word", example: "Het regent — It rains", level: 1, cat: "time" },
+  { dutch: "de boom", english: "the tree", type: "de-word", example: "Een grote boom — A big tree", level: 1, cat: "time" },
+  { dutch: "de bloem", english: "the flower", type: "de-word", example: "Een mooie bloem — A beautiful flower", level: 1, cat: "time" },
+  { dutch: "het weer", english: "the weather", type: "het-word", example: "Het weer is goed — The weather is good", level: 1, cat: "time" },
 
   // Daily life & objects
-  { dutch: "het boek", english: "the book", type: "het-word", example: "Ik lees een boek — I read a book", cat: "objects" },
-  { dutch: "de telefoon", english: "the phone", type: "de-word", example: "Mijn telefoon rinkelt — My phone rings", cat: "objects" },
-  { dutch: "de auto", english: "the car", type: "de-word", example: "De auto is nieuw — The car is new", cat: "objects" },
-  { dutch: "de fiets", english: "the bicycle", type: "de-word", example: "Ik ga met de fiets — I go by bike", cat: "objects" },
-  { dutch: "de trein", english: "the train", type: "de-word", example: "De trein is laat — The train is late", cat: "objects" },
-  { dutch: "het geld", english: "the money", type: "het-word", example: "Ik heb geen geld — I have no money", cat: "objects" },
-  { dutch: "de tas", english: "the bag", type: "de-word", example: "Mijn tas is zwaar — My bag is heavy", cat: "objects" },
-  { dutch: "de sleutel", english: "the key", type: "de-word", example: "Waar is de sleutel? — Where is the key?", cat: "objects" },
-  { dutch: "het werk", english: "the work / job", type: "het-word", example: "Ik ga naar het werk — I go to work", cat: "objects" },
-  { dutch: "de school", english: "the school", type: "de-word", example: "De school is dichtbij — The school is nearby", cat: "objects" },
+  { dutch: "het boek", english: "the book", type: "het-word", example: "Ik lees een boek — I read a book", level: 1, cat: "objects" },
+  { dutch: "de telefoon", english: "the phone", type: "de-word", example: "Mijn telefoon rinkelt — My phone rings", level: 1, cat: "objects" },
+  { dutch: "de auto", english: "the car", type: "de-word", example: "De auto is nieuw — The car is new", level: 1, cat: "objects" },
+  { dutch: "de fiets", english: "the bicycle", type: "de-word", example: "Ik ga met de fiets — I go by bike", level: 1, cat: "objects" },
+  { dutch: "de trein", english: "the train", type: "de-word", example: "De trein is laat — The train is late", level: 1, cat: "objects" },
+  { dutch: "het geld", english: "the money", type: "het-word", example: "Ik heb geen geld — I have no money", level: 1, cat: "objects" },
+  { dutch: "de tas", english: "the bag", type: "de-word", example: "Mijn tas is zwaar — My bag is heavy", level: 1, cat: "objects" },
+  { dutch: "de sleutel", english: "the key", type: "de-word", example: "Waar is de sleutel? — Where is the key?", level: 1, cat: "objects" },
+  { dutch: "het werk", english: "the work / job", type: "het-word", example: "Ik ga naar het werk — I go to work", level: 1, cat: "objects" },
+  { dutch: "de school", english: "the school", type: "de-word", example: "De school is dichtbij — The school is nearby", level: 1, cat: "objects" },
   // People & family (extra)
-  { dutch: "de jongen", english: "the boy", type: "de-word", example: "De jongen rent — The boy runs", cat: "people" },
-  { dutch: "de baby", english: "the baby", type: "de-word", example: "De baby slaapt — The baby sleeps", cat: "people" },
-  { dutch: "de buurman", english: "the neighbour", type: "de-word", example: "Mijn buurman is aardig — My neighbour is nice", cat: "people" },
-  { dutch: "de dokter", english: "the doctor", type: "de-word", example: "Ik ga naar de dokter — I go to the doctor", cat: "people" },
-  { dutch: "de leraar", english: "the teacher", type: "de-word", example: "De leraar legt uit — The teacher explains", cat: "people" },
-  { dutch: "de opa", english: "the grandfather", type: "de-word", example: "Mijn opa is oud — My grandfather is old", cat: "people" },
-  { dutch: "de oma", english: "the grandmother", type: "de-word", example: "Mijn oma kookt lekker — My grandmother cooks well", cat: "people" },
-  { dutch: "de collega", english: "the colleague", type: "de-word", example: "Mijn collega helpt me — My colleague helps me", cat: "people" },
-  { dutch: "de baas", english: "the boss", type: "de-word", example: "De baas is streng — The boss is strict", cat: "people" },
-  { dutch: "het lichaam", english: "the body", type: "het-word", example: "Het lichaam is sterk — The body is strong", cat: "people" },
+  { dutch: "de jongen", english: "the boy", type: "de-word", example: "De jongen rent — The boy runs", level: 2, cat: "people" },
+  { dutch: "de baby", english: "the baby", type: "de-word", example: "De baby slaapt — The baby sleeps", level: 2, cat: "people" },
+  { dutch: "de buurman", english: "the neighbour", type: "de-word", example: "Mijn buurman is aardig — My neighbour is nice", level: 2, cat: "people" },
+  { dutch: "de dokter", english: "the doctor", type: "de-word", example: "Ik ga naar de dokter — I go to the doctor", level: 2, cat: "people" },
+  { dutch: "de leraar", english: "the teacher", type: "de-word", example: "De leraar legt uit — The teacher explains", level: 2, cat: "people" },
+  { dutch: "de opa", english: "the grandfather", type: "de-word", example: "Mijn opa is oud — My grandfather is old", level: 2, cat: "people" },
+  { dutch: "de oma", english: "the grandmother", type: "de-word", example: "Mijn oma kookt lekker — My grandmother cooks well", level: 2, cat: "people" },
+  { dutch: "de collega", english: "the colleague", type: "de-word", example: "Mijn collega helpt me — My colleague helps me", level: 2, cat: "people" },
+  { dutch: "de baas", english: "the boss", type: "de-word", example: "De baas is streng — The boss is strict", level: 2, cat: "people" },
+  { dutch: "het lichaam", english: "the body", type: "het-word", example: "Het lichaam is sterk — The body is strong", level: 2, cat: "people" },
   // Home & places (extra)
-  { dutch: "de tuin", english: "the garden", type: "de-word", example: "De tuin is groen — The garden is green", cat: "home" },
-  { dutch: "de badkamer", english: "the bathroom", type: "de-word", example: "Ik ben in de badkamer — I am in the bathroom", cat: "home" },
-  { dutch: "de slaapkamer", english: "the bedroom", type: "de-word", example: "De slaapkamer is klein — The bedroom is small", cat: "home" },
-  { dutch: "de trap", english: "the stairs", type: "de-word", example: "Ik loop de trap op — I walk up the stairs", cat: "home" },
-  { dutch: "de muur", english: "the wall", type: "de-word", example: "De muur is wit — The wall is white", cat: "home" },
-  { dutch: "de vloer", english: "the floor", type: "de-word", example: "De vloer is schoon — The floor is clean", cat: "home" },
-  { dutch: "het dorp", english: "the village", type: "het-word", example: "Een klein dorp — A small village", cat: "home" },
-  { dutch: "de winkel", english: "the shop / store", type: "de-word", example: "De winkel is open — The shop is open", cat: "home" },
-  { dutch: "het ziekenhuis", english: "the hospital", type: "het-word", example: "Hij ligt in het ziekenhuis — He is in the hospital", cat: "home" },
-  { dutch: "het station", english: "the station", type: "het-word", example: "Ik wacht op het station — I wait at the station", cat: "home" },
+  { dutch: "de tuin", english: "the garden", type: "de-word", example: "De tuin is groen — The garden is green", level: 2, cat: "home" },
+  { dutch: "de badkamer", english: "the bathroom", type: "de-word", example: "Ik ben in de badkamer — I am in the bathroom", level: 2, cat: "home" },
+  { dutch: "de slaapkamer", english: "the bedroom", type: "de-word", example: "De slaapkamer is klein — The bedroom is small", level: 2, cat: "home" },
+  { dutch: "de trap", english: "the stairs", type: "de-word", example: "Ik loop de trap op — I walk up the stairs", level: 2, cat: "home" },
+  { dutch: "de muur", english: "the wall", type: "de-word", example: "De muur is wit — The wall is white", level: 2, cat: "home" },
+  { dutch: "de vloer", english: "the floor", type: "de-word", example: "De vloer is schoon — The floor is clean", level: 2, cat: "home" },
+  { dutch: "het dorp", english: "the village", type: "het-word", example: "Een klein dorp — A small village", level: 2, cat: "home" },
+  { dutch: "de winkel", english: "the shop / store", type: "de-word", example: "De winkel is open — The shop is open", level: 2, cat: "home" },
+  { dutch: "het ziekenhuis", english: "the hospital", type: "het-word", example: "Hij ligt in het ziekenhuis — He is in the hospital", level: 2, cat: "home" },
+  { dutch: "het station", english: "the station", type: "het-word", example: "Ik wacht op het station — I wait at the station", level: 2, cat: "home" },
   // Food & drink (extra)
-  { dutch: "de rijst", english: "the rice", type: "de-word", example: "Ik eet rijst — I eat rice", cat: "food" },
-  { dutch: "de aardappel", english: "the potato", type: "de-word", example: "Nederlandse aardappels — Dutch potatoes", cat: "food" },
-  { dutch: "de groente", english: "the vegetable", type: "de-word", example: "Eet je groente — Eat your vegetables", cat: "food" },
-  { dutch: "het fruit", english: "the fruit", type: "het-word", example: "Vers fruit is lekker — Fresh fruit is tasty", cat: "food" },
-  { dutch: "de vis", english: "the fish", type: "de-word", example: "Ik eet graag vis — I like to eat fish", cat: "food" },
-  { dutch: "de suiker", english: "the sugar", type: "de-word", example: "Suiker in de thee — Sugar in the tea", cat: "food" },
-  { dutch: "het zout", english: "the salt", type: "het-word", example: "Geef me het zout — Give me the salt", cat: "food" },
-  { dutch: "de boter", english: "the butter", type: "de-word", example: "Boter op het brood — Butter on the bread", cat: "food" },
-  { dutch: "het bier", english: "the beer", type: "het-word", example: "Een glas bier — A glass of beer", cat: "food" },
-  { dutch: "de wijn", english: "the wine", type: "de-word", example: "Rode wijn of witte wijn? — Red wine or white wine?", cat: "food" },
+  { dutch: "de rijst", english: "the rice", type: "de-word", example: "Ik eet rijst — I eat rice", level: 2, cat: "food" },
+  { dutch: "de aardappel", english: "the potato", type: "de-word", example: "Nederlandse aardappels — Dutch potatoes", level: 2, cat: "food" },
+  { dutch: "de groente", english: "the vegetable", type: "de-word", example: "Eet je groente — Eat your vegetables", level: 2, cat: "food" },
+  { dutch: "het fruit", english: "the fruit", type: "het-word", example: "Vers fruit is lekker — Fresh fruit is tasty", level: 2, cat: "food" },
+  { dutch: "de vis", english: "the fish", type: "de-word", example: "Ik eet graag vis — I like to eat fish", level: 2, cat: "food" },
+  { dutch: "de suiker", english: "the sugar", type: "de-word", example: "Suiker in de thee — Sugar in the tea", level: 2, cat: "food" },
+  { dutch: "het zout", english: "the salt", type: "het-word", example: "Geef me het zout — Give me the salt", level: 2, cat: "food" },
+  { dutch: "de boter", english: "the butter", type: "de-word", example: "Boter op het brood — Butter on the bread", level: 2, cat: "food" },
+  { dutch: "het bier", english: "the beer", type: "het-word", example: "Een glas bier — A glass of beer", level: 2, cat: "food" },
+  { dutch: "de wijn", english: "the wine", type: "de-word", example: "Rode wijn of witte wijn? — Red wine or white wine?", level: 2, cat: "food" },
   // Time & nature (extra)
-  { dutch: "de nacht", english: "the night", type: "de-word", example: "De nacht is lang — The night is long", cat: "time" },
-  { dutch: "de maand", english: "the month", type: "de-word", example: "Welke maand is het? — Which month is it?", cat: "time" },
-  { dutch: "het uur", english: "the hour", type: "het-word", example: "Over een uur — In one hour", cat: "time" },
-  { dutch: "de minuut", english: "the minute", type: "de-word", example: "Vijf minuten — Five minutes", cat: "time" },
-  { dutch: "de lente", english: "the spring", type: "de-word", example: "In de lente bloeien bloemen — In spring flowers bloom", cat: "time" },
-  { dutch: "de zomer", english: "the summer", type: "de-word", example: "De zomer is warm — The summer is warm", cat: "time" },
-  { dutch: "de herfst", english: "the autumn", type: "de-word", example: "De herfst is mooi — The autumn is beautiful", cat: "time" },
-  { dutch: "de winter", english: "the winter", type: "de-word", example: "De winter is koud — The winter is cold", cat: "time" },
-  { dutch: "de lucht", english: "the sky / air", type: "de-word", example: "De lucht is blauw — The sky is blue", cat: "time" },
-  { dutch: "de zee", english: "the sea", type: "de-word", example: "Ik ga naar de zee — I go to the sea", cat: "time" },
+  { dutch: "de nacht", english: "the night", type: "de-word", example: "De nacht is lang — The night is long", level: 2, cat: "time" },
+  { dutch: "de maand", english: "the month", type: "de-word", example: "Welke maand is het? — Which month is it?", level: 2, cat: "time" },
+  { dutch: "het uur", english: "the hour", type: "het-word", example: "Over een uur — In one hour", level: 2, cat: "time" },
+  { dutch: "de minuut", english: "the minute", type: "de-word", example: "Vijf minuten — Five minutes", level: 2, cat: "time" },
+  { dutch: "de lente", english: "the spring", type: "de-word", example: "In de lente bloeien bloemen — In spring flowers bloom", level: 2, cat: "time" },
+  { dutch: "de zomer", english: "the summer", type: "de-word", example: "De zomer is warm — The summer is warm", level: 2, cat: "time" },
+  { dutch: "de herfst", english: "the autumn", type: "de-word", example: "De herfst is mooi — The autumn is beautiful", level: 2, cat: "time" },
+  { dutch: "de winter", english: "the winter", type: "de-word", example: "De winter is koud — The winter is cold", level: 2, cat: "time" },
+  { dutch: "de lucht", english: "the sky / air", type: "de-word", example: "De lucht is blauw — The sky is blue", level: 2, cat: "time" },
+  { dutch: "de zee", english: "the sea", type: "de-word", example: "Ik ga naar de zee — I go to the sea", level: 2, cat: "time" },
   // Daily objects (extra)
-  { dutch: "de computer", english: "the computer", type: "de-word", example: "Ik werk op de computer — I work on the computer", cat: "objects" },
-  { dutch: "de krant", english: "the newspaper", type: "de-word", example: "Ik lees de krant — I read the newspaper", cat: "objects" },
-  { dutch: "de brief", english: "the letter", type: "de-word", example: "Ik schrijf een brief — I write a letter", cat: "objects" },
-  { dutch: "de pen", english: "the pen", type: "de-word", example: "Heb je een pen? — Do you have a pen?", cat: "objects" },
-  { dutch: "het horloge", english: "the watch", type: "het-word", example: "Mijn horloge is kapot — My watch is broken", cat: "objects" },
-  { dutch: "de paraplu", english: "the umbrella", type: "de-word", example: "Neem een paraplu mee — Take an umbrella", cat: "objects" },
-  { dutch: "de bril", english: "the glasses", type: "de-word", example: "Ik draag een bril — I wear glasses", cat: "objects" },
-  { dutch: "het kantoor", english: "the office", type: "het-word", example: "Ik ga naar kantoor — I go to the office", cat: "objects" },
-  { dutch: "de bus", english: "the bus", type: "de-word", example: "De bus is laat — The bus is late", cat: "objects" },
-  { dutch: "het vliegtuig", english: "the airplane", type: "het-word", example: "Het vliegtuig landt — The airplane lands", cat: "objects" },
+  { dutch: "de computer", english: "the computer", type: "de-word", example: "Ik werk op de computer — I work on the computer", level: 2, cat: "objects" },
+  { dutch: "de krant", english: "the newspaper", type: "de-word", example: "Ik lees de krant — I read the newspaper", level: 2, cat: "objects" },
+  { dutch: "de brief", english: "the letter", type: "de-word", example: "Ik schrijf een brief — I write a letter", level: 2, cat: "objects" },
+  { dutch: "de pen", english: "the pen", type: "de-word", example: "Heb je een pen? — Do you have a pen?", level: 2, cat: "objects" },
+  { dutch: "het horloge", english: "the watch", type: "het-word", example: "Mijn horloge is kapot — My watch is broken", level: 2, cat: "objects" },
+  { dutch: "de paraplu", english: "the umbrella", type: "de-word", example: "Neem een paraplu mee — Take an umbrella", level: 2, cat: "objects" },
+  { dutch: "de bril", english: "the glasses", type: "de-word", example: "Ik draag een bril — I wear glasses", level: 2, cat: "objects" },
+  { dutch: "het kantoor", english: "the office", type: "het-word", example: "Ik ga naar kantoor — I go to the office", level: 2, cat: "objects" },
+  { dutch: "de bus", english: "the bus", type: "de-word", example: "De bus is laat — The bus is late", level: 2, cat: "objects" },
+  { dutch: "het vliegtuig", english: "the airplane", type: "het-word", example: "Het vliegtuig landt — The airplane lands", level: 2, cat: "objects" },
 ];
 
 // ── PACKS ──
@@ -1047,6 +1094,7 @@ const PACKS = {
 };
 
 let currentPack = "verbs";
+let currentLevel = "all"; // "all", 1, or 2
 
 let currentCategory = "all";
 let deck = [];
@@ -1085,12 +1133,53 @@ function setPack(packKey) {
   if (packKey === currentPack) return;
   currentPack = packKey;
   currentCategory = "all";
+  currentLevel = "all";
   known.clear();
   learning.clear();
   initPacks();
+  initLevels();
   initCategories();
   buildDeck();
   shuffleDeck();
+}
+
+function initLevels() {
+  const pack = PACKS[currentPack];
+  const data = pack.data;
+  const countL1 = data.filter(w => w.level === 1).length;
+  const countL2 = data.filter(w => w.level === 2).length;
+
+  const levels = [
+    { key: "all", label: "All Words", icon: "☰", count: data.length },
+    { key: 1, label: "Level I", icon: "Ⅰ", count: countL1 },
+    { key: 2, label: "Level II", icon: "Ⅱ", count: countL2 },
+  ];
+
+  const el = document.getElementById('levelSelector');
+  el.innerHTML = '';
+  for (const lv of levels) {
+    const btn = document.createElement('button');
+    btn.className = 'level-btn' + (currentLevel === lv.key ? ' active' : '');
+    btn.innerHTML = `<span class="level-icon">${lv.icon}</span>${lv.label}<span class="level-count">${lv.count} cards</span>`;
+    btn.onclick = () => setLevel(lv.key);
+    el.appendChild(btn);
+  }
+}
+
+function setLevel(lv) {
+  currentLevel = lv;
+  currentCategory = "all";
+  known.clear();
+  learning.clear();
+  initLevels();
+  initCategories();
+  buildDeck();
+  currentIndex = 0;
+  updateCard();
+  updateUI();
+  document.getElementById('completion').classList.remove('visible');
+  document.getElementById('cardContainer').style.display = '';
+  document.getElementById('controls').style.display = '';
 }
 
 function initCategories() {
@@ -1119,7 +1208,12 @@ function setCategory(cat) {
 }
 
 function buildDeck() {
-  const data = PACKS[currentPack].data;
+  let data = PACKS[currentPack].data;
+  // Filter by level first
+  if (currentLevel !== "all") {
+    data = data.filter(w => w.level === currentLevel);
+  }
+  // Then filter by category
   if (currentCategory === 'all') {
     deck = [...data];
   } else {
@@ -1151,15 +1245,11 @@ function toggleDirection() {
   if (direction === "en-nl") {
     track.classList.add('reversed');
     toggle.classList.add('reversed');
-    lblLeft.textContent = "English";
-    lblRight.textContent = "Dutch";
-    lblLeft.classList.add('active');
-    lblRight.classList.remove('active');
+    lblLeft.classList.remove('active');
+    lblRight.classList.add('active');
   } else {
     track.classList.remove('reversed');
     toggle.classList.remove('reversed');
-    lblLeft.textContent = "Dutch";
-    lblRight.textContent = "English";
     lblLeft.classList.add('active');
     lblRight.classList.remove('active');
   }
@@ -1275,7 +1365,9 @@ function showCompletion() {
 }
 
 function reviewLearning() {
-  deck = PACKS[currentPack].data.filter(v => learning.has(v.dutch));
+  let source = PACKS[currentPack].data;
+  if (currentLevel !== "all") source = source.filter(w => w.level === currentLevel);
+  deck = source.filter(v => learning.has(v.dutch));
   if (deck.length === 0) {
     alert('No words marked as learning!');
     return;
@@ -1307,6 +1399,7 @@ document.addEventListener('keydown', (e) => {
 // Init
 initParticles();
 initPacks();
+initLevels();
 initCategories();
 buildDeck();
 shuffleDeck();
