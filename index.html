@@ -439,11 +439,12 @@
     justify-content: center;
     gap: 6px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
   }
   .pack-btn {
     font-family: 'Cinzel Decorative', cursive;
     font-size: 0.85rem;
-    padding: 10px 24px;
+    padding: 10px 20px;
     background: rgba(20, 10, 5, 0.8);
     color: #7a6a50;
     border: 1px solid #3a2a1a;
@@ -604,11 +605,52 @@
     margin: 0 2px;
   }
 
+  /* Conjugation card styles */
+  .conj-mode .card-back .card-word {
+    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    margin-bottom: 4px;
+  }
+  .conj-mode .card-back .card-example {
+    margin-top: 6px;
+    max-width: 100%;
+    text-align: left;
+  }
+  .conj-info {
+    font-size: 0.78rem;
+    line-height: 1.55;
+    width: 100%;
+  }
+  .conj-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1px;
+  }
+  .conj-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    color: #9b72cf;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 58px;
+    flex-shrink: 0;
+    opacity: 0.65;
+    padding-top: 2px;
+  }
+  .conj-forms {
+    color: #c9a8f0;
+  }
+  .conj-forms .aux {
+    color: #a88ac0;
+    opacity: 0.7;
+  }
+
   /* Responsive */
   @media (max-width: 520px) {
     .card-container { height: 280px; }
     .controls { gap: 10px; }
     .btn { padding: 10px 18px; font-size: 0.8rem; }
+    .conj-info { font-size: 0.72rem; }
+    .conj-label { font-size: 0.58rem; min-width: 48px; }
   }
 </style>
 </head>
@@ -1047,6 +1089,790 @@ const NOUNS = [
   { dutch: "het vliegtuig", english: "the airplane", type: "het-word", example: "Het vliegtuig landt — The airplane lands", level: 2, cat: "objects" },
 ];
 
+// ── PHRASES ──
+const PHRASES = [
+  // Greetings & basics
+  { dutch: "Hallo!", english: "Hello!", type: "greeting", example: "Hallo, hoe gaat het? — Hello, how are you?", level: 1, cat: "greetings" },
+  { dutch: "Goedemorgen!", english: "Good morning!", type: "greeting", example: "Goedemorgen, alles goed? — Good morning, all good?", level: 1, cat: "greetings" },
+  { dutch: "Goedemiddag!", english: "Good afternoon!", type: "greeting", example: "Goedemiddag mevrouw — Good afternoon ma'am", level: 1, cat: "greetings" },
+  { dutch: "Goedenavond!", english: "Good evening!", type: "greeting", example: "Goedenavond allemaal — Good evening everyone", level: 1, cat: "greetings" },
+  { dutch: "Welterusten!", english: "Good night!", type: "greeting", example: "Welterusten, slaap lekker — Good night, sleep well", level: 1, cat: "greetings" },
+  { dutch: "Tot ziens!", english: "Goodbye!", type: "greeting", example: "Tot ziens, tot morgen! — Goodbye, see you tomorrow!", level: 1, cat: "greetings" },
+  { dutch: "Doei!", english: "Bye! (informal)", type: "greeting", example: "Doei, tot later! — Bye, see you later!", level: 1, cat: "greetings" },
+  { dutch: "Hoe gaat het?", english: "How are you?", type: "question", example: "Hoe gaat het met jou? — How are you doing?", level: 1, cat: "greetings" },
+  { dutch: "Goed, dank je!", english: "Good, thank you!", type: "response", example: "Het gaat goed, dank je! — It's going well, thank you!", level: 1, cat: "greetings" },
+  { dutch: "Aangenaam!", english: "Nice to meet you!", type: "greeting", example: "Aangenaam kennis te maken — Pleased to meet you", level: 1, cat: "greetings" },
+
+  // Polite essentials
+  { dutch: "Alstublieft", english: "Please (formal)", type: "polite", example: "Een koffie, alstublieft — A coffee, please", level: 1, cat: "polite" },
+  { dutch: "Alsjeblieft", english: "Please (informal)", type: "polite", example: "Help me alsjeblieft — Help me please", level: 1, cat: "polite" },
+  { dutch: "Dank u wel", english: "Thank you (formal)", type: "polite", example: "Dank u wel, meneer — Thank you, sir", level: 1, cat: "polite" },
+  { dutch: "Dank je wel", english: "Thank you (informal)", type: "polite", example: "Dank je wel voor alles — Thank you for everything", level: 1, cat: "polite" },
+  { dutch: "Graag gedaan", english: "You're welcome", type: "polite", example: "Graag gedaan, hoor! — You're welcome!", level: 1, cat: "polite" },
+  { dutch: "Sorry", english: "Sorry", type: "polite", example: "Sorry, dat was mijn fout — Sorry, that was my mistake", level: 1, cat: "polite" },
+  { dutch: "Pardon", english: "Excuse me / Pardon", type: "polite", example: "Pardon, mag ik erdoor? — Excuse me, may I pass?", level: 1, cat: "polite" },
+  { dutch: "Geen probleem", english: "No problem", type: "polite", example: "Geen probleem, het is oké — No problem, it's okay", level: 1, cat: "polite" },
+  { dutch: "Natuurlijk!", english: "Of course!", type: "polite", example: "Natuurlijk mag dat! — Of course that's allowed!", level: 1, cat: "polite" },
+  { dutch: "Het geeft niet", english: "It doesn't matter", type: "polite", example: "Het geeft niet, maak je geen zorgen — It doesn't matter, don't worry", level: 1, cat: "polite" },
+
+  // Questions & directions
+  { dutch: "Wat is dit?", english: "What is this?", type: "question", example: "Wat is dit voor iets? — What kind of thing is this?", level: 1, cat: "questions" },
+  { dutch: "Waar is...?", english: "Where is...?", type: "question", example: "Waar is het station? — Where is the station?", level: 1, cat: "questions" },
+  { dutch: "Hoe laat is het?", english: "What time is it?", type: "question", example: "Hoe laat is het nu? — What time is it now?", level: 1, cat: "questions" },
+  { dutch: "Hoeveel kost het?", english: "How much does it cost?", type: "question", example: "Hoeveel kost deze tas? — How much does this bag cost?", level: 1, cat: "questions" },
+  { dutch: "Spreekt u Engels?", english: "Do you speak English?", type: "question", example: "Spreekt u Engels, alstublieft? — Do you speak English, please?", level: 1, cat: "questions" },
+  { dutch: "Ik begrijp het niet", english: "I don't understand", type: "response", example: "Sorry, ik begrijp het niet — Sorry, I don't understand", level: 1, cat: "questions" },
+  { dutch: "Kunt u dat herhalen?", english: "Can you repeat that?", type: "question", example: "Kunt u dat herhalen, alstublieft? — Can you repeat that, please?", level: 1, cat: "questions" },
+  { dutch: "Hoe zeg je...?", english: "How do you say...?", type: "question", example: "Hoe zeg je 'thank you' in het Nederlands? — How do you say 'thank you' in Dutch?", level: 1, cat: "questions" },
+  { dutch: "Wat bedoel je?", english: "What do you mean?", type: "question", example: "Wat bedoel je daarmee? — What do you mean by that?", level: 1, cat: "questions" },
+  { dutch: "Waarom?", english: "Why?", type: "question", example: "Waarom niet? — Why not?", level: 1, cat: "questions" },
+
+  // Shopping & restaurant
+  { dutch: "Ik wil graag...", english: "I would like...", type: "request", example: "Ik wil graag een koffie — I would like a coffee", level: 1, cat: "shopping" },
+  { dutch: "De rekening, alstublieft", english: "The bill, please", type: "request", example: "Mag ik de rekening, alstublieft? — May I have the bill, please?", level: 1, cat: "shopping" },
+  { dutch: "Heeft u...?", english: "Do you have...?", type: "question", example: "Heeft u melk? — Do you have milk?", level: 1, cat: "shopping" },
+  { dutch: "Ik zoek...", english: "I'm looking for...", type: "request", example: "Ik zoek de uitgang — I'm looking for the exit", level: 1, cat: "shopping" },
+  { dutch: "Mag ik...?", english: "May I...?", type: "question", example: "Mag ik hier zitten? — May I sit here?", level: 1, cat: "shopping" },
+  { dutch: "Dat is te duur", english: "That is too expensive", type: "response", example: "Dat is te duur voor mij — That is too expensive for me", level: 1, cat: "shopping" },
+  { dutch: "Ik neem dit", english: "I'll take this", type: "response", example: "Ik neem dit mee — I'll take this with me", level: 1, cat: "shopping" },
+  { dutch: "Kan ik pinnen?", english: "Can I pay by card?", type: "question", example: "Kan ik hier pinnen? — Can I pay by card here?", level: 1, cat: "shopping" },
+  { dutch: "Smakelijk eten!", english: "Enjoy your meal!", type: "polite", example: "Smakelijk eten, allemaal! — Enjoy your meal, everyone!", level: 1, cat: "shopping" },
+  { dutch: "Het is lekker!", english: "It's delicious!", type: "response", example: "Het eten is heel lekker! — The food is very delicious!", level: 1, cat: "shopping" },
+
+  // Daily conversation
+  { dutch: "Ik ben...", english: "I am...", type: "statement", example: "Ik ben moe — I am tired", level: 1, cat: "daily" },
+  { dutch: "Ik heb...", english: "I have...", type: "statement", example: "Ik heb honger — I am hungry", level: 1, cat: "daily" },
+  { dutch: "Ik ga naar...", english: "I'm going to...", type: "statement", example: "Ik ga naar huis — I'm going home", level: 1, cat: "daily" },
+  { dutch: "Ik kom uit...", english: "I come from...", type: "statement", example: "Ik kom uit Duitsland — I come from Germany", level: 1, cat: "daily" },
+  { dutch: "Ik woon in...", english: "I live in...", type: "statement", example: "Ik woon in Amsterdam — I live in Amsterdam", level: 1, cat: "daily" },
+  { dutch: "Ik werk als...", english: "I work as...", type: "statement", example: "Ik werk als leraar — I work as a teacher", level: 1, cat: "daily" },
+  { dutch: "Ik spreek een beetje Nederlands", english: "I speak a little Dutch", type: "statement", example: "Sorry, ik spreek een beetje Nederlands — Sorry, I speak a little Dutch", level: 1, cat: "daily" },
+  { dutch: "Ik heb een vraag", english: "I have a question", type: "statement", example: "Ik heb een vraag over de les — I have a question about the lesson", level: 1, cat: "daily" },
+  { dutch: "Het is mooi weer", english: "It's nice weather", type: "statement", example: "Het is mooi weer vandaag — It's nice weather today", level: 1, cat: "daily" },
+  { dutch: "Ik vind het leuk", english: "I like it", type: "statement", example: "Ik vind het heel leuk hier — I really like it here", level: 1, cat: "daily" },
+
+  // Level 2: Greetings & basics (extra)
+  { dutch: "Hoe is het?", english: "How is it going?", type: "greeting", example: "Hoe is het met je? — How is it going with you?", level: 2, cat: "greetings" },
+  { dutch: "Lang niet gezien!", english: "Long time no see!", type: "greeting", example: "Hé, lang niet gezien! — Hey, long time no see!", level: 2, cat: "greetings" },
+  { dutch: "Fijne dag!", english: "Have a nice day!", type: "greeting", example: "Fijne dag nog! — Have a nice rest of the day!", level: 2, cat: "greetings" },
+  { dutch: "Tot later!", english: "See you later!", type: "greeting", example: "Tot later, ik moet gaan — See you later, I have to go", level: 2, cat: "greetings" },
+  { dutch: "Tot morgen!", english: "See you tomorrow!", type: "greeting", example: "Tot morgen op school — See you tomorrow at school", level: 2, cat: "greetings" },
+  { dutch: "Leuk je te ontmoeten", english: "Nice to meet you", type: "greeting", example: "Leuk je te ontmoeten! — Nice to meet you!", level: 2, cat: "greetings" },
+  { dutch: "Gefeliciteerd!", english: "Congratulations!", type: "greeting", example: "Gefeliciteerd met je verjaardag! — Happy birthday!", level: 2, cat: "greetings" },
+  { dutch: "Veel succes!", english: "Good luck!", type: "greeting", example: "Veel succes met je examen! — Good luck with your exam!", level: 2, cat: "greetings" },
+  { dutch: "Prettig weekend!", english: "Have a nice weekend!", type: "greeting", example: "Prettig weekend, tot maandag! — Have a nice weekend, see you Monday!", level: 2, cat: "greetings" },
+  { dutch: "Hoe gaat het ermee?", english: "How are things?", type: "question", example: "En, hoe gaat het ermee? — So, how are things?", level: 2, cat: "greetings" },
+
+  // Level 2: Polite (extra)
+  { dutch: "Dat is aardig van je", english: "That's kind of you", type: "polite", example: "Oh, dat is aardig van je! — Oh, that's kind of you!", level: 2, cat: "polite" },
+  { dutch: "Mag ik u iets vragen?", english: "May I ask you something?", type: "polite", example: "Pardon, mag ik u iets vragen? — Excuse me, may I ask you something?", level: 2, cat: "polite" },
+  { dutch: "Het spijt me", english: "I'm sorry", type: "polite", example: "Het spijt me heel erg — I'm very sorry", level: 2, cat: "polite" },
+  { dutch: "Maak je geen zorgen", english: "Don't worry", type: "polite", example: "Maak je geen zorgen, het komt goed — Don't worry, it'll be fine", level: 2, cat: "polite" },
+  { dutch: "Ik waardeer het", english: "I appreciate it", type: "polite", example: "Ik waardeer het echt — I really appreciate it", level: 2, cat: "polite" },
+  { dutch: "Met alle plezier", english: "With pleasure", type: "polite", example: "Met alle plezier, hoor! — With pleasure!", level: 2, cat: "polite" },
+  { dutch: "Dat hoeft niet", english: "That's not necessary", type: "polite", example: "Nee, dat hoeft echt niet — No, that's really not necessary", level: 2, cat: "polite" },
+  { dutch: "Ik ben het eens", english: "I agree", type: "response", example: "Ja, ik ben het helemaal eens — Yes, I totally agree", level: 2, cat: "polite" },
+  { dutch: "Ik ben het niet eens", english: "I disagree", type: "response", example: "Sorry, maar ik ben het niet eens — Sorry, but I disagree", level: 2, cat: "polite" },
+  { dutch: "Dat klopt", english: "That's correct", type: "response", example: "Ja, dat klopt helemaal — Yes, that's entirely correct", level: 2, cat: "polite" },
+
+  // Level 2: Questions (extra)
+  { dutch: "Hoe kom ik bij...?", english: "How do I get to...?", type: "question", example: "Hoe kom ik bij het centrum? — How do I get to the center?", level: 2, cat: "questions" },
+  { dutch: "Welke kant op?", english: "Which direction?", type: "question", example: "Welke kant moet ik op? — Which direction should I go?", level: 2, cat: "questions" },
+  { dutch: "Is het ver?", english: "Is it far?", type: "question", example: "Is het ver lopen? — Is it far to walk?", level: 2, cat: "questions" },
+  { dutch: "Wat voor werk doe je?", english: "What work do you do?", type: "question", example: "En, wat voor werk doe je? — So, what work do you do?", level: 2, cat: "questions" },
+  { dutch: "Hoe oud ben je?", english: "How old are you?", type: "question", example: "Hoe oud ben je, als ik mag vragen? — How old are you, if I may ask?", level: 2, cat: "questions" },
+  { dutch: "Waar kom je vandaan?", english: "Where are you from?", type: "question", example: "Waar kom je oorspronkelijk vandaan? — Where are you originally from?", level: 2, cat: "questions" },
+  { dutch: "Kun je me helpen?", english: "Can you help me?", type: "question", example: "Kun je me alsjeblieft helpen? — Can you please help me?", level: 2, cat: "questions" },
+  { dutch: "Heb je zin in...?", english: "Do you feel like...?", type: "question", example: "Heb je zin in koffie? — Do you feel like coffee?", level: 2, cat: "questions" },
+  { dutch: "Wanneer begint het?", english: "When does it start?", type: "question", example: "Wanneer begint de film? — When does the movie start?", level: 2, cat: "questions" },
+  { dutch: "Weet je de weg?", english: "Do you know the way?", type: "question", example: "Weet je de weg naar het park? — Do you know the way to the park?", level: 2, cat: "questions" },
+
+  // Level 2: Shopping & restaurant (extra)
+  { dutch: "Wat kunt u aanbevelen?", english: "What can you recommend?", type: "question", example: "Wat kunt u aanbevelen als dessert? — What can you recommend for dessert?", level: 2, cat: "shopping" },
+  { dutch: "Ik heb een reservering", english: "I have a reservation", type: "statement", example: "Ik heb een reservering voor twee — I have a reservation for two", level: 2, cat: "shopping" },
+  { dutch: "Is deze plek vrij?", english: "Is this seat free?", type: "question", example: "Is deze plek nog vrij? — Is this seat still available?", level: 2, cat: "shopping" },
+  { dutch: "Mag het iets minder?", english: "Can it be a bit less?", type: "question", example: "Mag het iets minder, alstublieft? — Can it be a bit less, please?", level: 2, cat: "shopping" },
+  { dutch: "Ik ben allergisch voor...", english: "I'm allergic to...", type: "statement", example: "Ik ben allergisch voor noten — I'm allergic to nuts", level: 2, cat: "shopping" },
+  { dutch: "Zonder suiker, alstublieft", english: "Without sugar, please", type: "request", example: "Koffie zonder suiker, alstublieft — Coffee without sugar, please", level: 2, cat: "shopping" },
+  { dutch: "Mag ik de menukaart?", english: "May I have the menu?", type: "question", example: "Mag ik de menukaart zien? — May I see the menu?", level: 2, cat: "shopping" },
+  { dutch: "Dat is een koopje!", english: "That's a bargain!", type: "response", example: "Twee voor de prijs van één? Dat is een koopje! — Two for the price of one? That's a bargain!", level: 2, cat: "shopping" },
+  { dutch: "Heeft u een tasje?", english: "Do you have a bag?", type: "question", example: "Heeft u een tasje voor me? — Do you have a bag for me?", level: 2, cat: "shopping" },
+  { dutch: "Ik kijk alleen even", english: "I'm just looking", type: "response", example: "Dank u, ik kijk alleen even — Thank you, I'm just looking", level: 2, cat: "shopping" },
+
+  // Level 2: Daily conversation (extra)
+  { dutch: "Ik heb haast", english: "I'm in a hurry", type: "statement", example: "Sorry, ik heb haast — Sorry, I'm in a hurry", level: 2, cat: "daily" },
+  { dutch: "Ik verveel me", english: "I'm bored", type: "statement", example: "Ik verveel me thuis — I'm bored at home", level: 2, cat: "daily" },
+  { dutch: "Ik heb zin in...", english: "I feel like...", type: "statement", example: "Ik heb zin in ijs — I feel like ice cream", level: 2, cat: "daily" },
+  { dutch: "Dat kan niet", english: "That's not possible", type: "response", example: "Sorry, dat kan helaas niet — Sorry, that's unfortunately not possible", level: 2, cat: "daily" },
+  { dutch: "Ik ben het vergeten", english: "I forgot (it)", type: "statement", example: "Sorry, ik ben het vergeten — Sorry, I forgot", level: 2, cat: "daily" },
+  { dutch: "Ik ben verdwaald", english: "I'm lost", type: "statement", example: "Ik ben verdwaald, kunt u helpen? — I'm lost, can you help?", level: 2, cat: "daily" },
+  { dutch: "Dat is een goed idee", english: "That's a good idea", type: "response", example: "Ja, dat is een goed idee! — Yes, that's a good idea!", level: 2, cat: "daily" },
+  { dutch: "Laten we gaan", english: "Let's go", type: "statement", example: "Laten we gaan, het is laat — Let's go, it's late", level: 2, cat: "daily" },
+  { dutch: "Tot nu toe gaat het goed", english: "So far so good", type: "statement", example: "Tot nu toe gaat het goed met de studie — So far so good with the studies", level: 2, cat: "daily" },
+  { dutch: "Ik kijk ernaar uit", english: "I look forward to it", type: "statement", example: "Ik kijk ernaar uit! — I look forward to it!", level: 2, cat: "daily" },
+];
+
+// ── ESSENTIALS (frequentiewoorden & tijdsaanduidingen) ──
+const ESSENTIALS = [
+  // ── Level 1: Frequentiewoorden ──
+  // Conjunctions & prepositions
+  { dutch: "en", english: "and", type: "conjunction", example: "Ik en jij — You and I", level: 1, cat: "freq" },
+  { dutch: "maar", english: "but", type: "conjunction", example: "Klein maar fijn — Small but nice", level: 1, cat: "freq" },
+  { dutch: "of", english: "or", type: "conjunction", example: "Koffie of thee? — Coffee or tea?", level: 1, cat: "freq" },
+  { dutch: "want", english: "because (main clause)", type: "conjunction", example: "Ik blijf thuis, want ik ben ziek — I stay home because I'm sick", level: 1, cat: "freq" },
+  { dutch: "omdat", english: "because (sub clause)", type: "conjunction", example: "Omdat het regent — Because it rains", level: 1, cat: "freq" },
+  { dutch: "dus", english: "so / therefore", type: "conjunction", example: "Het regent, dus ik blijf thuis — It rains, so I stay home", level: 1, cat: "freq" },
+  { dutch: "als", english: "if / when", type: "conjunction", example: "Als het regent, blijf ik thuis — If it rains, I stay home", level: 1, cat: "freq" },
+  { dutch: "dat", english: "that", type: "conjunction", example: "Ik denk dat het klopt — I think that it's correct", level: 1, cat: "freq" },
+  { dutch: "in", english: "in", type: "preposition", example: "In het huis — In the house", level: 1, cat: "freq" },
+  { dutch: "op", english: "on / at", type: "preposition", example: "Op de tafel — On the table", level: 1, cat: "freq" },
+  { dutch: "met", english: "with", type: "preposition", example: "Met mijn vriend — With my friend", level: 1, cat: "freq" },
+  { dutch: "van", english: "of / from", type: "preposition", example: "Het boek van Jan — Jan's book", level: 1, cat: "freq" },
+  { dutch: "voor", english: "for / before", type: "preposition", example: "Dit is voor jou — This is for you", level: 1, cat: "freq" },
+  { dutch: "naar", english: "to / towards", type: "preposition", example: "Ik ga naar school — I go to school", level: 1, cat: "freq" },
+  { dutch: "aan", english: "at / on / to", type: "preposition", example: "Aan de muur — On the wall", level: 1, cat: "freq" },
+  { dutch: "bij", english: "at / near / with", type: "preposition", example: "Bij de dokter — At the doctor's", level: 1, cat: "freq" },
+  { dutch: "over", english: "about / over / in (time)", type: "preposition", example: "Over een uur — In an hour", level: 1, cat: "freq" },
+  { dutch: "uit", english: "out of / from", type: "preposition", example: "Uit Nederland — From the Netherlands", level: 1, cat: "freq" },
+  { dutch: "tot", english: "until / to", type: "preposition", example: "Van 9 tot 5 — From 9 to 5", level: 1, cat: "freq" },
+  { dutch: "na", english: "after", type: "preposition", example: "Na het eten — After the meal", level: 1, cat: "freq" },
+
+  // ── Level 1: Pronouns ──
+  { dutch: "ik", english: "I", type: "pronoun", example: "Ik ben hier — I am here", level: 1, cat: "pronouns" },
+  { dutch: "jij / je", english: "you (informal)", type: "pronoun", example: "Jij bent slim — You are smart", level: 1, cat: "pronouns" },
+  { dutch: "hij", english: "he", type: "pronoun", example: "Hij is groot — He is tall", level: 1, cat: "pronouns" },
+  { dutch: "zij / ze", english: "she / they", type: "pronoun", example: "Zij is mooi — She is beautiful", level: 1, cat: "pronouns" },
+  { dutch: "het", english: "it", type: "pronoun", example: "Het regent — It rains", level: 1, cat: "pronouns" },
+  { dutch: "wij / we", english: "we", type: "pronoun", example: "Wij gaan samen — We go together", level: 1, cat: "pronouns" },
+  { dutch: "jullie", english: "you (plural)", type: "pronoun", example: "Jullie zijn lief — You are sweet", level: 1, cat: "pronouns" },
+  { dutch: "u", english: "you (formal)", type: "pronoun", example: "Hoe gaat het met u? — How are you?", level: 1, cat: "pronouns" },
+  { dutch: "mijn", english: "my", type: "possessive", example: "Mijn huis — My house", level: 1, cat: "pronouns" },
+  { dutch: "jouw", english: "your (informal)", type: "possessive", example: "Jouw tas — Your bag", level: 1, cat: "pronouns" },
+
+  // ── Level 1: Frequency scale (hoe vaak?) ──
+  { dutch: "altijd", english: "always", type: "frequency", example: "Ik ben altijd blij — I am always happy", level: 1, cat: "howoften" },
+  { dutch: "bijna altijd", english: "almost always", type: "frequency", example: "Hij is bijna altijd op tijd — He's almost always on time", level: 1, cat: "howoften" },
+  { dutch: "meestal", english: "usually / mostly", type: "frequency", example: "Meestal eet ik brood — Usually I eat bread", level: 1, cat: "howoften" },
+  { dutch: "vaak", english: "often", type: "frequency", example: "Ik ga vaak zwemmen — I often go swimming", level: 1, cat: "howoften" },
+  { dutch: "regelmatig", english: "regularly", type: "frequency", example: "Ik sport regelmatig — I exercise regularly", level: 1, cat: "howoften" },
+  { dutch: "soms", english: "sometimes", type: "frequency", example: "Soms regent het — Sometimes it rains", level: 1, cat: "howoften" },
+  { dutch: "af en toe", english: "now and then", type: "frequency", example: "Af en toe ga ik uit eten — Now and then I eat out", level: 1, cat: "howoften" },
+  { dutch: "zelden", english: "seldom / rarely", type: "frequency", example: "Ik ga zelden naar de bioscoop — I rarely go to the cinema", level: 1, cat: "howoften" },
+  { dutch: "bijna nooit", english: "almost never", type: "frequency", example: "Hij is bijna nooit ziek — He is almost never sick", level: 1, cat: "howoften" },
+  { dutch: "nooit", english: "never", type: "frequency", example: "Ik eet nooit vlees — I never eat meat", level: 1, cat: "howoften" },
+  { dutch: "nog nooit", english: "never (yet)", type: "frequency", example: "Ik heb nog nooit gevlogen — I have never flown", level: 1, cat: "howoften" },
+  { dutch: "weleens", english: "ever / sometimes", type: "frequency", example: "Heb je weleens kaas gegeten? — Have you ever eaten cheese?", level: 1, cat: "howoften" },
+  { dutch: "ooit", english: "ever (question)", type: "frequency", example: "Ben je ooit in Nederland geweest? — Have you ever been to the Netherlands?", level: 1, cat: "howoften" },
+  { dutch: "... keer per ...", english: "... times per ...", type: "frequency", example: "Twee keer per week — Twice a week", level: 1, cat: "howoften" },
+
+  // ── Level 1: Time words (basic past/present/future) ──
+  { dutch: "nu", english: "now", type: "time", example: "Ik ga nu — I'm going now", level: 1, cat: "time_basic" },
+  { dutch: "vandaag", english: "today", type: "time", example: "Vandaag is het maandag — Today is Monday", level: 1, cat: "time_basic" },
+  { dutch: "morgen", english: "tomorrow", type: "time", example: "Tot morgen! — See you tomorrow!", level: 1, cat: "time_basic" },
+  { dutch: "gisteren", english: "yesterday", type: "time", example: "Gisteren was het mooi — Yesterday was nice", level: 1, cat: "time_basic" },
+  { dutch: "straks", english: "later / soon", type: "time", example: "Ik kom straks — I'll come later", level: 1, cat: "time_basic" },
+  { dutch: "vroeg", english: "early", type: "time", example: "Ik sta vroeg op — I get up early", level: 1, cat: "time_basic" },
+  { dutch: "laat", english: "late", type: "time", example: "Het is laat — It is late", level: 1, cat: "time_basic" },
+  { dutch: "vanochtend", english: "this morning", type: "time", example: "Vanochtend heb ik gesport — This morning I exercised", level: 1, cat: "time_basic" },
+  { dutch: "vanmiddag", english: "this afternoon", type: "time", example: "Vanmiddag ga ik winkelen — This afternoon I'm going shopping", level: 1, cat: "time_basic" },
+  { dutch: "vanavond", english: "this evening", type: "time", example: "Vanavond kook ik — This evening I'm cooking", level: 1, cat: "time_basic" },
+  { dutch: "vannacht", english: "tonight / last night", type: "time", example: "Vannacht heb ik slecht geslapen — Last night I slept badly", level: 1, cat: "time_basic" },
+  { dutch: "gistermorgen", english: "yesterday morning", type: "time", example: "Gistermorgen regende het — Yesterday morning it rained", level: 1, cat: "time_basic" },
+  { dutch: "gistermiddag", english: "yesterday afternoon", type: "time", example: "Gistermiddag was ik vrij — Yesterday afternoon I was free", level: 1, cat: "time_basic" },
+  { dutch: "gisteravond", english: "yesterday evening", type: "time", example: "Gisteravond was het leuk — Yesterday evening was fun", level: 1, cat: "time_basic" },
+
+  // ── Level 1: Sequence & tense markers ──
+  { dutch: "eerst", english: "first", type: "sequence", example: "Eerst eten, dan spelen — First eat, then play", level: 1, cat: "tenses" },
+  { dutch: "dan", english: "then", type: "sequence", example: "Dan ga ik naar huis — Then I go home", level: 1, cat: "tenses" },
+  { dutch: "daarna", english: "after that", type: "sequence", example: "Daarna ga ik slapen — After that I go to sleep", level: 1, cat: "tenses" },
+  { dutch: "vervolgens", english: "next / subsequently", type: "sequence", example: "Vervolgens belde hij — Subsequently he called", level: 1, cat: "tenses" },
+  { dutch: "tot slot", english: "finally / lastly", type: "sequence", example: "Tot slot wil ik zeggen... — Finally I want to say...", level: 1, cat: "tenses" },
+  { dutch: "ten slotte", english: "in conclusion", type: "sequence", example: "Ten slotte bedankt iedereen — In conclusion, thank everyone", level: 1, cat: "tenses" },
+  { dutch: "net / zojuist", english: "just (now)", type: "past", example: "Ik heb net gegeten — I just ate", level: 1, cat: "tenses" },
+  { dutch: "nog niet", english: "not yet", type: "present", example: "Ik heb nog niet gegeten — I haven't eaten yet", level: 1, cat: "tenses" },
+  { dutch: "binnenkort", english: "soon", type: "future", example: "Binnenkort verhuis ik — I'm moving soon", level: 1, cat: "tenses" },
+  { dutch: "meteen / direct", english: "immediately", type: "future", example: "Ik kom meteen — I'm coming right away", level: 1, cat: "tenses" },
+
+  // ── Level 2: More frequency words (extra) ──
+  { dutch: "hoewel", english: "although", type: "conjunction", example: "Hoewel het regent, ga ik — Although it rains, I go", level: 2, cat: "freq" },
+  { dutch: "toch", english: "still / anyway", type: "adverb", example: "Ik ga toch — I'm going anyway", level: 2, cat: "freq" },
+  { dutch: "zodra", english: "as soon as", type: "conjunction", example: "Zodra ik klaar ben — As soon as I'm ready", level: 2, cat: "freq" },
+  { dutch: "voordat", english: "before (sub clause)", type: "conjunction", example: "Voordat je gaat — Before you go", level: 2, cat: "freq" },
+  { dutch: "nadat", english: "after (sub clause)", type: "conjunction", example: "Nadat ik gegeten heb — After I have eaten", level: 2, cat: "freq" },
+  { dutch: "terwijl", english: "while", type: "conjunction", example: "Terwijl ik sliep — While I slept", level: 2, cat: "freq" },
+  { dutch: "toen", english: "when (past)", type: "conjunction", example: "Toen ik jong was — When I was young", level: 2, cat: "freq" },
+  { dutch: "doordat", english: "because of / due to", type: "conjunction", example: "Doordat het stormde — Because it was storming", level: 2, cat: "freq" },
+  { dutch: "zolang", english: "as long as", type: "conjunction", example: "Zolang je gelukkig bent — As long as you're happy", level: 2, cat: "freq" },
+  { dutch: "bovendien", english: "moreover / besides", type: "adverb", example: "Bovendien is het duur — Moreover, it's expensive", level: 2, cat: "freq" },
+  { dutch: "echter", english: "however", type: "adverb", example: "Het is echter niet makkelijk — However, it's not easy", level: 2, cat: "freq" },
+  { dutch: "tussen", english: "between", type: "preposition", example: "Tussen 9 en 5 — Between 9 and 5", level: 2, cat: "freq" },
+  { dutch: "om", english: "at (time) / around", type: "preposition", example: "Om 8 uur — At 8 o'clock", level: 2, cat: "freq" },
+  { dutch: "niet", english: "not", type: "adverb", example: "Ik weet het niet — I don't know", level: 2, cat: "freq" },
+
+  // ── Level 2: More pronouns (extra) ──
+  { dutch: "zijn", english: "his", type: "possessive", example: "Zijn auto — His car", level: 2, cat: "pronouns" },
+  { dutch: "haar", english: "her", type: "possessive", example: "Haar boek — Her book", level: 2, cat: "pronouns" },
+  { dutch: "ons / onze", english: "our", type: "possessive", example: "Ons huis — Our house", level: 2, cat: "pronouns" },
+  { dutch: "hun", english: "their", type: "possessive", example: "Hun kinderen — Their children", level: 2, cat: "pronouns" },
+  { dutch: "deze", english: "this / these", type: "demonstrative", example: "Deze auto is nieuw — This car is new", level: 2, cat: "pronouns" },
+  { dutch: "die", english: "that / those", type: "demonstrative", example: "Die man daar — That man there", level: 2, cat: "pronouns" },
+  { dutch: "dit", english: "this (het-word)", type: "demonstrative", example: "Dit boek is goed — This book is good", level: 2, cat: "pronouns" },
+  { dutch: "wat", english: "what / something", type: "pronoun", example: "Wat wil je? — What do you want?", level: 2, cat: "pronouns" },
+  { dutch: "wie", english: "who", type: "pronoun", example: "Wie is dat? — Who is that?", level: 2, cat: "pronouns" },
+  { dutch: "welk / welke", english: "which", type: "pronoun", example: "Welke kleur? — Which colour?", level: 2, cat: "pronouns" },
+  { dutch: "hier", english: "here", type: "adverb", example: "Kom hier — Come here", level: 2, cat: "pronouns" },
+  { dutch: "daar", english: "there", type: "adverb", example: "Ik ben daar — I am there", level: 2, cat: "pronouns" },
+  { dutch: "waar", english: "where", type: "adverb", example: "Waar ben je? — Where are you?", level: 2, cat: "pronouns" },
+  { dutch: "wanneer", english: "when", type: "adverb", example: "Wanneer kom je? — When are you coming?", level: 2, cat: "pronouns" },
+
+  // ── Level 2: More adverbs (extra) ──
+  { dutch: "ook", english: "also / too", type: "adverb", example: "Ik ook — Me too", level: 2, cat: "howoften" },
+  { dutch: "nog", english: "still / yet", type: "adverb", example: "Ik ben nog hier — I'm still here", level: 2, cat: "howoften" },
+  { dutch: "al", english: "already", type: "adverb", example: "Ik heb al gegeten — I have already eaten", level: 2, cat: "howoften" },
+  { dutch: "heel / erg", english: "very", type: "adverb", example: "Heel goed! — Very good!", level: 2, cat: "howoften" },
+  { dutch: "misschien", english: "maybe / perhaps", type: "adverb", example: "Misschien morgen — Maybe tomorrow", level: 2, cat: "howoften" },
+  { dutch: "bijna", english: "almost / nearly", type: "adverb", example: "Ik ben bijna klaar — I'm almost done", level: 2, cat: "howoften" },
+  { dutch: "zelfs", english: "even", type: "adverb", example: "Zelfs hij wist het niet — Even he didn't know", level: 2, cat: "howoften" },
+  { dutch: "alleen", english: "only / alone", type: "adverb", example: "Ik ben alleen — I am alone", level: 2, cat: "howoften" },
+  { dutch: "samen", english: "together", type: "adverb", example: "We gaan samen — We go together", level: 2, cat: "howoften" },
+  { dutch: "eigenlijk", english: "actually", type: "adverb", example: "Eigenlijk heb je gelijk — Actually, you're right", level: 2, cat: "howoften" },
+
+  // ── Level 2: Past time words (extra) ──
+  { dutch: "eergisteren", english: "day before yesterday", type: "past", example: "Eergisteren was het koud — Day before yesterday it was cold", level: 2, cat: "time_basic" },
+  { dutch: "een paar dagen geleden", english: "a few days ago", type: "past", example: "Een paar dagen geleden belde hij — He called a few days ago", level: 2, cat: "time_basic" },
+  { dutch: "een tijdje geleden", english: "a while ago", type: "past", example: "Een tijdje geleden verhuisde ik — I moved a while ago", level: 2, cat: "time_basic" },
+  { dutch: "de afgelopen tijd", english: "recently / the past period", type: "past", example: "De afgelopen tijd werk ik hard — Recently I've been working hard", level: 2, cat: "time_basic" },
+  { dutch: "vorige week / afgelopen week", english: "last week", type: "past", example: "Vorige week was ik ziek — Last week I was sick", level: 2, cat: "time_basic" },
+  { dutch: "vorig weekend", english: "last weekend", type: "past", example: "Vorig weekend was het leuk — Last weekend was fun", level: 2, cat: "time_basic" },
+  { dutch: "vorige maand / afgelopen maand", english: "last month", type: "past", example: "Vorige maand reisde ik — Last month I travelled", level: 2, cat: "time_basic" },
+  { dutch: "vorig jaar / afgelopen jaar", english: "last year", type: "past", example: "Vorig jaar was ik in Spanje — Last year I was in Spain", level: 2, cat: "time_basic" },
+  { dutch: "overmorgen", english: "day after tomorrow", type: "future", example: "Overmorgen ga ik weg — Day after tomorrow I leave", level: 2, cat: "time_basic" },
+  { dutch: "... geleden", english: "... ago", type: "past", example: "Twee jaar geleden — Two years ago", level: 2, cat: "time_basic" },
+  { dutch: "vorig(e)...", english: "last / previous...", type: "past", example: "Vorige zomer — Last summer", level: 2, cat: "time_basic" },
+  { dutch: "afgelopen...", english: "past / last...", type: "past", example: "Het afgelopen uur — The past hour", level: 2, cat: "time_basic" },
+  { dutch: "volgend(e)...", english: "next...", type: "future", example: "Volgende week — Next week", level: 2, cat: "time_basic" },
+  { dutch: "komend(e)...", english: "coming / upcoming...", type: "future", example: "Komend weekend — This coming weekend", level: 2, cat: "time_basic" },
+  { dutch: "aanstaande (a.s.)...", english: "this coming...", type: "future", example: "Aanstaande dinsdag — This coming Tuesday", level: 2, cat: "time_basic" },
+  { dutch: "elk(e)... / iedere...", english: "every...", type: "time", example: "Elke maandag — Every Monday", level: 2, cat: "time_basic" },
+
+  // ── Level 2: Time prepositions & tense markers (extra) ──
+  { dutch: "om ... uur", english: "at ... o'clock", type: "time-prep", example: "Om drie uur — At three o'clock", level: 2, cat: "tenses" },
+  { dutch: "van ... tot ...", english: "from ... to ...", type: "time-prep", example: "Van 9 tot 5 — From 9 to 5", level: 2, cat: "tenses" },
+  { dutch: "van ... tot en met ...", english: "from ... through ...", type: "time-prep", example: "Van maandag tot en met vrijdag — From Monday through Friday", level: 2, cat: "tenses" },
+  { dutch: "tussen ... en ...", english: "between ... and ...", type: "time-prep", example: "Tussen 2 en 4 uur — Between 2 and 4 o'clock", level: 2, cat: "tenses" },
+  { dutch: "op (+ dag)", english: "on (+ day)", type: "time-prep", example: "Op maandag — On Monday", level: 2, cat: "tenses" },
+  { dutch: "in (+ maand/jaar)", english: "in (+ month/year)", type: "time-prep", example: "In januari / In 2025 — In January / In 2025", level: 2, cat: "tenses" },
+  { dutch: "over (+ duur)", english: "in (+ duration)", type: "time-prep", example: "Over twee dagen — In two days", level: 2, cat: "tenses" },
+  { dutch: "sinds / sedert", english: "since", type: "past", example: "Sinds vorig jaar — Since last year", level: 2, cat: "tenses" },
+  { dutch: "vroeger", english: "in the past / formerly", type: "past", example: "Vroeger woonde ik daar — I used to live there", level: 2, cat: "tenses" },
+  { dutch: "tegenwoordig", english: "nowadays", type: "present", example: "Tegenwoordig werk ik thuis — Nowadays I work from home", level: 2, cat: "tenses" },
+  { dutch: "ondertussen", english: "meanwhile", type: "time", example: "Ondertussen wacht ik — Meanwhile I wait", level: 2, cat: "tenses" },
+  { dutch: "uiteindelijk", english: "eventually / finally", type: "time", example: "Uiteindelijk is het gelukt — Eventually it worked out", level: 2, cat: "tenses" },
+  { dutch: "onlangs", english: "recently", type: "past", example: "Ik heb onlangs verhuisd — I recently moved", level: 2, cat: "tenses" },
+  { dutch: "op dit moment", english: "at this moment", type: "present", example: "Op dit moment ben ik thuis — At this moment I'm at home", level: 2, cat: "tenses" },
+];
+
+// ── KNM (KENNIS VAN DE NEDERLANDSE MAATSCHAPPIJ) ──
+const KNM = [
+  // ── LEVEL 1: Government & Law ──
+  { dutch: "de koning", english: "the king", type: "politics", example: "De koning van Nederland is Willem-Alexander — The king of the Netherlands is Willem-Alexander", level: 1, cat: "government" },
+  { dutch: "de minister-president", english: "the prime minister", type: "politics", example: "De minister-president leidt de regering — The prime minister leads the government", level: 1, cat: "government" },
+  { dutch: "de Tweede Kamer", english: "House of Representatives", type: "politics", example: "De Tweede Kamer maakt wetten — The House of Representatives makes laws", level: 1, cat: "government" },
+  { dutch: "de Eerste Kamer", english: "the Senate", type: "politics", example: "De Eerste Kamer keurt wetten goed — The Senate approves laws", level: 1, cat: "government" },
+  { dutch: "de gemeente", english: "the municipality", type: "politics", example: "Ik woon in de gemeente Amsterdam — I live in the municipality of Amsterdam", level: 1, cat: "government" },
+  { dutch: "de burgemeester", english: "the mayor", type: "politics", example: "De burgemeester leidt de gemeente — The mayor leads the municipality", level: 1, cat: "government" },
+  { dutch: "de grondwet", english: "the constitution", type: "law", example: "De grondwet beschermt onze rechten — The constitution protects our rights", level: 1, cat: "government" },
+  { dutch: "stemrecht", english: "the right to vote", type: "law", example: "Alle Nederlanders hebben stemrecht — All Dutch people have the right to vote", level: 1, cat: "government" },
+  { dutch: "de democratie", english: "democracy", type: "politics", example: "Nederland is een democratie — The Netherlands is a democracy", level: 1, cat: "government" },
+  { dutch: "de verkiezingen", english: "the elections", type: "politics", example: "De verkiezingen zijn om de vier jaar — Elections are every four years", level: 1, cat: "government" },
+  { dutch: "de wet", english: "the law", type: "law", example: "Je moet de wet volgen — You must follow the law", level: 1, cat: "government" },
+  { dutch: "de politie", english: "the police", type: "law", example: "Bel de politie bij nood: 112 — Call the police in emergency: 112", level: 1, cat: "government" },
+  { dutch: "gelijkheid", english: "equality", type: "law", example: "Gelijkheid is een grondrecht — Equality is a fundamental right", level: 1, cat: "government" },
+  { dutch: "discriminatie", english: "discrimination", type: "law", example: "Discriminatie is verboden — Discrimination is prohibited", level: 1, cat: "government" },
+
+  // ── LEVEL 1: Geography & People ──
+  { dutch: "de hoofdstad", english: "the capital city", type: "geography", example: "Amsterdam is de hoofdstad — Amsterdam is the capital city", level: 1, cat: "geography" },
+  { dutch: "de provincie", english: "the province", type: "geography", example: "Nederland heeft twaalf provincies — The Netherlands has twelve provinces", level: 1, cat: "geography" },
+  { dutch: "de Randstad", english: "the Randstad (urban area)", type: "geography", example: "De Randstad is het dichtbevolkte westen — The Randstad is the densely populated west", level: 1, cat: "geography" },
+  { dutch: "de Noordzee", english: "the North Sea", type: "geography", example: "Nederland grenst aan de Noordzee — The Netherlands borders the North Sea", level: 1, cat: "geography" },
+  { dutch: "de polder", english: "the polder (reclaimed land)", type: "geography", example: "Een polder is land dat van water is gewonnen — A polder is land reclaimed from water", level: 1, cat: "geography" },
+  { dutch: "de dijk", english: "the dike / levee", type: "geography", example: "Dijken beschermen tegen overstromingen — Dikes protect against floods", level: 1, cat: "geography" },
+  { dutch: "de Rijn", english: "the Rhine (river)", type: "geography", example: "De Rijn stroomt door Nederland — The Rhine flows through the Netherlands", level: 1, cat: "geography" },
+  { dutch: "het klimaat", english: "the climate", type: "geography", example: "Nederland heeft een zeeklimaat — The Netherlands has a maritime climate", level: 1, cat: "geography" },
+  { dutch: "de inwoner", english: "the inhabitant / resident", type: "people", example: "Nederland heeft ruim 17 miljoen inwoners — The Netherlands has over 17 million residents", level: 1, cat: "geography" },
+  { dutch: "de bevolking", english: "the population", type: "people", example: "De bevolking groeit — The population is growing", level: 1, cat: "geography" },
+  { dutch: "de allochtoon", english: "person of foreign origin", type: "people", example: "Nederland is een multicultureel land — The Netherlands is a multicultural country", level: 1, cat: "geography" },
+  { dutch: "de wijk", english: "the neighbourhood", type: "geography", example: "Ik woon in een rustige wijk — I live in a quiet neighbourhood", level: 1, cat: "geography" },
+  { dutch: "de Waterschappen", english: "the Water Boards", type: "geography", example: "De Waterschappen beheren het water — The Water Boards manage the water", level: 1, cat: "geography" },
+  { dutch: "de Waddeneilanden", english: "the Wadden Islands", type: "geography", example: "De Waddeneilanden liggen in het noorden — The Wadden Islands are in the north", level: 1, cat: "geography" },
+
+  // ── LEVEL 1: Healthcare & Social ──
+  { dutch: "de huisarts", english: "the GP / family doctor", type: "health", example: "Ga eerst naar de huisarts — Go to the GP first", level: 1, cat: "health" },
+  { dutch: "de zorgverzekering", english: "health insurance", type: "health", example: "Zorgverzekering is verplicht — Health insurance is mandatory", level: 1, cat: "health" },
+  { dutch: "het ziekenhuis", english: "the hospital", type: "health", example: "De huisarts verwijst je naar het ziekenhuis — The GP refers you to the hospital", level: 1, cat: "health" },
+  { dutch: "de apotheek", english: "the pharmacy", type: "health", example: "Haal medicijnen bij de apotheek — Get medicine at the pharmacy", level: 1, cat: "health" },
+  { dutch: "het BSN-nummer", english: "citizen service number (BSN)", type: "social", example: "Iedereen krijgt een BSN-nummer — Everyone gets a BSN number", level: 1, cat: "health" },
+  { dutch: "DigiD", english: "digital identity (DigiD)", type: "social", example: "Met DigiD regel je overheidszaken online — With DigiD you handle government affairs online", level: 1, cat: "health" },
+  { dutch: "de zorgtoeslag", english: "healthcare allowance", type: "social", example: "Zorgtoeslag helpt met de zorgkosten — Healthcare allowance helps with healthcare costs", level: 1, cat: "health" },
+  { dutch: "de huurtoeslag", english: "housing allowance", type: "social", example: "Huurtoeslag is hulp bij de huur — Housing allowance is help with rent", level: 1, cat: "health" },
+  { dutch: "het eigen risico", english: "personal excess / deductible", type: "health", example: "Het eigen risico is wat je zelf betaalt — The deductible is what you pay yourself", level: 1, cat: "health" },
+  { dutch: "de tandarts", english: "the dentist", type: "health", example: "Ga twee keer per jaar naar de tandarts — Go to the dentist twice a year", level: 1, cat: "health" },
+  { dutch: "de spoedeisende hulp", english: "emergency room (ER)", type: "health", example: "Bij spoed ga je naar de spoedeisende hulp — In emergencies go to the ER", level: 1, cat: "health" },
+  { dutch: "de Belastingdienst", english: "the Tax Authority", type: "social", example: "De Belastingdienst int belasting — The Tax Authority collects taxes", level: 1, cat: "health" },
+  { dutch: "de kinderopvangtoeslag", english: "childcare allowance", type: "social", example: "Ouders krijgen kinderopvangtoeslag — Parents get childcare allowance", level: 1, cat: "health" },
+  { dutch: "het consultatiebureau", english: "child health clinic", type: "health", example: "Baby's gaan naar het consultatiebureau — Babies go to the child health clinic", level: 1, cat: "health" },
+
+  // ── LEVEL 1: Education & Work ──
+  { dutch: "de basisschool", english: "primary school", type: "education", example: "Kinderen gaan naar de basisschool vanaf 4 jaar — Children go to primary school from age 4", level: 1, cat: "education" },
+  { dutch: "de middelbare school", english: "secondary school", type: "education", example: "Na de basisschool ga je naar de middelbare school — After primary school you go to secondary school", level: 1, cat: "education" },
+  { dutch: "het vmbo", english: "pre-vocational education", type: "education", example: "Vmbo duurt vier jaar — Vmbo lasts four years", level: 1, cat: "education" },
+  { dutch: "de havo", english: "senior general education", type: "education", example: "Havo duurt vijf jaar — Havo lasts five years", level: 1, cat: "education" },
+  { dutch: "het vwo", english: "pre-university education", type: "education", example: "Vwo duurt zes jaar — Vwo lasts six years", level: 1, cat: "education" },
+  { dutch: "het mbo", english: "vocational education (MBO)", type: "education", example: "Na vmbo ga je naar het mbo — After vmbo you go to MBO", level: 1, cat: "education" },
+  { dutch: "het hbo", english: "university of applied sciences", type: "education", example: "Hbo is hoger beroepsonderwijs — HBO is higher professional education", level: 1, cat: "education" },
+  { dutch: "de universiteit", english: "the university (WO)", type: "education", example: "Na vwo ga je naar de universiteit — After vwo you go to university", level: 1, cat: "education" },
+  { dutch: "de leerplicht", english: "compulsory education", type: "education", example: "Leerplicht is van 5 tot 18 jaar — Compulsory education is from 5 to 18", level: 1, cat: "education" },
+  { dutch: "het arbeidscontract", english: "employment contract", type: "work", example: "Lees je arbeidscontract goed — Read your employment contract carefully", level: 1, cat: "education" },
+  { dutch: "het minimumloon", english: "minimum wage", type: "work", example: "Iedereen verdient minstens het minimumloon — Everyone earns at least minimum wage", level: 1, cat: "education" },
+  { dutch: "het UWV", english: "employee insurance agency", type: "work", example: "Het UWV regelt werkloosheidsuitkeringen — UWV manages unemployment benefits", level: 1, cat: "education" },
+
+  // ── LEVEL 1: Culture & Traditions ──
+  { dutch: "Koningsdag", english: "King's Day (April 27)", type: "holiday", example: "Op Koningsdag draagt iedereen oranje — On King's Day everyone wears orange", level: 1, cat: "culture" },
+  { dutch: "Sinterklaas", english: "Sinterklaas (Dec 5)", type: "tradition", example: "Sinterklaas komt op 5 december — Sinterklaas comes on December 5th", level: 1, cat: "culture" },
+  { dutch: "Bevrijdingsdag", english: "Liberation Day (May 5)", type: "holiday", example: "Bevrijdingsdag viert de vrijheid — Liberation Day celebrates freedom", level: 1, cat: "culture" },
+  { dutch: "Dodenherdenking", english: "Remembrance Day (May 4)", type: "holiday", example: "Op 4 mei herdenken we de oorlogsslachtoffers — On May 4 we remember the war victims", level: 1, cat: "culture" },
+  { dutch: "Kerstmis", english: "Christmas (Dec 25-26)", type: "holiday", example: "Nederland viert twee kerstdagen — The Netherlands celebrates two Christmas days", level: 1, cat: "culture" },
+  { dutch: "Oud en Nieuw", english: "New Year's Eve", type: "holiday", example: "Op Oud en Nieuw zijn er vuurwerken — On New Year's Eve there are fireworks", level: 1, cat: "culture" },
+  { dutch: "de tolerantie", english: "tolerance", type: "value", example: "Tolerantie is een Nederlandse waarde — Tolerance is a Dutch value", level: 1, cat: "culture" },
+  { dutch: "de vrijheid van meningsuiting", english: "freedom of speech", type: "value", example: "Vrijheid van meningsuiting is een grondrecht — Freedom of speech is a fundamental right", level: 1, cat: "culture" },
+  { dutch: "de fiets", english: "the bicycle", type: "culture", example: "Nederlanders fietsen overal — Dutch people cycle everywhere", level: 1, cat: "culture" },
+  { dutch: "gezellig", english: "cozy / sociable (untranslatable)", type: "culture", example: "Het is gezellig hier — It's cozy/nice here", level: 1, cat: "culture" },
+
+  // ── LEVEL 2: Government & Law ──
+  { dutch: "de rechtsstaat", english: "constitutional state / rule of law", type: "law", example: "Nederland is een rechtsstaat — The Netherlands is a constitutional state", level: 2, cat: "government" },
+  { dutch: "de Grondwet van 1848", english: "Constitution of 1848", type: "law", example: "Thorbecke schreef de Grondwet van 1848 — Thorbecke wrote the Constitution of 1848", level: 2, cat: "government" },
+  { dutch: "de coalitie", english: "the coalition", type: "politics", example: "De coalitie vormt de regering — The coalition forms the government", level: 2, cat: "government" },
+  { dutch: "de oppositie", english: "the opposition", type: "politics", example: "De oppositie controleert de regering — The opposition checks the government", level: 2, cat: "government" },
+  { dutch: "de Provinciale Staten", english: "Provincial Council", type: "politics", example: "De Provinciale Staten besturen de provincie — The Provincial Council governs the province", level: 2, cat: "government" },
+  { dutch: "de gemeenteraad", english: "municipal council", type: "politics", example: "De gemeenteraad beslist over lokale zaken — The municipal council decides on local matters", level: 2, cat: "government" },
+  { dutch: "de scheiding van kerk en staat", english: "separation of church and state", type: "law", example: "Er is scheiding van kerk en staat — There is separation of church and state", level: 2, cat: "government" },
+  { dutch: "de godsdienstvrijheid", english: "freedom of religion", type: "law", example: "Godsdienstvrijheid staat in de grondwet — Freedom of religion is in the constitution", level: 2, cat: "government" },
+  { dutch: "het Koninkrijk der Nederlanden", english: "the Kingdom of the Netherlands", type: "politics", example: "Het Koninkrijk omvat ook Caribische eilanden — The Kingdom also includes Caribbean islands", level: 2, cat: "government" },
+  { dutch: "de constitutionele monarchie", english: "constitutional monarchy", type: "politics", example: "Nederland is een constitutionele monarchie — The Netherlands is a constitutional monarchy", level: 2, cat: "government" },
+  { dutch: "de Raad van State", english: "Council of State", type: "politics", example: "De Raad van State adviseert over wetten — The Council of State advises on laws", level: 2, cat: "government" },
+  { dutch: "de ombudsman", english: "the ombudsman", type: "law", example: "De ombudsman behandelt klachten over de overheid — The ombudsman handles complaints about government", level: 2, cat: "government" },
+  { dutch: "het kiesrecht", english: "suffrage / voting rights", type: "law", example: "Vrouwen kregen kiesrecht in 1919 — Women got voting rights in 1919", level: 2, cat: "government" },
+  { dutch: "de ambtenaar", english: "civil servant", type: "politics", example: "Ambtenaren werken voor de overheid — Civil servants work for the government", level: 2, cat: "government" },
+
+  // ── LEVEL 2: Geography & People ──
+  { dutch: "de Deltawerken", english: "the Delta Works", type: "geography", example: "De Deltawerken beschermen tegen de zee — The Delta Works protect against the sea", level: 2, cat: "geography" },
+  { dutch: "Flevoland", english: "Flevoland (newest province)", type: "geography", example: "Flevoland is de jongste provincie — Flevoland is the newest province", level: 2, cat: "geography" },
+  { dutch: "de Maas", english: "the Meuse (river)", type: "geography", example: "De Maas stroomt door het zuiden — The Meuse flows through the south", level: 2, cat: "geography" },
+  { dutch: "beneden zeeniveau", english: "below sea level", type: "geography", example: "Veel van Nederland ligt beneden zeeniveau — Much of the Netherlands is below sea level", level: 2, cat: "geography" },
+  { dutch: "de multiculturele samenleving", english: "multicultural society", type: "people", example: "Nederland is een multiculturele samenleving — The Netherlands is a multicultural society", level: 2, cat: "geography" },
+  { dutch: "de Gouden Eeuw", english: "the Golden Age (17th century)", type: "history", example: "De Gouden Eeuw was in de 17e eeuw — The Golden Age was in the 17th century", level: 2, cat: "geography" },
+  { dutch: "de VOC", english: "Dutch East India Company", type: "history", example: "De VOC was een handelscompagnie — The VOC was a trading company", level: 2, cat: "geography" },
+  { dutch: "het koninklijk huis", english: "the royal house", type: "people", example: "Het koninklijk huis is van Oranje-Nassau — The royal house is of Orange-Nassau", level: 2, cat: "geography" },
+  { dutch: "de Friezen", english: "the Frisians", type: "people", example: "De Friezen spreken Fries — The Frisians speak Frisian", level: 2, cat: "geography" },
+  { dutch: "de grachtengordel", english: "canal belt (Amsterdam)", type: "geography", example: "De grachtengordel is UNESCO-erfgoed — The canal belt is UNESCO heritage", level: 2, cat: "geography" },
+  { dutch: "de droogmakerij", english: "land reclamation", type: "geography", example: "Droogmakerij is typisch Nederlands — Land reclamation is typically Dutch", level: 2, cat: "geography" },
+  { dutch: "Bonaire, Sint-Eustatius, Saba", english: "BES islands (Caribbean NL)", type: "geography", example: "De BES-eilanden zijn bijzondere gemeenten — The BES islands are special municipalities", level: 2, cat: "geography" },
+  { dutch: "het Binnenhof", english: "the Binnenhof (parliament)", type: "geography", example: "Het Binnenhof is in Den Haag — The Binnenhof is in The Hague", level: 2, cat: "geography" },
+  { dutch: "de Veluwe", english: "the Veluwe (nature area)", type: "geography", example: "De Veluwe is een groot natuurgebied — The Veluwe is a large nature area", level: 2, cat: "geography" },
+
+  // ── LEVEL 2: Healthcare & Social ──
+  { dutch: "de verwijsbrief", english: "referral letter", type: "health", example: "Je hebt een verwijsbrief nodig voor de specialist — You need a referral for the specialist", level: 2, cat: "health" },
+  { dutch: "de specialist", english: "the specialist (doctor)", type: "health", example: "De huisarts verwijst naar de specialist — The GP refers to the specialist", level: 2, cat: "health" },
+  { dutch: "de GGD", english: "Municipal Health Service", type: "health", example: "De GGD doet vaccinaties en preventie — The GGD does vaccinations and prevention", level: 2, cat: "health" },
+  { dutch: "de verloskundige", english: "the midwife", type: "health", example: "Een verloskundige begeleidt de bevalling — A midwife guides the delivery", level: 2, cat: "health" },
+  { dutch: "het kinderdagverblijf", english: "daycare / nursery", type: "social", example: "Kinderen gaan naar het kinderdagverblijf — Children go to daycare", level: 2, cat: "health" },
+  { dutch: "de bijstand", english: "social assistance / welfare", type: "social", example: "Bijstand is een uitkering voor wie niet kan werken — Social assistance is benefits for those who can't work", level: 2, cat: "health" },
+  { dutch: "de WW-uitkering", english: "unemployment benefit", type: "social", example: "WW-uitkering krijg je na ontslag — You get unemployment benefit after dismissal", level: 2, cat: "health" },
+  { dutch: "de AOW", english: "state pension (AOW)", type: "social", example: "AOW krijg je vanaf de pensioenleeftijd — You get AOW from the pension age", level: 2, cat: "health" },
+  { dutch: "het basispakket", english: "basic health package", type: "health", example: "Het basispakket dekt de basisgezondheidszorg — The basic package covers essential healthcare", level: 2, cat: "health" },
+  { dutch: "de aanvullende verzekering", english: "supplementary insurance", type: "health", example: "De tandarts zit in de aanvullende verzekering — Dentist is in supplementary insurance", level: 2, cat: "health" },
+  { dutch: "het CBR", english: "driving test authority", type: "social", example: "Het CBR neemt het rijexamen af — The CBR administers the driving test", level: 2, cat: "health" },
+  { dutch: "de mantelzorg", english: "informal care", type: "health", example: "Mantelzorg is zorg door familie of vrienden — Informal care is care by family or friends", level: 2, cat: "health" },
+  { dutch: "de jeugdzorg", english: "youth care", type: "social", example: "Jeugdzorg helpt kinderen en gezinnen — Youth care helps children and families", level: 2, cat: "health" },
+  { dutch: "de inburgering", english: "civic integration", type: "social", example: "Inburgering is verplicht voor nieuwkomers — Civic integration is mandatory for newcomers", level: 2, cat: "health" },
+
+  // ── LEVEL 2: Education & Work ──
+  { dutch: "de Cito-toets", english: "Cito test (end of primary)", type: "education", example: "De Cito-toets bepaalt je niveau — The Cito test determines your level", level: 2, cat: "education" },
+  { dutch: "de stage", english: "internship", type: "work", example: "Studenten lopen stage bij bedrijven — Students do internships at companies", level: 2, cat: "education" },
+  { dutch: "het diploma", english: "the diploma / degree", type: "education", example: "Je hebt een diploma nodig om te werken — You need a diploma to work", level: 2, cat: "education" },
+  { dutch: "de studiefinanciering", english: "student finance", type: "education", example: "Studenten krijgen studiefinanciering — Students receive student finance", level: 2, cat: "education" },
+  { dutch: "het CWI", english: "job centre (now UWV WERKbedrijf)", type: "work", example: "Het CWI helpt bij het zoeken naar werk — The job centre helps with finding work", level: 2, cat: "education" },
+  { dutch: "de vakbond", english: "trade union", type: "work", example: "De vakbond komt op voor werknemers — The trade union stands up for employees", level: 2, cat: "education" },
+  { dutch: "de CAO", english: "collective labour agreement", type: "work", example: "De CAO regelt arbeidsvoorwaarden — The CAO regulates working conditions", level: 2, cat: "education" },
+  { dutch: "het ontslagrecht", english: "dismissal law", type: "work", example: "Ontslagrecht beschermt werknemers — Dismissal law protects employees", level: 2, cat: "education" },
+  { dutch: "de belastingaangifte", english: "tax return", type: "work", example: "Ieder jaar doe je belastingaangifte — Every year you file a tax return", level: 2, cat: "education" },
+  { dutch: "het ROC", english: "regional training centre", type: "education", example: "Het ROC geeft mbo-opleidingen — The ROC provides MBO education", level: 2, cat: "education" },
+  { dutch: "de peuterspeelzaal", english: "playgroup (ages 2-4)", type: "education", example: "Peuters gaan naar de peuterspeelzaal — Toddlers go to playgroup", level: 2, cat: "education" },
+  { dutch: "de schoolplicht", english: "school attendance obligation", type: "education", example: "Schoolplicht geldt voor alle kinderen — School attendance is mandatory for all children", level: 2, cat: "education" },
+
+  // ── LEVEL 2: Culture & Traditions ──
+  { dutch: "Prinsjesdag", english: "Budget Day (3rd Tue Sep)", type: "holiday", example: "Op Prinsjesdag leest de koning de troonrede — On Budget Day the king reads the speech", level: 2, cat: "culture" },
+  { dutch: "Hemelvaartsdag", english: "Ascension Day", type: "holiday", example: "Hemelvaartsdag is een vrije dag — Ascension Day is a day off", level: 2, cat: "culture" },
+  { dutch: "Pinksteren", english: "Whitsun / Pentecost", type: "holiday", example: "Pinksteren is een christelijke feestdag — Whitsun is a Christian holiday", level: 2, cat: "culture" },
+  { dutch: "Carnaval", english: "Carnival (southern NL)", type: "tradition", example: "Carnaval wordt gevierd in het zuiden — Carnival is celebrated in the south", level: 2, cat: "culture" },
+  { dutch: "de nuchterheid", english: "sobriety / down-to-earth attitude", type: "value", example: "Nuchterheid is typisch Nederlands — A down-to-earth attitude is typically Dutch", level: 2, cat: "culture" },
+  { dutch: "doe maar normaal", english: "just act normal (Dutch saying)", type: "value", example: "Doe maar normaal, dan doe je al gek genoeg — Just act normal, that's crazy enough", level: 2, cat: "culture" },
+  { dutch: "het poldermodel", english: "polder model (consensus)", type: "value", example: "Het poldermodel is overleg en compromis — The polder model is consultation and compromise", level: 2, cat: "culture" },
+  { dutch: "de klompen", english: "wooden shoes / clogs", type: "culture", example: "Klompen zijn traditioneel Nederlands schoeisel — Clogs are traditional Dutch footwear", level: 2, cat: "culture" },
+  { dutch: "de tulpen", english: "tulips", type: "culture", example: "Tulpen zijn een symbool van Nederland — Tulips are a symbol of the Netherlands", level: 2, cat: "culture" },
+  { dutch: "de molen", english: "the windmill", type: "culture", example: "Molens werden gebruikt om water weg te pompen — Windmills were used to pump away water", level: 2, cat: "culture" },
+  { dutch: "het Wilhelmus", english: "the national anthem", type: "culture", example: "Het Wilhelmus is het oudste volkslied ter wereld — The Wilhelmus is the oldest national anthem", level: 2, cat: "culture" },
+  { dutch: "de stroopwafel", english: "syrup waffle", type: "culture", example: "De stroopwafel is een typisch Nederlands koekje — The syrup waffle is a typical Dutch cookie", level: 2, cat: "culture" },
+];
+
+// ── VERB CONJUGATIONS (strong / irregular / modal — all tenses) ──
+const VERB_CONJUGATIONS = [
+  // ═══ LEVEL 1: ESSENTIALS ═══
+  { dutch: "zijn", english: "to be", type: "strong",
+    present: "ik ben, jij bent, hij/zij is, wij zijn",
+    past: "ik was, jij was, hij was, wij waren",
+    perfect: "ik ben geweest",
+    level: 1, cat: "essentials" },
+  { dutch: "hebben", english: "to have", type: "strong",
+    present: "ik heb, jij hebt, hij heeft, wij hebben",
+    past: "ik had, jij had, hij had, wij hadden",
+    perfect: "ik heb gehad",
+    level: 1, cat: "essentials" },
+  { dutch: "worden", english: "to become", type: "strong",
+    present: "ik word, jij wordt, hij wordt, wij worden",
+    past: "ik werd, jij werd, hij werd, wij werden",
+    perfect: "ik ben geworden",
+    level: 1, cat: "essentials" },
+  { dutch: "kunnen", english: "can / to be able", type: "modal",
+    present: "ik kan, jij kunt/kan, hij kan, wij kunnen",
+    past: "ik kon, jij kon, hij kon, wij konden",
+    perfect: "ik heb gekund",
+    level: 1, cat: "essentials" },
+  { dutch: "zullen", english: "shall / will", type: "modal",
+    present: "ik zal, jij zult/zal, hij zal, wij zullen",
+    past: "ik zou, jij zou, hij zou, wij zouden",
+    perfect: "—",
+    level: 1, cat: "essentials" },
+  { dutch: "moeten", english: "must / to have to", type: "modal",
+    present: "ik moet, jij moet, hij moet, wij moeten",
+    past: "ik moest, jij moest, hij moest, wij moesten",
+    perfect: "ik heb gemoeten",
+    level: 1, cat: "essentials" },
+  { dutch: "mogen", english: "may / to be allowed", type: "modal",
+    present: "ik mag, jij mag, hij mag, wij mogen",
+    past: "ik mocht, jij mocht, hij mocht, wij mochten",
+    perfect: "ik heb gemogen",
+    level: 1, cat: "essentials" },
+  { dutch: "willen", english: "to want", type: "modal",
+    present: "ik wil, jij wilt/wil, hij wil, wij willen",
+    past: "ik wilde/wou, jij wilde/wou, wij wilden/wouden",
+    perfect: "ik heb gewild",
+    level: 1, cat: "essentials" },
+  { dutch: "doen", english: "to do", type: "strong",
+    present: "ik doe, jij doet, hij doet, wij doen",
+    past: "ik deed, jij deed, hij deed, wij deden",
+    perfect: "ik heb gedaan",
+    level: 1, cat: "essentials" },
+  { dutch: "gaan", english: "to go", type: "strong",
+    present: "ik ga, jij gaat, hij gaat, wij gaan",
+    past: "ik ging, jij ging, hij ging, wij gingen",
+    perfect: "ik ben gegaan",
+    level: 1, cat: "essentials" },
+
+  // ═══ LEVEL 1: DAILY ═══
+  { dutch: "komen", english: "to come", type: "strong",
+    present: "ik kom, jij komt, hij komt, wij komen",
+    past: "ik kwam, jij kwam, hij kwam, wij kwamen",
+    perfect: "ik ben gekomen",
+    level: 1, cat: "daily" },
+  { dutch: "zien", english: "to see", type: "strong",
+    present: "ik zie, jij ziet, hij ziet, wij zien",
+    past: "ik zag, jij zag, hij zag, wij zagen",
+    perfect: "ik heb gezien",
+    level: 1, cat: "daily" },
+  { dutch: "geven", english: "to give", type: "strong",
+    present: "ik geef, jij geeft, hij geeft, wij geven",
+    past: "ik gaf, jij gaf, hij gaf, wij gaven",
+    perfect: "ik heb gegeven",
+    level: 1, cat: "daily" },
+  { dutch: "nemen", english: "to take", type: "strong",
+    present: "ik neem, jij neemt, hij neemt, wij nemen",
+    past: "ik nam, jij nam, hij nam, wij namen",
+    perfect: "ik heb genomen",
+    level: 1, cat: "daily" },
+  { dutch: "vinden", english: "to find / to think", type: "strong",
+    present: "ik vind, jij vindt, hij vindt, wij vinden",
+    past: "ik vond, jij vond, hij vond, wij vonden",
+    perfect: "ik heb gevonden",
+    level: 1, cat: "daily" },
+  { dutch: "zeggen", english: "to say", type: "strong",
+    present: "ik zeg, jij zegt, hij zegt, wij zeggen",
+    past: "ik zei, jij zei, hij zei, wij zeiden",
+    perfect: "ik heb gezegd",
+    level: 1, cat: "daily" },
+  { dutch: "weten", english: "to know (fact)", type: "strong",
+    present: "ik weet, jij weet, hij weet, wij weten",
+    past: "ik wist, jij wist, hij wist, wij wisten",
+    perfect: "ik heb geweten",
+    level: 1, cat: "daily" },
+  { dutch: "denken", english: "to think", type: "strong",
+    present: "ik denk, jij denkt, hij denkt, wij denken",
+    past: "ik dacht, jij dacht, hij dacht, wij dachten",
+    perfect: "ik heb gedacht",
+    level: 1, cat: "daily" },
+
+  // ═══ LEVEL 1: MOVEMENT ═══
+  { dutch: "lopen", english: "to walk / to run", type: "strong",
+    present: "ik loop, jij loopt, hij loopt, wij lopen",
+    past: "ik liep, jij liep, hij liep, wij liepen",
+    perfect: "ik heb/ben gelopen",
+    level: 1, cat: "movement" },
+  { dutch: "rijden", english: "to drive / to ride", type: "strong",
+    present: "ik rijd, jij rijdt, hij rijdt, wij rijden",
+    past: "ik reed, jij reed, hij reed, wij reden",
+    perfect: "ik heb/ben gereden",
+    level: 1, cat: "movement" },
+  { dutch: "vliegen", english: "to fly", type: "strong",
+    present: "ik vlieg, jij vliegt, hij vliegt, wij vliegen",
+    past: "ik vloog, jij vloog, hij vloog, wij vlogen",
+    perfect: "ik heb/ben gevlogen",
+    level: 1, cat: "movement" },
+  { dutch: "vallen", english: "to fall", type: "strong",
+    present: "ik val, jij valt, hij valt, wij vallen",
+    past: "ik viel, jij viel, hij viel, wij vielen",
+    perfect: "ik ben gevallen",
+    level: 1, cat: "movement" },
+  { dutch: "staan", english: "to stand", type: "strong",
+    present: "ik sta, jij staat, hij staat, wij staan",
+    past: "ik stond, jij stond, hij stond, wij stonden",
+    perfect: "ik heb gestaan",
+    level: 1, cat: "movement" },
+  { dutch: "zitten", english: "to sit", type: "strong",
+    present: "ik zit, jij zit, hij zit, wij zitten",
+    past: "ik zat, jij zat, hij zat, wij zaten",
+    perfect: "ik heb gezeten",
+    level: 1, cat: "movement" },
+  { dutch: "liggen", english: "to lie (down)", type: "strong",
+    present: "ik lig, jij ligt, hij ligt, wij liggen",
+    past: "ik lag, jij lag, hij lag, wij lagen",
+    perfect: "ik heb gelegen",
+    level: 1, cat: "movement" },
+  { dutch: "brengen", english: "to bring", type: "strong",
+    present: "ik breng, jij brengt, hij brengt, wij brengen",
+    past: "ik bracht, jij bracht, hij bracht, wij brachten",
+    perfect: "ik heb gebracht",
+    level: 1, cat: "movement" },
+
+  // ═══ LEVEL 1: COMMUNICATION ═══
+  { dutch: "spreken", english: "to speak", type: "strong",
+    present: "ik spreek, jij spreekt, hij spreekt, wij spreken",
+    past: "ik sprak, jij sprak, hij sprak, wij spraken",
+    perfect: "ik heb gesproken",
+    level: 1, cat: "communication" },
+  { dutch: "schrijven", english: "to write", type: "strong",
+    present: "ik schrijf, jij schrijft, hij schrijft, wij schrijven",
+    past: "ik schreef, jij schreef, hij schreef, wij schreven",
+    perfect: "ik heb geschreven",
+    level: 1, cat: "communication" },
+  { dutch: "lezen", english: "to read", type: "strong",
+    present: "ik lees, jij leest, hij leest, wij lezen",
+    past: "ik las, jij las, hij las, wij lazen",
+    perfect: "ik heb gelezen",
+    level: 1, cat: "communication" },
+  { dutch: "begrijpen", english: "to understand", type: "strong",
+    present: "ik begrijp, jij begrijpt, hij begrijpt, wij begrijpen",
+    past: "ik begreep, jij begreep, hij begreep, wij begrepen",
+    perfect: "ik heb begrepen",
+    level: 1, cat: "communication" },
+
+  // ═══ LEVEL 1: LIFE ═══
+  { dutch: "eten", english: "to eat", type: "strong",
+    present: "ik eet, jij eet, hij eet, wij eten",
+    past: "ik at, jij at, hij at, wij aten",
+    perfect: "ik heb gegeten",
+    level: 1, cat: "life" },
+  { dutch: "drinken", english: "to drink", type: "strong",
+    present: "ik drink, jij drinkt, hij drinkt, wij drinken",
+    past: "ik dronk, jij dronk, hij dronk, wij dronken",
+    perfect: "ik heb gedronken",
+    level: 1, cat: "life" },
+  { dutch: "slapen", english: "to sleep", type: "strong",
+    present: "ik slaap, jij slaapt, hij slaapt, wij slapen",
+    past: "ik sliep, jij sliep, hij sliep, wij sliepen",
+    perfect: "ik heb geslapen",
+    level: 1, cat: "life" },
+  { dutch: "houden van", english: "to love / to like", type: "strong",
+    present: "ik houd van, jij houdt van, hij houdt van",
+    past: "ik hield van, jij hield van, wij hielden van",
+    perfect: "ik heb gehouden van",
+    level: 1, cat: "life" },
+
+  // ═══ LEVEL 2: ESSENTIALS ═══
+  { dutch: "laten", english: "to let / to leave", type: "strong",
+    present: "ik laat, jij laat, hij laat, wij laten",
+    past: "ik liet, jij liet, hij liet, wij lieten",
+    perfect: "ik heb gelaten",
+    level: 2, cat: "essentials" },
+  { dutch: "blijven", english: "to stay / to remain", type: "strong",
+    present: "ik blijf, jij blijft, hij blijft, wij blijven",
+    past: "ik bleef, jij bleef, hij bleef, wij bleven",
+    perfect: "ik ben gebleven",
+    level: 2, cat: "essentials" },
+  { dutch: "lijken", english: "to seem / to appear", type: "strong",
+    present: "ik lijk, jij lijkt, hij lijkt, wij lijken",
+    past: "ik leek, jij leek, hij leek, wij leken",
+    perfect: "ik heb geleken",
+    level: 2, cat: "essentials" },
+  { dutch: "hoeven", english: "need to (negative)", type: "modal",
+    present: "ik hoef, jij hoeft, hij hoeft, wij hoeven",
+    past: "ik hoefde, jij hoefde, hij hoefde, wij hoefden",
+    perfect: "ik heb gehoeven",
+    level: 2, cat: "essentials" },
+  { dutch: "heten", english: "to be called", type: "strong",
+    present: "ik heet, jij heet, hij heet, wij heten",
+    past: "ik heette, jij heette, hij heette, wij heetten",
+    perfect: "ik heb geheten",
+    level: 2, cat: "essentials" },
+  { dutch: "bestaan", english: "to exist", type: "strong",
+    present: "ik besta, jij bestaat, hij bestaat, wij bestaan",
+    past: "ik bestond, jij bestond, hij bestond, wij bestonden",
+    perfect: "ik heb bestaan",
+    level: 2, cat: "essentials" },
+  { dutch: "krijgen", english: "to get / to receive", type: "strong",
+    present: "ik krijg, jij krijgt, hij krijgt, wij krijgen",
+    past: "ik kreeg, jij kreeg, hij kreeg, wij kregen",
+    perfect: "ik heb gekregen",
+    level: 2, cat: "essentials" },
+
+  // ═══ LEVEL 2: DAILY ═══
+  { dutch: "kopen", english: "to buy", type: "strong",
+    present: "ik koop, jij koopt, hij koopt, wij kopen",
+    past: "ik kocht, jij kocht, hij kocht, wij kochten",
+    perfect: "ik heb gekocht",
+    level: 2, cat: "daily" },
+  { dutch: "verkopen", english: "to sell", type: "strong",
+    present: "ik verkoop, jij verkoopt, hij verkoopt, wij verkopen",
+    past: "ik verkocht, jij verkocht, hij verkocht, wij verkochten",
+    perfect: "ik heb verkocht",
+    level: 2, cat: "daily" },
+  { dutch: "zoeken", english: "to search / to look for", type: "strong",
+    present: "ik zoek, jij zoekt, hij zoekt, wij zoeken",
+    past: "ik zocht, jij zocht, hij zocht, wij zochten",
+    perfect: "ik heb gezocht",
+    level: 2, cat: "daily" },
+  { dutch: "helpen", english: "to help", type: "strong",
+    present: "ik help, jij helpt, hij helpt, wij helpen",
+    past: "ik hielp, jij hielp, hij hielp, wij hielpen",
+    perfect: "ik heb geholpen",
+    level: 2, cat: "daily" },
+  { dutch: "houden", english: "to hold / to keep", type: "strong",
+    present: "ik houd, jij houdt, hij houdt, wij houden",
+    past: "ik hield, jij hield, hij hield, wij hielden",
+    perfect: "ik heb gehouden",
+    level: 2, cat: "daily" },
+  { dutch: "vergeten", english: "to forget", type: "strong",
+    present: "ik vergeet, jij vergeet, hij vergeet, wij vergeten",
+    past: "ik vergat, jij vergat, hij vergat, wij vergaten",
+    perfect: "ik ben/heb vergeten",
+    level: 2, cat: "daily" },
+  { dutch: "kijken", english: "to look / to watch", type: "strong",
+    present: "ik kijk, jij kijkt, hij kijkt, wij kijken",
+    past: "ik keek, jij keek, hij keek, wij keken",
+    perfect: "ik heb gekeken",
+    level: 2, cat: "daily" },
+
+  // ═══ LEVEL 2: MOVEMENT ═══
+  { dutch: "vertrekken", english: "to depart", type: "strong",
+    present: "ik vertrek, jij vertrekt, hij vertrekt, wij vertrekken",
+    past: "ik vertrok, jij vertrok, hij vertrok, wij vertrokken",
+    perfect: "ik ben vertrokken",
+    level: 2, cat: "movement" },
+  { dutch: "klimmen", english: "to climb", type: "strong",
+    present: "ik klim, jij klimt, hij klimt, wij klimmen",
+    past: "ik klom, jij klom, hij klom, wij klommen",
+    perfect: "ik heb/ben geklommen",
+    level: 2, cat: "movement" },
+  { dutch: "springen", english: "to jump", type: "strong",
+    present: "ik spring, jij springt, hij springt, wij springen",
+    past: "ik sprong, jij sprong, hij sprong, wij sprongen",
+    perfect: "ik heb/ben gesprongen",
+    level: 2, cat: "movement" },
+  { dutch: "trekken", english: "to pull", type: "strong",
+    present: "ik trek, jij trekt, hij trekt, wij trekken",
+    past: "ik trok, jij trok, hij trok, wij trokken",
+    perfect: "ik heb getrokken",
+    level: 2, cat: "movement" },
+  { dutch: "dragen", english: "to carry / to wear", type: "strong",
+    present: "ik draag, jij draagt, hij draagt, wij dragen",
+    past: "ik droeg, jij droeg, hij droeg, wij droegen",
+    perfect: "ik heb gedragen",
+    level: 2, cat: "movement" },
+
+  // ═══ LEVEL 2: COMMUNICATION ═══
+  { dutch: "roepen", english: "to call / to shout", type: "strong",
+    present: "ik roep, jij roept, hij roept, wij roepen",
+    past: "ik riep, jij riep, hij riep, wij riepen",
+    perfect: "ik heb geroepen",
+    level: 2, cat: "communication" },
+  { dutch: "zingen", english: "to sing", type: "strong",
+    present: "ik zing, jij zingt, hij zingt, wij zingen",
+    past: "ik zong, jij zong, hij zong, wij zongen",
+    perfect: "ik heb gezongen",
+    level: 2, cat: "communication" },
+  { dutch: "liegen", english: "to lie (untruth)", type: "strong",
+    present: "ik lieg, jij liegt, hij liegt, wij liegen",
+    past: "ik loog, jij loog, hij loog, wij logen",
+    perfect: "ik heb gelogen",
+    level: 2, cat: "communication" },
+  { dutch: "bieden", english: "to offer", type: "strong",
+    present: "ik bied, jij biedt, hij biedt, wij bieden",
+    past: "ik bood, jij bood, hij bood, wij boden",
+    perfect: "ik heb geboden",
+    level: 2, cat: "communication" },
+
+  // ═══ LEVEL 2: LIFE ═══
+  { dutch: "sterven", english: "to die", type: "strong",
+    present: "ik sterf, jij sterft, hij sterft, wij sterven",
+    past: "ik stierf, jij stierf, hij stierf, wij stierven",
+    perfect: "ik ben gestorven",
+    level: 2, cat: "life" },
+  { dutch: "wassen", english: "to wash", type: "strong",
+    present: "ik was, jij wast, hij wast, wij wassen",
+    past: "ik waste, jij waste, hij waste, wij wasten",
+    perfect: "ik heb gewassen",
+    level: 2, cat: "life" },
+  { dutch: "breken", english: "to break", type: "strong",
+    present: "ik breek, jij breekt, hij breekt, wij breken",
+    past: "ik brak, jij brak, hij brak, wij braken",
+    perfect: "ik heb gebroken",
+    level: 2, cat: "life" },
+  { dutch: "sluiten", english: "to close / to lock", type: "strong",
+    present: "ik sluit, jij sluit, hij sluit, wij sluiten",
+    past: "ik sloot, jij sloot, hij sloot, wij sloten",
+    perfect: "ik heb gesloten",
+    level: 2, cat: "life" },
+  { dutch: "kiezen", english: "to choose", type: "strong",
+    present: "ik kies, jij kiest, hij kiest, wij kiezen",
+    past: "ik koos, jij koos, hij koos, wij kozen",
+    perfect: "ik heb gekozen",
+    level: 2, cat: "life" },
+  { dutch: "winnen", english: "to win", type: "strong",
+    present: "ik win, jij wint, hij wint, wij winnen",
+    past: "ik won, jij won, hij won, wij wonnen",
+    perfect: "ik heb gewonnen",
+    level: 2, cat: "life" },
+  { dutch: "beginnen", english: "to begin", type: "strong",
+    present: "ik begin, jij begint, hij begint, wij beginnen",
+    past: "ik begon, jij begon, hij begon, wij begonnen",
+    perfect: "ik ben begonnen",
+    level: 2, cat: "life" },
+  { dutch: "vergelijken", english: "to compare", type: "strong",
+    present: "ik vergelijk, jij vergelijkt, hij vergelijkt",
+    past: "ik vergeleek, jij vergeleek, wij vergeleken",
+    perfect: "ik heb vergeleken",
+    level: 2, cat: "life" },
+];
+
 // ── PACKS ──
 const PACKS = {
   verbs: {
@@ -1089,6 +1915,63 @@ const PACKS = {
       food: "Food & Drink",
       time: "Time & Nature",
       objects: "Daily Objects"
+    }
+  },
+  phrases: {
+    label: "Phrases",
+    icon: "💬",
+    data: PHRASES,
+    wordLabel: "Phrase",
+    categories: {
+      all: "All Phrases",
+      greetings: "Greetings",
+      polite: "Polite & Manners",
+      questions: "Questions",
+      shopping: "Shopping & Food",
+      daily: "Daily Talk"
+    }
+  },
+  essentials: {
+    label: "Essentials",
+    icon: "🔑",
+    data: ESSENTIALS,
+    wordLabel: "Word",
+    categories: {
+      all: "All Essentials",
+      freq: "Frequency Words",
+      pronouns: "Pronouns",
+      howoften: "How Often?",
+      time_basic: "Time Words",
+      tenses: "Tense Markers"
+    }
+  },
+  knm: {
+    label: "Dutch Society",
+    icon: "🏛",
+    data: KNM,
+    wordLabel: "Concept",
+    categories: {
+      all: "All Concepts",
+      government: "Government & Law",
+      geography: "Geography & People",
+      health: "Healthcare & Social",
+      education: "Education & Work",
+      culture: "Culture & Traditions"
+    }
+  },
+  conjugations: {
+    label: "Verb Tenses",
+    icon: "⚗",
+    data: VERB_CONJUGATIONS,
+    wordLabel: "Verb",
+    isConjugation: true,
+    categories: {
+      all: "All Verbs",
+      essentials: "Essentials & Modals",
+      daily: "Daily Actions",
+      movement: "Movement",
+      communication: "Communication",
+      life: "Life & Feelings"
     }
   }
 };
@@ -1263,28 +2146,50 @@ function flipCard() {
   document.getElementById('card').classList.toggle('flipped', isFlipped);
 }
 
+function buildConjHTML(word) {
+  return `<div class="conj-info">
+    <div class="conj-row"><span class="conj-label">Presens</span><span class="conj-forms">${word.present}</span></div>
+    <div class="conj-row"><span class="conj-label">OVT</span><span class="conj-forms">${word.past}</span></div>
+    <div class="conj-row"><span class="conj-label">VTT</span><span class="conj-forms">${word.perfect}</span></div>
+  </div>`;
+}
+
 function updateCardContent() {
   if (currentIndex >= deck.length) return;
   const word = deck[currentIndex];
-  const wLabel = PACKS[currentPack].wordLabel;
+  const pack = PACKS[currentPack];
+  const wLabel = pack.wordLabel;
+  const isConj = pack.isConjugation;
+
+  const card = document.getElementById('card');
+  card.classList.toggle('conj-mode', !!isConj);
 
   const frontLabel = document.querySelector('.card-front .card-label');
   const backLabel = document.querySelector('.card-back .card-label');
+  const backExample = document.getElementById('backExample');
 
   if (direction === "nl-en") {
     document.getElementById('frontWord').textContent = word.dutch;
     document.getElementById('frontExtra').textContent = `(${word.type})`;
     frontLabel.textContent = `Dutch ${wLabel}`;
     document.getElementById('backWord').textContent = word.english;
-    document.getElementById('backExample').textContent = `"${word.example}"`;
-    backLabel.textContent = "English Translation";
+    backLabel.textContent = isConj ? "Conjugations" : "English Translation";
+    if (isConj) {
+      backExample.innerHTML = buildConjHTML(word);
+    } else {
+      backExample.textContent = `"${word.example}"`;
+    }
   } else {
     document.getElementById('frontWord').textContent = word.english;
     document.getElementById('frontExtra').textContent = `(${word.type})`;
     frontLabel.textContent = `English ${wLabel}`;
     document.getElementById('backWord').textContent = word.dutch;
-    document.getElementById('backExample').textContent = `"${word.example}"`;
-    backLabel.textContent = "Dutch Translation";
+    backLabel.textContent = isConj ? "Conjugations" : "Dutch Translation";
+    if (isConj) {
+      backExample.innerHTML = buildConjHTML(word);
+    } else {
+      backExample.textContent = `"${word.example}"`;
+    }
   }
 }
 
