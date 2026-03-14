@@ -282,6 +282,53 @@
     font-style: italic;
   }
 
+  .audio-btn {
+    position: absolute;
+    bottom: 14px;
+    right: 16px;
+    background: rgba(218, 165, 32, 0.12);
+    border: 1px solid rgba(218, 165, 32, 0.35);
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+    color: #daa520;
+    line-height: 1;
+    padding: 0;
+  }
+  .audio-btn:hover {
+    background: rgba(218, 165, 32, 0.28);
+    transform: scale(1.12);
+  }
+  .audio-btn.speaking {
+    background: rgba(218, 165, 32, 0.4);
+    animation: pulse-audio 0.6s ease-in-out infinite alternate;
+  }
+  .audio-btn.loading {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  @keyframes pulse-audio {
+    from { box-shadow: 0 0 4px rgba(218,165,32,0.3); }
+    to   { box-shadow: 0 0 12px rgba(218,165,32,0.8); }
+  }
+  .card-back .audio-btn {
+    border-color: rgba(155, 114, 207, 0.35);
+    background: rgba(155, 114, 207, 0.12);
+    color: #9b72cf;
+  }
+  .card-back .audio-btn:hover {
+    background: rgba(155, 114, 207, 0.28);
+  }
+  .card-back .audio-btn.speaking {
+    background: rgba(155, 114, 207, 0.4);
+  }
+
   /* Buttons */
   .controls {
     display: flex;
@@ -796,6 +843,7 @@
         <div class="card-label">Dutch Verb</div>
         <div class="card-word" id="frontWord">zijn</div>
         <div class="card-extra" id="frontExtra">(irregular)</div>
+        <button class="audio-btn" id="audioFront" onclick="event.stopPropagation(); speakCurrent()" title="Uitspreken">🔊</button>
         <div class="flip-hint">~ tap to reveal ~</div>
       </div>
       <div class="card-face card-back">
@@ -803,6 +851,7 @@
         <div class="card-label">English Translation</div>
         <div class="card-word" id="backWord">to be</div>
         <div class="card-example" id="backExample">"Ik ben blij" — I am happy</div>
+        <button class="audio-btn" id="audioBack" onclick="event.stopPropagation(); speakCurrent()" title="Uitspreken">🔊</button>
       </div>
     </div>
   </div>
@@ -2635,6 +2684,104 @@ function buildSceneBackHTML(word) {
     ${pairs}
   </div>`;
 }
+
+// ── Audio: Wiktionary real pronunciation + TTS fallback ──
+const _audioCache = {};   // word → audio URL (or null if not found)
+let   _currentAudio = null;
+
+// Strip Dutch articles so "de man" → "man", "het huis" → "huis"
+function _stripArticle(text) {
+  return text.replace(/^(de|het|een)\s+/i, '').trim();
+}
+
+// Build candidate Wiktionary filenames for a Dutch word/phrase
+function _wiktionaryFilenames(text) {
+  const base = _stripArticle(text).toLowerCase();
+  // Wiktionary naming: "Nl-word.ogg" or "Nl-word_(Belgium).ogg"
+  // Some words use spaces as-is, most use hyphens; try both
+  const variants = [base, base.replace(/\s+/g, '_'), base.replace(/\s+/g, '-')];
+  const unique = [...new Set(variants)];
+  return unique.map(v => `Nl-${v}.ogg`);
+}
+
+async function _fetchWiktionaryUrl(text) {
+  const filenames = _wiktionaryFilenames(text);
+  for (const filename of filenames) {
+    try {
+      const apiUrl = `https://commons.wikimedia.org/w/api.php?action=query&titles=File:${encodeURIComponent(filename)}&prop=imageinfo&iiprop=url&format=json&origin=*`;
+      const resp = await fetch(apiUrl);
+      if (!resp.ok) continue;
+      const data = await resp.json();
+      const pages = Object.values(data.query.pages);
+      if (pages[0] && pages[0].imageinfo && pages[0].imageinfo[0]) {
+        return pages[0].imageinfo[0].url;
+      }
+    } catch (_) { /* network error, try next */ }
+  }
+  return null;
+}
+
+function _setBtnState(state) {
+  // state: 'loading' | 'speaking' | ''
+  document.querySelectorAll('.audio-btn').forEach(b => {
+    b.classList.toggle('speaking', state === 'speaking');
+    b.classList.toggle('loading',  state === 'loading');
+    b.textContent = state === 'loading' ? '⏳' : '🔊';
+  });
+}
+
+function _speakTTS(text) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'nl-NL';
+  utt.rate = 0.88;
+  const voices = speechSynthesis.getVoices();
+  const voice = voices.find(v => v.lang === 'nl-NL') || voices.find(v => v.lang.startsWith('nl'));
+  if (voice) utt.voice = voice;
+  _setBtnState('speaking');
+  utt.onend  = () => _setBtnState('');
+  utt.onerror = () => _setBtnState('');
+  speechSynthesis.speak(utt);
+}
+
+async function speakCurrent() {
+  if (currentIndex >= deck.length) return;
+  const word = deck[currentIndex];
+
+  // Stop any current playback
+  if (_currentAudio) { _currentAudio.pause(); _currentAudio = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+
+  const text = word.dutch;
+  const cacheKey = text.toLowerCase();
+
+  _setBtnState('loading');
+
+  // Check cache first (null means already tried and not found)
+  let audioUrl;
+  if (cacheKey in _audioCache) {
+    audioUrl = _audioCache[cacheKey];
+  } else {
+    audioUrl = await _fetchWiktionaryUrl(text);
+    _audioCache[cacheKey] = audioUrl;
+  }
+
+  if (audioUrl) {
+    _setBtnState('speaking');
+    const audio = new Audio(audioUrl);
+    _currentAudio = audio;
+    audio.onended  = () => { _setBtnState(''); _currentAudio = null; };
+    audio.onerror  = () => { _setBtnState(''); _currentAudio = null; _speakTTS(text); };
+    audio.play().catch(() => _speakTTS(text));
+  } else {
+    // Wiktionary doesn't have this word — fall back to TTS
+    _speakTTS(text);
+  }
+}
+
+// Pre-warm TTS voices
+if (window.speechSynthesis) speechSynthesis.getVoices();
 
 function updateCardContent() {
   if (currentIndex >= deck.length) return;
