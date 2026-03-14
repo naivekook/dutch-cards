@@ -232,7 +232,7 @@
 
   .card-label {
     font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
+    font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 3px;
     margin-bottom: 16px;
@@ -243,7 +243,7 @@
 
   .card-word {
     font-family: 'Cinzel Decorative', cursive;
-    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-size: clamp(2.6rem, 7vw, 4rem);
     font-weight: 700;
     line-height: 1.3;
     margin-bottom: 12px;
@@ -259,7 +259,7 @@
 
   .card-extra {
     font-style: italic;
-    font-size: 1rem;
+    font-size: 1.4rem;
     opacity: 0.65;
     margin-top: 4px;
   }
@@ -268,7 +268,7 @@
 
   .card-example {
     margin-top: 16px;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     opacity: 0.7;
     max-width: 90%;
     line-height: 1.5;
@@ -607,7 +607,7 @@
 
   /* Conjugation card styles */
   .conj-mode .card-back .card-word {
-    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    font-size: clamp(2rem, 5vw, 3rem);
     margin-bottom: 4px;
   }
   .conj-mode .card-back .card-example {
@@ -616,7 +616,7 @@
     text-align: left;
   }
   .conj-info {
-    font-size: 0.78rem;
+    font-size: 1rem;
     line-height: 1.55;
     width: 100%;
   }
@@ -627,11 +627,11 @@
   }
   .conj-label {
     font-family: 'Cinzel', serif;
-    font-size: 0.62rem;
+    font-size: 0.85rem;
     color: #9b72cf;
     text-transform: uppercase;
     letter-spacing: 1px;
-    min-width: 58px;
+    min-width: 72px;
     flex-shrink: 0;
     opacity: 0.65;
     padding-top: 2px;
@@ -644,9 +644,99 @@
     opacity: 0.7;
   }
 
+  /* Scene card styles */
+  .card-container.scene-container {
+    height: 380px;
+  }
+  .scene-mode .card-front {
+    padding: 14px 20px;
+    justify-content: flex-start;
+  }
+  .scene-mode .card-front .card-label {
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  .scene-mode .card-front .card-word {
+    font-size: 1.6rem;
+    margin: 0;
+    color: #d4a574;
+    font-style: italic;
+  }
+  .scene-mode .card-front .card-extra {
+    font-size: 1.2rem;
+    color: #a08050;
+    margin-top: 4px;
+  }
+  .scene-mode .card-front .flip-hint {
+    margin-top: 4px;
+  }
+  .scene-img {
+    width: 100%;
+    max-width: 400px;
+    height: 185px;
+    margin: 6px auto;
+    border-radius: 10px;
+    border: 1px solid rgba(139, 105, 20, 0.4);
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    object-fit: cover;
+    background: #1a1a2e;
+    display: block;
+  }
+  .scene-mode .card-back {
+    padding: 16px 20px;
+    justify-content: flex-start;
+  }
+  .scene-mode .card-back .card-label {
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  .scene-mode .card-back .card-word {
+    font-size: clamp(1.6rem, 4.5vw, 2.2rem);
+    margin-bottom: 6px;
+    color: #e8d5b0;
+  }
+  .scene-mode .card-back .card-example {
+    margin-top: 2px;
+    max-width: 100%;
+    text-align: left;
+  }
+  .scene-vocab {
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  .scene-desc {
+    color: #c9a8f0;
+    font-style: italic;
+    margin-bottom: 6px;
+    font-size: 1.1rem;
+    text-align: center;
+  }
+  .vocab-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1px;
+    align-items: baseline;
+  }
+  .vocab-nl {
+    color: #e8c170;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-width: 130px;
+    flex-shrink: 0;
+  }
+  .vocab-en {
+    color: #a088b8;
+    font-size: 0.9rem;
+  }
+
   /* Responsive */
   @media (max-width: 520px) {
     .card-container { height: 280px; }
+    .card-container.scene-container { height: 350px; }
+    .scene-svg { height: 150px; }
     .controls { gap: 10px; }
     .btn { padding: 10px 18px; font-size: 0.8rem; }
     .conj-info { font-size: 0.72rem; }
@@ -1314,9 +1404,14 @@ const ESSENTIALS = [
   { dutch: "haar", english: "her", type: "possessive", example: "Haar boek — Her book", level: 2, cat: "pronouns" },
   { dutch: "ons / onze", english: "our", type: "possessive", example: "Ons huis — Our house", level: 2, cat: "pronouns" },
   { dutch: "hun", english: "their", type: "possessive", example: "Hun kinderen — Their children", level: 2, cat: "pronouns" },
-  { dutch: "deze", english: "this / these", type: "demonstrative", example: "Deze auto is nieuw — This car is new", level: 2, cat: "pronouns" },
-  { dutch: "die", english: "that / those", type: "demonstrative", example: "Die man daar — That man there", level: 2, cat: "pronouns" },
-  { dutch: "dit", english: "this (het-word)", type: "demonstrative", example: "Dit boek is goed — This book is good", level: 2, cat: "pronouns" },
+  { dutch: "dit (het-word, dichtbij)", english: "this (het-word, near)", type: "demonstrative", example: "Dit huis is mooi — This house is beautiful", level: 2, cat: "pronouns" },
+  { dutch: "dat (het-word, ver weg)", english: "that (het-word, far)", type: "demonstrative", example: "Dat huis daar is oud — That house there is old", level: 2, cat: "pronouns" },
+  { dutch: "deze (de-word, dichtbij)", english: "this (de-word, near)", type: "demonstrative", example: "Deze kast is nieuw — This cupboard is new", level: 2, cat: "pronouns" },
+  { dutch: "die (de-word, ver weg)", english: "that (de-word, far)", type: "demonstrative", example: "Die kast daar is oud — That cupboard there is old", level: 2, cat: "pronouns" },
+  { dutch: "deze (pluralis, dichtbij)", english: "these (plural, near)", type: "demonstrative", example: "Deze huizen / deze kasten — These houses / these cupboards", level: 2, cat: "pronouns" },
+  { dutch: "die (pluralis, ver weg)", english: "those (plural, far)", type: "demonstrative", example: "Die huizen / die kasten — Those houses / those cupboards", level: 2, cat: "pronouns" },
+  { dutch: "deze/dit week/jaar (nu)", english: "this week/year (now, current)", type: "demonstrative", example: "Deze week heb ik les, dit jaar studeer ik — This week I have class, this year I study", level: 2, cat: "pronouns" },
+  { dutch: "die/dat week/jaar (andere tijd)", english: "that week/year (other time)", type: "demonstrative", example: "Die week was ik ziek, dat jaar was moeilijk — That week I was sick, that year was hard", level: 2, cat: "pronouns" },
   { dutch: "wat", english: "what / something", type: "pronoun", example: "Wat wil je? — What do you want?", level: 2, cat: "pronouns" },
   { dutch: "wie", english: "who", type: "pronoun", example: "Wie is dat? — Who is that?", level: 2, cat: "pronouns" },
   { dutch: "welk / welke", english: "which", type: "pronoun", example: "Welke kleur? — Which colour?", level: 2, cat: "pronouns" },
@@ -1370,6 +1465,429 @@ const ESSENTIALS = [
   { dutch: "uiteindelijk", english: "eventually / finally", type: "time", example: "Uiteindelijk is het gelukt — Eventually it worked out", level: 2, cat: "tenses" },
   { dutch: "onlangs", english: "recently", type: "past", example: "Ik heb onlangs verhuisd — I recently moved", level: 2, cat: "tenses" },
   { dutch: "op dit moment", english: "at this moment", type: "present", example: "Op dit moment ben ik thuis — At this moment I'm at home", level: 2, cat: "tenses" },
+];
+
+// ── VERB CONJUGATIONS ──
+// Front: infinitive + English. Back: full conjugation table (heden / O.V.T. / voltooid deelwoord + heeft/is)
+// "conj" field holds the conjugation table shown on the back card
+const VERB_CONJ = [
+  // ── LEVEL 1: Essentials (zijn, hebben, worden, gaan, komen, doen, zeggen, weten, kunnen, mogen, moeten, willen, zullen) ──
+  { dutch: "zijn", english: "to be", type: "irregular",
+    conj: "ik ben · jij bent · hij is · wij zijn · zij zijn | was / waren | geweest (zijn)",
+    example: "Ik was gisteren ziek — I was sick yesterday", level: 1, cat: "essentials" },
+  { dutch: "hebben", english: "to have", type: "irregular",
+    conj: "ik heb · jij hebt · hij heeft · wij hebben · zij hebben | had / hadden | gehad (hebben)",
+    example: "Wij hadden honger — We were hungry", level: 1, cat: "essentials" },
+  { dutch: "worden", english: "to become / to get", type: "irregular",
+    conj: "ik word · jij wordt · hij wordt · wij worden · zij worden | werd / werden | geworden (zijn)",
+    example: "Het wordt koud — It's getting cold", level: 1, cat: "essentials" },
+  { dutch: "gaan", english: "to go", type: "strong",
+    conj: "ik ga · jij gaat · hij gaat · wij gaan · zij gaan | ging / gingen | gegaan (zijn)",
+    example: "Zij gingen naar school — They went to school", level: 1, cat: "essentials" },
+  { dutch: "komen", english: "to come", type: "strong",
+    conj: "ik kom · jij komt · hij komt · wij komen · zij komen | kwam / kwamen | gekomen (zijn)",
+    example: "Hij kwam te laat — He came too late", level: 1, cat: "essentials" },
+  { dutch: "doen", english: "to do", type: "irregular",
+    conj: "ik doe · jij doet · hij doet · wij doen · zij doen | deed / deden | gedaan (hebben)",
+    example: "Wat deed jij gisteren? — What did you do yesterday?", level: 1, cat: "essentials" },
+  { dutch: "zeggen", english: "to say", type: "irregular",
+    conj: "ik zeg · jij zegt · hij zegt · wij zeggen · zij zeggen | zei / zeiden | gezegd (hebben)",
+    example: "Ze zei niets — She said nothing", level: 1, cat: "essentials" },
+  { dutch: "weten", english: "to know (a fact)", type: "irregular",
+    conj: "ik weet · jij weet · hij weet · wij weten · zij weten | wist / wisten | geweten (hebben)",
+    example: "Ik wist het antwoord niet — I didn't know the answer", level: 1, cat: "essentials" },
+  { dutch: "kunnen", english: "can / to be able to", type: "modal",
+    conj: "ik kan · jij kunt/kan · hij kan · wij kunnen · zij kunnen | kon / konden | gekund (hebben)",
+    example: "Ik kon gisteren niet komen — I couldn't come yesterday", level: 1, cat: "essentials" },
+  { dutch: "mogen", english: "may / to be allowed to", type: "modal",
+    conj: "ik mag · jij mag · hij mag · wij mogen · zij mogen | mocht / mochten | gemoogd (hebben)",
+    example: "Mocht ik hier parkeren? — Was I allowed to park here?", level: 1, cat: "essentials" },
+  { dutch: "moeten", english: "must / to have to", type: "modal",
+    conj: "ik moet · jij moet · hij moet · wij moeten · zij moeten | moest / moesten | gemoeten (hebben)",
+    example: "Hij moest vroeg opstaan — He had to get up early", level: 1, cat: "essentials" },
+  { dutch: "willen", english: "to want", type: "modal",
+    conj: "ik wil · jij wilt/wil · hij wil · wij willen · zij willen | wilde/wou / wilden | gewild (hebben)",
+    example: "Ze wilde een kopje thee — She wanted a cup of tea", level: 1, cat: "essentials" },
+  { dutch: "zullen", english: "shall / will (future)", type: "modal",
+    conj: "ik zal · jij zult/zal · hij zal · wij zullen · zij zullen | zou / zouden | — ",
+    example: "Ik zou morgen komen — I would come tomorrow", level: 1, cat: "essentials" },
+
+  // ── LEVEL 1: Common Strong Verbs (kijken, rijden, schrijven, blijven, lijken, krijgen, snijden) ──
+  { dutch: "kijken", english: "to look / to watch", type: "strong",
+    conj: "ik kijk · jij kijkt · hij kijkt · wij kijken · zij kijken | keek / keken | gekeken (hebben)",
+    example: "We keken naar de film — We watched the film", level: 1, cat: "strong" },
+  { dutch: "rijden", english: "to ride / to drive", type: "strong",
+    conj: "ik rijd · jij rijdt · hij rijdt · wij rijden · zij rijden | reed / reden | gereden (hebben/zijn)",
+    example: "Hij reed naar Amsterdam — He drove to Amsterdam", level: 1, cat: "strong" },
+  { dutch: "schrijven", english: "to write", type: "strong",
+    conj: "ik schrijf · jij schrijft · hij schrijft · wij schrijven · zij schrijven | schreef / schreven | geschreven (hebben)",
+    example: "Ze schreef een brief — She wrote a letter", level: 1, cat: "strong" },
+  { dutch: "blijven", english: "to stay / to remain", type: "strong",
+    conj: "ik blijf · jij blijft · hij blijft · wij blijven · zij blijven | bleef / bleven | gebleven (zijn)",
+    example: "Hij bleef de hele dag thuis — He stayed home all day", level: 1, cat: "strong" },
+  { dutch: "lijken", english: "to seem / to look like", type: "strong",
+    conj: "ik lijk · jij lijkt · hij lijkt · wij lijken · zij lijken | leek / leken | geleken (hebben)",
+    example: "Het leek makkelijk — It seemed easy", level: 1, cat: "strong" },
+  { dutch: "krijgen", english: "to get / to receive", type: "strong",
+    conj: "ik krijg · jij krijgt · hij krijgt · wij krijgen · zij krijgen | kreeg / kregen | gekregen (hebben)",
+    example: "Ze kregen een brief — They received a letter", level: 1, cat: "strong" },
+  { dutch: "snijden", english: "to cut", type: "strong",
+    conj: "ik snijd · jij snijdt · hij snijdt · wij snijden · zij snijden | sneed / sneden | gesneden (hebben)",
+    example: "Hij sneed het brood — He cut the bread", level: 1, cat: "strong" },
+
+  // ── LEVEL 1: Separable Verbs ──
+  { dutch: "opstaan", english: "to get up / to stand up", type: "separable",
+    conj: "ik sta op · jij staat op · hij staat op · wij staan op · zij staan op | stond op / stonden op | opgestaan (zijn)",
+    example: "Ze stond vroeg op — She got up early", level: 1, cat: "separable" },
+  { dutch: "aankomen", english: "to arrive", type: "separable",
+    conj: "ik kom aan · jij komt aan · hij komt aan · wij komen aan · zij komen aan | kwam aan / kwamen aan | aangekomen (zijn)",
+    example: "De trein kwam laat aan — The train arrived late", level: 1, cat: "separable" },
+  { dutch: "meenemen", english: "to take along", type: "separable",
+    conj: "ik neem mee · jij neemt mee · hij neemt mee · wij nemen mee · zij nemen mee | nam mee / namen mee | meegenomen (hebben)",
+    example: "Hij nam zijn tas mee — He took his bag along", level: 1, cat: "separable" },
+  { dutch: "uitleggen", english: "to explain", type: "separable",
+    conj: "ik leg uit · jij legt uit · hij legt uit · wij leggen uit · zij leggen uit | legde uit / legden uit | uitgelegd (hebben)",
+    example: "De leraar legde het uit — The teacher explained it", level: 1, cat: "separable" },
+  { dutch: "beginnen", english: "to begin / to start", type: "strong",
+    conj: "ik begin · jij begint · hij begint · wij beginnen · zij beginnen | begon / begonnen | begonnen (zijn)",
+    example: "De les begon om negen uur — The lesson began at nine", level: 1, cat: "strong" },
+
+  // ── LEVEL 2: More Strong Verbs ──
+  { dutch: "vinden", english: "to find / to think", type: "strong",
+    conj: "ik vind · jij vindt · hij vindt · wij vinden · zij vinden | vond / vonden | gevonden (hebben)",
+    example: "Ik vond het heel leuk — I found it very nice", level: 2, cat: "strong" },
+  { dutch: "binden", english: "to tie / to bind", type: "strong",
+    conj: "ik bind · jij bindt · hij bindt · wij binden · zij binden | bond / bonden | gebonden (hebben)",
+    example: "Ze bond de schoenveters — She tied her shoelaces", level: 2, cat: "strong" },
+  { dutch: "zingen", english: "to sing", type: "strong",
+    conj: "ik zing · jij zingt · hij zingt · wij zingen · zij zingen | zong / zongen | gezongen (hebben)",
+    example: "Ze zongen een lied — They sang a song", level: 2, cat: "strong" },
+  { dutch: "drinken", english: "to drink", type: "strong",
+    conj: "ik drink · jij drinkt · hij drinkt · wij drinken · zij drinken | dronk / dronken | gedronken (hebben)",
+    example: "Hij dronk een glas water — He drank a glass of water", level: 2, cat: "strong" },
+  { dutch: "springen", english: "to jump", type: "strong",
+    conj: "ik spring · jij springt · hij springt · wij springen · zij springen | sprong / sprongen | gesprongen (zijn)",
+    example: "Het kind sprong van vreugde — The child jumped for joy", level: 2, cat: "strong" },
+  { dutch: "helpen", english: "to help", type: "strong",
+    conj: "ik help · jij helpt · hij helpt · wij helpen · zij helpen | hielp / hielpen | geholpen (hebben)",
+    example: "Hij hielp zijn moeder — He helped his mother", level: 2, cat: "strong" },
+  { dutch: "lopen", english: "to walk / to run", type: "strong",
+    conj: "ik loop · jij loopt · hij loopt · wij lopen · zij lopen | liep / liepen | gelopen (hebben/zijn)",
+    example: "Ze liep naar het station — She walked to the station", level: 2, cat: "strong" },
+  { dutch: "roepen", english: "to call out / to shout", type: "strong",
+    conj: "ik roep · jij roept · hij roept · wij roepen · zij roepen | riep / riepen | geroepen (hebben)",
+    example: "Hij riep om hulp — He called out for help", level: 2, cat: "strong" },
+  { dutch: "vliegen", english: "to fly", type: "strong",
+    conj: "ik vlieg · jij vliegt · hij vliegt · wij vliegen · zij vliegen | vloog / vlogen | gevlogen (zijn)",
+    example: "Ze vlogen naar Barcelona — They flew to Barcelona", level: 2, cat: "strong" },
+  { dutch: "slapen", english: "to sleep", type: "strong",
+    conj: "ik slaap · jij slaapt · hij slaapt · wij slapen · zij slapen | sliep / sliepen | geslapen (hebben)",
+    example: "De kinderen sliepen al — The children were already sleeping", level: 2, cat: "strong" },
+  { dutch: "vallen", english: "to fall", type: "strong",
+    conj: "ik val · jij valt · hij valt · wij vallen · zij vallen | viel / vielen | gevallen (zijn)",
+    example: "Ze viel van de fiets — She fell off the bike", level: 2, cat: "strong" },
+  { dutch: "houden", english: "to hold / to keep", type: "strong",
+    conj: "ik houd · jij houdt · hij houdt · wij houden · zij houden | hield / hielden | gehouden (hebben)",
+    example: "Ik hield van haar — I loved her", level: 2, cat: "strong" },
+  { dutch: "lezen", english: "to read", type: "strong",
+    conj: "ik lees · jij leest · hij leest · wij lezen · zij lezen | las / lazen | gelezen (hebben)",
+    example: "Ze las elke avond een boek — She read a book every evening", level: 2, cat: "strong" },
+  { dutch: "eten", english: "to eat", type: "strong",
+    conj: "ik eet · jij eet · hij eet · wij eten · zij eten | at / aten | gegeten (hebben)",
+    example: "We aten samen aan tafel — We ate together at the table", level: 2, cat: "strong" },
+  { dutch: "geven", english: "to give", type: "strong",
+    conj: "ik geef · jij geeft · hij geeft · wij geven · zij geven | gaf / gaven | gegeven (hebben)",
+    example: "Ze gaf hem een cadeau — She gave him a gift", level: 2, cat: "strong" },
+  { dutch: "staan", english: "to stand", type: "strong",
+    conj: "ik sta · jij staat · hij staat · wij staan · zij staan | stond / stonden | gestaan (hebben)",
+    example: "Hij stond aan de deur — He stood at the door", level: 2, cat: "strong" },
+  { dutch: "zitten", english: "to sit", type: "strong",
+    conj: "ik zit · jij zit · hij zit · wij zitten · zij zitten | zat / zaten | gezeten (hebben)",
+    example: "Ze zat op de bank — She sat on the sofa", level: 2, cat: "strong" },
+  { dutch: "liggen", english: "to lie (down)", type: "strong",
+    conj: "ik lig · jij ligt · hij ligt · wij liggen · zij liggen | lag / lagen | gelegen (hebben)",
+    example: "Het boek lag op tafel — The book lay on the table", level: 2, cat: "strong" },
+
+  // ── LEVEL 2: More Separable Verbs ──
+  { dutch: "afspreken", english: "to arrange / to meet up", type: "separable",
+    conj: "ik spreek af · jij spreekt af · hij spreekt af · wij spreken af · zij spreken af | sprak af / spraken af | afgesproken (hebben)",
+    example: "We spraken af om zes uur — We agreed to meet at six", level: 2, cat: "separable" },
+  { dutch: "terugkomen", english: "to come back / to return", type: "separable",
+    conj: "ik kom terug · jij komt terug · hij komt terug · wij komen terug · zij komen terug | kwam terug / kwamen terug | teruggekomen (zijn)",
+    example: "Ze kwam pas laat terug — She came back late", level: 2, cat: "separable" },
+  { dutch: "aanzetten", english: "to turn on", type: "separable",
+    conj: "ik zet aan · jij zet aan · hij zet aan · wij zetten aan · zij zetten aan | zette aan / zetten aan | aangezet (hebben)",
+    example: "Ze zette de televisie aan — She turned on the TV", level: 2, cat: "separable" },
+  { dutch: "uitzetten", english: "to turn off", type: "separable",
+    conj: "ik zet uit · jij zet uit · hij zet uit · wij zetten uit · zij zetten uit | zette uit / zetten uit | uitgezet (hebben)",
+    example: "Hij zette het licht uit — He turned off the light", level: 2, cat: "separable" },
+  { dutch: "opbellen", english: "to call (on phone)", type: "separable",
+    conj: "ik bel op · jij belt op · hij belt op · wij bellen op · zij bellen op | belde op / belden op | opgebeld (hebben)",
+    example: "Ze belde haar moeder op — She called her mother", level: 2, cat: "separable" },
+];
+
+// ── PREPOSITIONS ──
+const PREPOSITIONS = [
+  // ── LEVEL 1: Place prepositions (from poster image) ──
+  { dutch: "in", english: "in / inside", type: "place",
+    example: "De kat zit in de doos — The cat is inside the box", level: 1, cat: "place" },
+  { dutch: "op", english: "on / on top of", type: "place",
+    example: "Het boek ligt op de tafel — The book is on the table", level: 1, cat: "place" },
+  { dutch: "boven", english: "above / over", type: "place",
+    example: "De lamp hangt boven de tafel — The lamp hangs above the table", level: 1, cat: "place" },
+  { dutch: "onder", english: "under / below", type: "place",
+    example: "De tas ligt onder de stoel — The bag is under the chair", level: 1, cat: "place" },
+  { dutch: "tussen", english: "between", type: "place",
+    example: "Het huis staat tussen de bomen — The house stands between the trees", level: 1, cat: "place" },
+  { dutch: "voor", english: "in front of / before", type: "place",
+    example: "De fiets staat voor de deur — The bike is in front of the door", level: 1, cat: "place" },
+  { dutch: "achter", english: "behind / at the back of", type: "place",
+    example: "De tuin is achter het huis — The garden is behind the house", level: 1, cat: "place" },
+  { dutch: "naast", english: "next to / beside", type: "place",
+    example: "Ik zit naast mijn vriend — I sit next to my friend", level: 1, cat: "place" },
+  { dutch: "tegen", english: "against", type: "place",
+    example: "De ladder staat tegen de muur — The ladder leans against the wall", level: 1, cat: "place" },
+  { dutch: "aan", english: "on / at (attached to)", type: "place",
+    example: "Het schilderij hangt aan de muur — The painting hangs on the wall", level: 1, cat: "place" },
+  { dutch: "links van", english: "to the left of", type: "place",
+    example: "De keuken is links van de woonkamer — The kitchen is to the left of the living room", level: 1, cat: "place" },
+  { dutch: "rechts van", english: "to the right of", type: "place",
+    example: "Het toilet is rechts van de badkamer — The toilet is to the right of the bathroom", level: 1, cat: "place" },
+  { dutch: "dicht bij", english: "close to / near", type: "place",
+    example: "Ik woon dicht bij het station — I live close to the station", level: 1, cat: "place" },
+  { dutch: "ver van", english: "far from", type: "place",
+    example: "De school is ver van huis — The school is far from home", level: 1, cat: "place" },
+  { dutch: "bij", english: "at / by / near", type: "place",
+    example: "Ik ben bij de dokter — I'm at the doctor's", level: 1, cat: "place" },
+  { dutch: "tegenover", english: "opposite / across from", type: "place",
+    example: "De bakker zit tegenover de supermarkt — The bakery is across from the supermarket", level: 1, cat: "place" },
+  { dutch: "buiten", english: "outside", type: "place",
+    example: "De kinderen spelen buiten — The children play outside", level: 1, cat: "place" },
+  { dutch: "binnen", english: "inside / indoors", type: "place",
+    example: "Blijf maar binnen, het regent — Stay inside, it's raining", level: 1, cat: "place" },
+  { dutch: "langs", english: "along / past", type: "place",
+    example: "We fietsten langs de rivier — We cycled along the river", level: 1, cat: "place" },
+  { dutch: "door", english: "through", type: "place",
+    example: "We reden door de tunnel — We drove through the tunnel", level: 1, cat: "place" },
+
+  // ── LEVEL 1: Time prepositions ──
+  { dutch: "om", english: "at (clock time)", type: "time",
+    example: "De vergadering begint om drie uur — The meeting starts at three o'clock", level: 1, cat: "time" },
+  { dutch: "op", english: "on (day of week / date)", type: "time",
+    example: "Op maandag ga ik naar school — On Monday I go to school", level: 1, cat: "time" },
+  { dutch: "in", english: "in (month / year / season)", type: "time",
+    example: "In de zomer ga ik op vakantie — In summer I go on holiday", level: 1, cat: "time" },
+  { dutch: "voor", english: "before", type: "time",
+    example: "Kom voor acht uur thuis — Come home before eight o'clock", level: 1, cat: "time" },
+  { dutch: "na", english: "after", type: "time",
+    example: "Na het eten kijken we televisie — After dinner we watch TV", level: 1, cat: "time" },
+  { dutch: "tijdens", english: "during", type: "time",
+    example: "Niet praten tijdens de les — Don't talk during the lesson", level: 1, cat: "time" },
+  { dutch: "tot", english: "until / till", type: "time",
+    example: "Ik werk tot vijf uur — I work until five o'clock", level: 1, cat: "time" },
+  { dutch: "vanaf", english: "from (a point in time)", type: "time",
+    example: "Vanaf morgen ga ik sporten — From tomorrow I'm going to exercise", level: 1, cat: "time" },
+  { dutch: "over", english: "in (time from now)", type: "time",
+    example: "Over tien minuten ben ik er — I'll be there in ten minutes", level: 1, cat: "time" },
+  { dutch: "sinds", english: "since / for (duration to now)", type: "time",
+    example: "Ik woon hier al drie jaar — I have been living here for three years", level: 1, cat: "time" },
+
+  // ── LEVEL 1: Demonstrative pronouns (from image) ──
+  { dutch: "dit", english: "this (het-word, singular, near)", type: "demonstrative",
+    example: "Dit huis is groot — This house is big", level: 1, cat: "demonstratives" },
+  { dutch: "dat", english: "that (het-word, singular, far)", type: "demonstrative",
+    example: "Dat huis is klein — That house is small", level: 1, cat: "demonstratives" },
+  { dutch: "deze", english: "this/these (de-word singular OR plural)", type: "demonstrative",
+    example: "Deze kast is nieuw — This cupboard is new | Deze kasten zijn nieuw — These cupboards are new", level: 1, cat: "demonstratives" },
+  { dutch: "die", english: "that/those (de-word singular OR plural)", type: "demonstrative",
+    example: "Die kast is oud — That cupboard is old | Die kasten zijn oud — Those cupboards are old", level: 1, cat: "demonstratives" },
+  { dutch: "dit / deze  →  nu", english: "dit/deze = current time period", type: "demonstrative",
+    example: "deze week — this week | dit jaar — this year | dit moment — this moment", level: 1, cat: "demonstratives" },
+  { dutch: "dat / die  →  andere tijd", english: "dat/die = other (non-current) time period", type: "demonstrative",
+    example: "die week — that week | dat jaar — that year | die tijd — that time", level: 1, cat: "demonstratives" },
+  { dutch: "hier", english: "here (place near speaker)", type: "demonstrative",
+    example: "Kom hier! — Come here! | Hier is het warm — It's warm here", level: 1, cat: "demonstratives" },
+  { dutch: "daar", english: "there (place far from speaker)", type: "demonstrative",
+    example: "Ik woon daar — I live there | Ga maar daar zitten — Go sit there", level: 1, cat: "demonstratives" },
+
+  // ── LEVEL 2: Direction prepositions ──
+  { dutch: "naar", english: "to (direction / destination)", type: "direction",
+    example: "Ik ga naar huis — I'm going home", level: 2, cat: "direction" },
+  { dutch: "van ... naar", english: "from ... to", type: "direction",
+    example: "We reisden van Utrecht naar Amsterdam — We travelled from Utrecht to Amsterdam", level: 2, cat: "direction" },
+  { dutch: "vanuit", english: "from (a starting point)", type: "direction",
+    example: "Vanuit Amsterdam rijd je een uur — From Amsterdam you drive one hour", level: 2, cat: "direction" },
+  { dutch: "richting", english: "in the direction of / towards", type: "direction",
+    example: "Hij liep richting het station — He walked towards the station", level: 2, cat: "direction" },
+  { dutch: "via", english: "via / through", type: "direction",
+    example: "We reden via Den Haag — We drove via The Hague", level: 2, cat: "direction" },
+  { dutch: "heen", english: "there (one-way / away)", type: "direction",
+    example: "Hoe lang doe je erover om er heen te rijden? — How long does it take to drive there?", level: 2, cat: "direction" },
+  { dutch: "terug", english: "back (returning)", type: "direction",
+    example: "Wanneer kom je terug? — When are you coming back?", level: 2, cat: "direction" },
+
+  // ── LEVEL 2: More time / combined ──
+  { dutch: "van ... tot", english: "from ... to (time span)", type: "time",
+    example: "Ik werk van negen tot vijf — I work from nine to five", level: 2, cat: "time" },
+  { dutch: "van ... tot en met", english: "from ... up to and including", type: "time",
+    example: "Van maandag tot en met vrijdag — From Monday to Friday (inclusive)", level: 2, cat: "time" },
+  { dutch: "tussen ... en", english: "between ... and (time)", type: "time",
+    example: "Bel tussen tien en twaalf — Call between ten and twelve", level: 2, cat: "time" },
+  { dutch: "tegen", english: "around / towards (time)", type: "time",
+    example: "Ze komen tegen het weekend aan — They'll arrive around the weekend", level: 2, cat: "time" },
+  { dutch: "rond", english: "around / approximately (time)", type: "time",
+    example: "Ik kom rond middernacht thuis — I'll be home around midnight", level: 2, cat: "time" },
+  { dutch: "gedurende", english: "throughout / over the course of", type: "time",
+    example: "Gedurende de zomer regent het weinig — Throughout summer it rains little", level: 2, cat: "time" },
+
+  // ── LEVEL 2: Other useful prepositions ──
+  { dutch: "met", english: "with", type: "other",
+    example: "Ik ga met de bus — I go by bus", level: 2, cat: "other" },
+  { dutch: "zonder", english: "without", type: "other",
+    example: "Koffie zonder suiker — Coffee without sugar", level: 2, cat: "other" },
+  { dutch: "over", english: "about / over / across", type: "other",
+    example: "We praten over het nieuws — We talk about the news", level: 2, cat: "other" },
+  { dutch: "uit", english: "from (origin) / out of", type: "other",
+    example: "Ik kom uit Nederland — I come from the Netherlands", level: 2, cat: "other" },
+  { dutch: "per", english: "per / by (means)", type: "other",
+    example: "Ik ga per trein — I go by train", level: 2, cat: "other" },
+  { dutch: "volgens", english: "according to", type: "other",
+    example: "Volgens de leraar is het correct — According to the teacher it's correct", level: 2, cat: "other" },
+  { dutch: "ondanks", english: "despite / in spite of", type: "other",
+    example: "Ondanks het weer gingen we fietsen — Despite the weather we went cycling", level: 2, cat: "other" },
+];
+
+// ── HUIS (HOUSE) VOCABULARY — A2 ──
+const HUIS = [
+  // ── LEVEL 1: Rooms ──
+  { dutch: "de woonkamer", english: "the living room", type: "room",
+    example: "We zitten 's avonds in de woonkamer — We sit in the living room in the evening", level: 1, cat: "rooms" },
+  { dutch: "de slaapkamer", english: "the bedroom", type: "room",
+    example: "De slaapkamer heeft twee ramen — The bedroom has two windows", level: 1, cat: "rooms" },
+  { dutch: "de keuken", english: "the kitchen", type: "room",
+    example: "Mama kookt elke dag in de keuken — Mum cooks in the kitchen every day", level: 1, cat: "rooms" },
+  { dutch: "de badkamer", english: "the bathroom", type: "room",
+    example: "De badkamer is naast de slaapkamer — The bathroom is next to the bedroom", level: 1, cat: "rooms" },
+  { dutch: "het toilet", english: "the toilet", type: "room",
+    example: "Het toilet is op de overloop — The toilet is on the landing", level: 1, cat: "rooms" },
+  { dutch: "de hal", english: "the hallway / entrance", type: "room",
+    example: "Hang je jas in de hal — Hang your coat in the hallway", level: 1, cat: "rooms" },
+  { dutch: "de gang", english: "the corridor / hallway", type: "room",
+    example: "De gang verbindt alle kamers — The corridor connects all rooms", level: 1, cat: "rooms" },
+  { dutch: "de tuin", english: "the garden", type: "room",
+    example: "In de zomer zitten we in de tuin — In summer we sit in the garden", level: 1, cat: "rooms" },
+  { dutch: "het balkon", english: "the balcony", type: "room",
+    example: "Vanaf het balkon zie je de straat — From the balcony you see the street", level: 1, cat: "rooms" },
+  { dutch: "de zolder", english: "the attic / loft", type: "room",
+    example: "Onze koffers staan op de zolder — Our suitcases are in the attic", level: 1, cat: "rooms" },
+  { dutch: "de kelder", english: "the cellar / basement", type: "room",
+    example: "De wijn staat in de kelder — The wine is in the cellar", level: 1, cat: "rooms" },
+  { dutch: "de garage", english: "the garage", type: "room",
+    example: "De auto staat in de garage — The car is in the garage", level: 1, cat: "rooms" },
+  { dutch: "de trap", english: "the stairs", type: "room",
+    example: "Wees voorzichtig op de trap — Be careful on the stairs", level: 1, cat: "rooms" },
+  { dutch: "de overloop", english: "the landing (upstairs hallway)", type: "room",
+    example: "Het toilet is op de overloop — The toilet is on the landing", level: 1, cat: "rooms" },
+
+  // ── LEVEL 1: Furniture & Living Room ──
+  { dutch: "de bank", english: "the sofa / couch", type: "furniture",
+    example: "We zitten op de bank — We sit on the sofa", level: 1, cat: "furniture" },
+  { dutch: "de stoel", english: "the chair", type: "furniture",
+    example: "Er staan vier stoelen aan tafel — There are four chairs at the table", level: 1, cat: "furniture" },
+  { dutch: "de tafel", english: "the table", type: "furniture",
+    example: "Zet de bloemen op de tafel — Put the flowers on the table", level: 1, cat: "furniture" },
+  { dutch: "de kast", english: "the cupboard / closet", type: "furniture",
+    example: "Mijn kleren hangen in de kast — My clothes hang in the closet", level: 1, cat: "furniture" },
+  { dutch: "het bed", english: "the bed", type: "furniture",
+    example: "Ik ga om tien uur naar bed — I go to bed at ten o'clock", level: 1, cat: "furniture" },
+  { dutch: "het nachtkastje", english: "the bedside table / nightstand", type: "furniture",
+    example: "Mijn telefoon ligt op het nachtkastje — My phone is on the nightstand", level: 1, cat: "furniture" },
+  { dutch: "de lamp", english: "the lamp / light", type: "furniture",
+    example: "Zet de lamp aan, het is donker — Turn on the lamp, it's dark", level: 1, cat: "furniture" },
+  { dutch: "het raam", english: "the window", type: "furniture",
+    example: "Doe het raam open, het is warm — Open the window, it's hot", level: 1, cat: "furniture" },
+  { dutch: "de deur", english: "the door", type: "furniture",
+    example: "Vergeet niet de deur te sluiten — Don't forget to close the door", level: 1, cat: "furniture" },
+  { dutch: "de vloer", english: "the floor", type: "furniture",
+    example: "Het tapijt ligt op de vloer — The carpet is on the floor", level: 1, cat: "furniture" },
+  { dutch: "het plafond", english: "the ceiling", type: "furniture",
+    example: "Het plafond is wit geschilderd — The ceiling is painted white", level: 1, cat: "furniture" },
+  { dutch: "de muur", english: "the wall", type: "furniture",
+    example: "Er hangt een schilderij aan de muur — There's a painting on the wall", level: 1, cat: "furniture" },
+
+  // ── LEVEL 1: Kitchen ──
+  { dutch: "de koelkast", english: "the fridge / refrigerator", type: "kitchen",
+    example: "De melk staat in de koelkast — The milk is in the fridge", level: 1, cat: "kitchen" },
+  { dutch: "het fornuis", english: "the stove / cooker", type: "kitchen",
+    example: "Zet de soep op het fornuis — Put the soup on the stove", level: 1, cat: "kitchen" },
+  { dutch: "de oven", english: "the oven", type: "kitchen",
+    example: "De pizza gaat in de oven — The pizza goes in the oven", level: 1, cat: "kitchen" },
+  { dutch: "de magnetron", english: "the microwave", type: "kitchen",
+    example: "Warm het eten op in de magnetron — Heat the food in the microwave", level: 1, cat: "kitchen" },
+  { dutch: "de pan", english: "the pan / pot", type: "kitchen",
+    example: "Gebruik een grote pan voor de soep — Use a big pot for the soup", level: 1, cat: "kitchen" },
+  { dutch: "het aanrecht", english: "the kitchen counter / worktop", type: "kitchen",
+    example: "Leg de boodschappen op het aanrecht — Put the groceries on the counter", level: 1, cat: "kitchen" },
+  { dutch: "de vaatwasser", english: "the dishwasher", type: "kitchen",
+    example: "Doe de borden in de vaatwasser — Put the plates in the dishwasher", level: 1, cat: "kitchen" },
+  { dutch: "de waterkoker", english: "the kettle", type: "kitchen",
+    example: "Zet de waterkoker aan voor thee — Turn on the kettle for tea", level: 1, cat: "kitchen" },
+  { dutch: "het bord", english: "the plate", type: "kitchen",
+    example: "Leg de borden op tafel — Put the plates on the table", level: 1, cat: "kitchen" },
+  { dutch: "het glas", english: "the glass", type: "kitchen",
+    example: "Wil je een glas water? — Do you want a glass of water?", level: 1, cat: "kitchen" },
+  { dutch: "het bestek", english: "the cutlery / utensils", type: "kitchen",
+    example: "Het bestek ligt in de la — The cutlery is in the drawer", level: 1, cat: "kitchen" },
+  { dutch: "de la", english: "the drawer", type: "kitchen",
+    example: "De messen liggen in de la — The knives are in the drawer", level: 1, cat: "kitchen" },
+
+  // ── LEVEL 2: Bathroom & Cleaning ──
+  { dutch: "de douche", english: "the shower", type: "bathroom",
+    example: "Elke ochtend neem ik een douche — Every morning I take a shower", level: 2, cat: "bathroom" },
+  { dutch: "het bad", english: "the bathtub / bath", type: "bathroom",
+    example: "De kinderen nemen een bad — The children take a bath", level: 2, cat: "bathroom" },
+  { dutch: "de wastafel", english: "the sink / washbasin", type: "bathroom",
+    example: "Was je handen bij de wastafel — Wash your hands at the sink", level: 2, cat: "bathroom" },
+  { dutch: "de spiegel", english: "the mirror", type: "bathroom",
+    example: "Ik kijk in de spiegel — I look in the mirror", level: 2, cat: "bathroom" },
+  { dutch: "de handdoek", english: "the towel", type: "bathroom",
+    example: "De handdoeken hangen aan de deur — The towels hang on the door", level: 2, cat: "bathroom" },
+  { dutch: "de zeep", english: "the soap", type: "bathroom",
+    example: "Gebruik zeep bij het handen wassen — Use soap when washing hands", level: 2, cat: "bathroom" },
+  { dutch: "de tandenborstel", english: "the toothbrush", type: "bathroom",
+    example: "Vergeet je tandenborstel niet — Don't forget your toothbrush", level: 2, cat: "bathroom" },
+  { dutch: "de wasmachine", english: "the washing machine", type: "bathroom",
+    example: "De was zit in de wasmachine — The laundry is in the washing machine", level: 2, cat: "bathroom" },
+  { dutch: "de stofzuiger", english: "the vacuum cleaner / hoover", type: "bathroom",
+    example: "Ik ga de vloer stofzuigen — I'm going to hoover the floor", level: 2, cat: "bathroom" },
+  { dutch: "de dweil", english: "the mop", type: "bathroom",
+    example: "De vloer dweilen duurt lang — Mopping the floor takes a long time", level: 2, cat: "bathroom" },
+
+  // ── LEVEL 2: House types & renting ──
+  { dutch: "de flat / het appartement", english: "the flat / apartment", type: "house type",
+    example: "Wij wonen in een flat op de derde verdieping — We live in a flat on the third floor", level: 2, cat: "house" },
+  { dutch: "de rijtjeswoning", english: "terraced house", type: "house type",
+    example: "Een rijtjeswoning heeft buren aan beide kanten — A terraced house has neighbours on both sides", level: 2, cat: "house" },
+  { dutch: "de vrijstaande woning", english: "detached house", type: "house type",
+    example: "Een vrijstaande woning heeft geen gedeelde muren — A detached house has no shared walls", level: 2, cat: "house" },
+  { dutch: "de huur", english: "the rent", type: "renting",
+    example: "Hoeveel is de huur per maand? — How much is the rent per month?", level: 2, cat: "house" },
+  { dutch: "de huurder", english: "the tenant / renter", type: "renting",
+    example: "De huurder betaalt elke maand huur — The tenant pays rent every month", level: 2, cat: "house" },
+  { dutch: "de verhuurder", english: "the landlord / lessor", type: "renting",
+    example: "De verhuurder repareert het dak — The landlord repairs the roof", level: 2, cat: "house" },
+  { dutch: "de borgsom", english: "the deposit", type: "renting",
+    example: "Je betaalt één maand borgsom — You pay one month's deposit", level: 2, cat: "house" },
+  { dutch: "het huurcontract", english: "the rental contract", type: "renting",
+    example: "Lees het huurcontract goed door — Read the rental contract carefully", level: 2, cat: "house" },
+  { dutch: "de verdieping", english: "the floor / storey", type: "house type",
+    example: "Wij wonen op de tweede verdieping — We live on the second floor", level: 2, cat: "house" },
+  { dutch: "de begane grond", english: "the ground floor", type: "house type",
+    example: "De woonkamer is op de begane grond — The living room is on the ground floor", level: 2, cat: "house" },
+  { dutch: "de bel", english: "the doorbell", type: "house type",
+    example: "Druk op de bel als je aankomt — Ring the doorbell when you arrive", level: 2, cat: "house" },
+  { dutch: "de sleutel", english: "the key", type: "house type",
+    example: "Ben je je sleutel vergeten? — Have you forgotten your key?", level: 2, cat: "house" },
 ];
 
 // ── KNM (KENNIS VAN DE NEDERLANDSE MAATSCHAPPIJ) ──
@@ -1525,352 +2043,253 @@ const KNM = [
   { dutch: "de stroopwafel", english: "syrup waffle", type: "culture", example: "De stroopwafel is een typisch Nederlands koekje — The syrup waffle is a typical Dutch cookie", level: 2, cat: "culture" },
 ];
 
-// ── VERB CONJUGATIONS (strong / irregular / modal — all tenses) ──
-const VERB_CONJUGATIONS = [
-  // ═══ LEVEL 1: ESSENTIALS ═══
-  { dutch: "zijn", english: "to be", type: "strong",
-    present: "ik ben, jij bent, hij/zij is, wij zijn",
-    past: "ik was, jij was, hij was, wij waren",
-    perfect: "ik ben geweest",
-    level: 1, cat: "essentials" },
-  { dutch: "hebben", english: "to have", type: "strong",
-    present: "ik heb, jij hebt, hij heeft, wij hebben",
-    past: "ik had, jij had, hij had, wij hadden",
-    perfect: "ik heb gehad",
-    level: 1, cat: "essentials" },
-  { dutch: "worden", english: "to become", type: "strong",
-    present: "ik word, jij wordt, hij wordt, wij worden",
-    past: "ik werd, jij werd, hij werd, wij werden",
-    perfect: "ik ben geworden",
-    level: 1, cat: "essentials" },
-  { dutch: "kunnen", english: "can / to be able", type: "modal",
-    present: "ik kan, jij kunt/kan, hij kan, wij kunnen",
-    past: "ik kon, jij kon, hij kon, wij konden",
-    perfect: "ik heb gekund",
-    level: 1, cat: "essentials" },
-  { dutch: "zullen", english: "shall / will", type: "modal",
-    present: "ik zal, jij zult/zal, hij zal, wij zullen",
-    past: "ik zou, jij zou, hij zou, wij zouden",
-    perfect: "—",
-    level: 1, cat: "essentials" },
-  { dutch: "moeten", english: "must / to have to", type: "modal",
-    present: "ik moet, jij moet, hij moet, wij moeten",
-    past: "ik moest, jij moest, hij moest, wij moesten",
-    perfect: "ik heb gemoeten",
-    level: 1, cat: "essentials" },
-  { dutch: "mogen", english: "may / to be allowed", type: "modal",
-    present: "ik mag, jij mag, hij mag, wij mogen",
-    past: "ik mocht, jij mocht, hij mocht, wij mochten",
-    perfect: "ik heb gemogen",
-    level: 1, cat: "essentials" },
-  { dutch: "willen", english: "to want", type: "modal",
-    present: "ik wil, jij wilt/wil, hij wil, wij willen",
-    past: "ik wilde/wou, jij wilde/wou, wij wilden/wouden",
-    perfect: "ik heb gewild",
-    level: 1, cat: "essentials" },
-  { dutch: "doen", english: "to do", type: "strong",
-    present: "ik doe, jij doet, hij doet, wij doen",
-    past: "ik deed, jij deed, hij deed, wij deden",
-    perfect: "ik heb gedaan",
-    level: 1, cat: "essentials" },
-  { dutch: "gaan", english: "to go", type: "strong",
-    present: "ik ga, jij gaat, hij gaat, wij gaan",
-    past: "ik ging, jij ging, hij ging, wij gingen",
-    perfect: "ik ben gegaan",
-    level: 1, cat: "essentials" },
+// ── SCENES (Picture Description Cards) ──
+// Uses Unsplash photos (requires internet)
 
-  // ═══ LEVEL 1: DAILY ═══
-  { dutch: "komen", english: "to come", type: "strong",
-    present: "ik kom, jij komt, hij komt, wij komen",
-    past: "ik kwam, jij kwam, hij kwam, wij kwamen",
-    perfect: "ik ben gekomen",
-    level: 1, cat: "daily" },
-  { dutch: "zien", english: "to see", type: "strong",
-    present: "ik zie, jij ziet, hij ziet, wij zien",
-    past: "ik zag, jij zag, hij zag, wij zagen",
-    perfect: "ik heb gezien",
-    level: 1, cat: "daily" },
-  { dutch: "geven", english: "to give", type: "strong",
-    present: "ik geef, jij geeft, hij geeft, wij geven",
-    past: "ik gaf, jij gaf, hij gaf, wij gaven",
-    perfect: "ik heb gegeven",
-    level: 1, cat: "daily" },
-  { dutch: "nemen", english: "to take", type: "strong",
-    present: "ik neem, jij neemt, hij neemt, wij nemen",
-    past: "ik nam, jij nam, hij nam, wij namen",
-    perfect: "ik heb genomen",
-    level: 1, cat: "daily" },
-  { dutch: "vinden", english: "to find / to think", type: "strong",
-    present: "ik vind, jij vindt, hij vindt, wij vinden",
-    past: "ik vond, jij vond, hij vond, wij vonden",
-    perfect: "ik heb gevonden",
-    level: 1, cat: "daily" },
-  { dutch: "zeggen", english: "to say", type: "strong",
-    present: "ik zeg, jij zegt, hij zegt, wij zeggen",
-    past: "ik zei, jij zei, hij zei, wij zeiden",
-    perfect: "ik heb gezegd",
-    level: 1, cat: "daily" },
-  { dutch: "weten", english: "to know (fact)", type: "strong",
-    present: "ik weet, jij weet, hij weet, wij weten",
-    past: "ik wist, jij wist, hij wist, wij wisten",
-    perfect: "ik heb geweten",
-    level: 1, cat: "daily" },
-  { dutch: "denken", english: "to think", type: "strong",
-    present: "ik denk, jij denkt, hij denkt, wij denken",
-    past: "ik dacht, jij dacht, hij dacht, wij dachten",
-    perfect: "ik heb gedacht",
-    level: 1, cat: "daily" },
+const SCENES = [
+  // ── LEVEL 1: Daily Life ──
+  { scene: "https://images.unsplash.com/photo-1606787366850-de6330128bfc?w=500&h=250&fit=crop",
+    hint: "Wat zie je op de tafel?", dutch: "Twee mensen eten samen aan tafel", english: "Dinner scene",
+    vocab: "de tafel — the table | eten — to eat | samen — together | het bord — the plate | het eten — the food",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&h=250&fit=crop",
+    hint: "Beschrijf de keuken.", dutch: "Een vrouw kookt in de keuken", english: "Cooking in the kitchen",
+    vocab: "de keuken — the kitchen | koken — to cook | de pan — the pan | het fornuis — the stove | snijden — to cut",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=500&h=250&fit=crop",
+    hint: "Wat koop je hier?", dutch: "Op de markt koop je groenten en fruit", english: "Market scene",
+    vocab: "de markt — the market | kopen — to buy | groenten — vegetables | fruit — fruit | vers — fresh",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=500&h=250&fit=crop",
+    hint: "Wat doet deze vrouw?", dutch: "Een vrouw doet boodschappen in de supermarkt", english: "Supermarket shopping",
+    vocab: "de supermarkt — the supermarket | boodschappen doen — to do groceries | betalen — to pay | de kassa — the checkout | het mandje — the basket",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=500&h=250&fit=crop",
+    hint: "Beschrijf het ontbijt.", dutch: "Een gezin eet ontbijt aan de keukentafel", english: "Family breakfast",
+    vocab: "het ontbijt — breakfast | het gezin — the family | de boterham — the sandwich | de melk — milk | drinken — to drink",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&h=250&fit=crop",
+    hint: "Waar zijn deze mensen?", dutch: "Twee mensen wandelen in het park", english: "Walking in the park",
+    vocab: "het park — the park | wandelen — to walk | de boom — the tree | de zon — the sun | buiten — outside",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een man doet de was en strijkt kleren", english: "Doing laundry",
+    vocab: "de was — the laundry | de wasmachine — washing machine | strijken — to iron | de kleren — the clothes | schoon — clean",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=500&h=250&fit=crop",
+    hint: "Waar is dit?", dutch: "Een winkel met veel producten in de schappen", english: "Shop with shelves",
+    vocab: "de winkel — the shop | het schap — the shelf | het product — the product | de prijs — the price | kiezen — to choose",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=250&fit=crop",
+    hint: "Beschrijf de situatie.", dutch: "Een vrouw betaalt aan de kassa in de winkel", english: "Paying at checkout",
+    vocab: "betalen — to pay | de kassa — the checkout | het geld — the money | de pinpas — the debit card | het wisselgeld — the change",
+    type: "daily life", level: 1, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&h=250&fit=crop",
+    hint: "Wat ligt er op tafel?", dutch: "Het avondeten staat klaar op tafel", english: "Dinner is ready",
+    vocab: "het avondeten — dinner | klaar — ready | de tafel dekken — to set the table | het bestek — cutlery | het bord — the plate",
+    type: "daily life", level: 1, cat: "daily" },
 
-  // ═══ LEVEL 1: MOVEMENT ═══
-  { dutch: "lopen", english: "to walk / to run", type: "strong",
-    present: "ik loop, jij loopt, hij loopt, wij lopen",
-    past: "ik liep, jij liep, hij liep, wij liepen",
-    perfect: "ik heb/ben gelopen",
-    level: 1, cat: "movement" },
-  { dutch: "rijden", english: "to drive / to ride", type: "strong",
-    present: "ik rijd, jij rijdt, hij rijdt, wij rijden",
-    past: "ik reed, jij reed, hij reed, wij reden",
-    perfect: "ik heb/ben gereden",
-    level: 1, cat: "movement" },
-  { dutch: "vliegen", english: "to fly", type: "strong",
-    present: "ik vlieg, jij vliegt, hij vliegt, wij vliegen",
-    past: "ik vloog, jij vloog, hij vloog, wij vlogen",
-    perfect: "ik heb/ben gevlogen",
-    level: 1, cat: "movement" },
-  { dutch: "vallen", english: "to fall", type: "strong",
-    present: "ik val, jij valt, hij valt, wij vallen",
-    past: "ik viel, jij viel, hij viel, wij vielen",
-    perfect: "ik ben gevallen",
-    level: 1, cat: "movement" },
-  { dutch: "staan", english: "to stand", type: "strong",
-    present: "ik sta, jij staat, hij staat, wij staan",
-    past: "ik stond, jij stond, hij stond, wij stonden",
-    perfect: "ik heb gestaan",
-    level: 1, cat: "movement" },
-  { dutch: "zitten", english: "to sit", type: "strong",
-    present: "ik zit, jij zit, hij zit, wij zitten",
-    past: "ik zat, jij zat, hij zat, wij zaten",
-    perfect: "ik heb gezeten",
-    level: 1, cat: "movement" },
-  { dutch: "liggen", english: "to lie (down)", type: "strong",
-    present: "ik lig, jij ligt, hij ligt, wij liggen",
-    past: "ik lag, jij lag, hij lag, wij lagen",
-    perfect: "ik heb gelegen",
-    level: 1, cat: "movement" },
-  { dutch: "brengen", english: "to bring", type: "strong",
-    present: "ik breng, jij brengt, hij brengt, wij brengen",
-    past: "ik bracht, jij bracht, hij bracht, wij brachten",
-    perfect: "ik heb gebracht",
-    level: 1, cat: "movement" },
+  // ── LEVEL 1: Health & Services ──
+  { scene: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=500&h=250&fit=crop",
+    hint: "Waar is deze persoon?", dutch: "Een patiënt is bij de huisarts", english: "At the doctor's office",
+    vocab: "de huisarts — the GP | de patiënt — the patient | ziek zijn — to be sick | het recept — the prescription | onderzoeken — to examine",
+    type: "health", level: 1, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1585435557343-3b092031a831?w=500&h=250&fit=crop",
+    hint: "Wat gebeurt hier?", dutch: "Een vrouw haalt medicijnen bij de apotheek", english: "At the pharmacy",
+    vocab: "de apotheek — the pharmacy | het medicijn — the medicine | het recept — the prescription | de pillen — the pills | ophalen — to pick up",
+    type: "health", level: 1, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=500&h=250&fit=crop",
+    hint: "Wat doet de arts?", dutch: "De dokter onderzoekt de patiënt in het ziekenhuis", english: "Hospital examination",
+    vocab: "het ziekenhuis — the hospital | de dokter — the doctor | onderzoeken — to examine | de afspraak — the appointment | gezond — healthy",
+    type: "health", level: 1, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een man is bij de tandarts voor controle", english: "At the dentist",
+    vocab: "de tandarts — the dentist | de tanden — the teeth | poetsen — to brush | de afspraak — the appointment | pijn — pain",
+    type: "health", level: 1, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=500&h=250&fit=crop",
+    hint: "Waar ben je?", dutch: "Bij de spoedeisende hulp in het ziekenhuis", english: "Emergency room",
+    vocab: "de spoedeisende hulp — ER | het ongeluk — the accident | de ambulance — the ambulance | 112 bellen — to call 112 | helpen — to help",
+    type: "health", level: 1, cat: "health" },
 
-  // ═══ LEVEL 1: COMMUNICATION ═══
-  { dutch: "spreken", english: "to speak", type: "strong",
-    present: "ik spreek, jij spreekt, hij spreekt, wij spreken",
-    past: "ik sprak, jij sprak, hij sprak, wij spraken",
-    perfect: "ik heb gesproken",
-    level: 1, cat: "communication" },
-  { dutch: "schrijven", english: "to write", type: "strong",
-    present: "ik schrijf, jij schrijft, hij schrijft, wij schrijven",
-    past: "ik schreef, jij schreef, hij schreef, wij schreven",
-    perfect: "ik heb geschreven",
-    level: 1, cat: "communication" },
-  { dutch: "lezen", english: "to read", type: "strong",
-    present: "ik lees, jij leest, hij leest, wij lezen",
-    past: "ik las, jij las, hij las, wij lazen",
-    perfect: "ik heb gelezen",
-    level: 1, cat: "communication" },
-  { dutch: "begrijpen", english: "to understand", type: "strong",
-    present: "ik begrijp, jij begrijpt, hij begrijpt, wij begrijpen",
-    past: "ik begreep, jij begreep, hij begreep, wij begrepen",
-    perfect: "ik heb begrepen",
-    level: 1, cat: "communication" },
+  // ── LEVEL 1: Work & Education ──
+  { scene: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=500&h=250&fit=crop",
+    hint: "Beschrijf het klaslokaal.", dutch: "Leerlingen zitten in de klas en luisteren naar de leraar", english: "Classroom scene",
+    vocab: "de klas — the classroom | de leerling — the student | de leraar — the teacher | leren — to learn | luisteren — to listen",
+    type: "education", level: 1, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een man werkt op kantoor achter de computer", english: "Working at the office",
+    vocab: "het kantoor — the office | werken — to work | de computer — the computer | de collega — the colleague | de vergadering — the meeting",
+    type: "work", level: 1, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=500&h=250&fit=crop",
+    hint: "Wat gebeurt hier?", dutch: "Twee mensen hebben een sollicitatiegesprek", english: "Job interview",
+    vocab: "het sollicitatiegesprek — job interview | de baan — the job | het CV — the CV | ervaring — experience | solliciteren — to apply",
+    type: "work", level: 1, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=500&h=250&fit=crop",
+    hint: "Beschrijf deze plek.", dutch: "Kinderen spelen op het schoolplein", english: "School playground",
+    vocab: "de school — the school | het schoolplein — the playground | spelen — to play | de pauze — the break | de kinderen — the children",
+    type: "education", level: 1, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een student studeert in de bibliotheek", english: "Studying at the library",
+    vocab: "de bibliotheek — the library | studeren — to study | het boek — the book | lezen — to read | de student — the student",
+    type: "education", level: 1, cat: "work" },
 
-  // ═══ LEVEL 1: LIFE ═══
-  { dutch: "eten", english: "to eat", type: "strong",
-    present: "ik eet, jij eet, hij eet, wij eten",
-    past: "ik at, jij at, hij at, wij aten",
-    perfect: "ik heb gegeten",
-    level: 1, cat: "life" },
-  { dutch: "drinken", english: "to drink", type: "strong",
-    present: "ik drink, jij drinkt, hij drinkt, wij drinken",
-    past: "ik dronk, jij dronk, hij dronk, wij dronken",
-    perfect: "ik heb gedronken",
-    level: 1, cat: "life" },
-  { dutch: "slapen", english: "to sleep", type: "strong",
-    present: "ik slaap, jij slaapt, hij slaapt, wij slapen",
-    past: "ik sliep, jij sliep, hij sliep, wij sliepen",
-    perfect: "ik heb geslapen",
-    level: 1, cat: "life" },
-  { dutch: "houden van", english: "to love / to like", type: "strong",
-    present: "ik houd van, jij houdt van, hij houdt van",
-    past: "ik hield van, jij hield van, wij hielden van",
-    perfect: "ik heb gehouden van",
-    level: 1, cat: "life" },
+  // ── LEVEL 1: Social & Public ──
+  { scene: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=250&fit=crop",
+    hint: "Beschrijf het restaurant.", dutch: "Vrienden eten samen in een restaurant", english: "Eating at a restaurant",
+    vocab: "het restaurant — the restaurant | bestellen — to order | de ober — the waiter | het menu — the menu | lekker — tasty",
+    type: "social", level: 1, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1526491109649-aa01a9c0c140?w=500&h=250&fit=crop",
+    hint: "Wat doen deze mensen?", dutch: "Mensen picknicken in het park op een mooie dag", english: "Picnic in the park",
+    vocab: "picknicken — to picnic | het park — the park | de zon — the sun | genieten — to enjoy | samen — together",
+    type: "social", level: 1, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=500&h=250&fit=crop",
+    hint: "Wat vieren ze?", dutch: "Vrienden vieren een verjaardag op een feest", english: "Birthday party",
+    vocab: "de verjaardag — the birthday | het feest — the party | vieren — to celebrate | de taart — the cake | feliciteren — to congratulate",
+    type: "social", level: 1, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=500&h=250&fit=crop",
+    hint: "Beschrijf de situatie.", dutch: "Buren praten met elkaar in de straat", english: "Chatting with neighbours",
+    vocab: "de buren — the neighbours | praten — to talk | de straat — the street | kennismaken — to get acquainted | gezellig — cozy",
+    type: "social", level: 1, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=500&h=250&fit=crop",
+    hint: "Waar zijn deze mensen?", dutch: "Mensen wachten in de rij bij een loket", english: "Queue at a counter",
+    vocab: "het loket — the counter | de rij — the queue | wachten — to wait | het formulier — the form | de afspraak — the appointment",
+    type: "social", level: 1, cat: "social" },
 
-  // ═══ LEVEL 2: ESSENTIALS ═══
-  { dutch: "laten", english: "to let / to leave", type: "strong",
-    present: "ik laat, jij laat, hij laat, wij laten",
-    past: "ik liet, jij liet, hij liet, wij lieten",
-    perfect: "ik heb gelaten",
-    level: 2, cat: "essentials" },
-  { dutch: "blijven", english: "to stay / to remain", type: "strong",
-    present: "ik blijf, jij blijft, hij blijft, wij blijven",
-    past: "ik bleef, jij bleef, hij bleef, wij bleven",
-    perfect: "ik ben gebleven",
-    level: 2, cat: "essentials" },
-  { dutch: "lijken", english: "to seem / to appear", type: "strong",
-    present: "ik lijk, jij lijkt, hij lijkt, wij lijken",
-    past: "ik leek, jij leek, hij leek, wij leken",
-    perfect: "ik heb geleken",
-    level: 2, cat: "essentials" },
-  { dutch: "hoeven", english: "need to (negative)", type: "modal",
-    present: "ik hoef, jij hoeft, hij hoeft, wij hoeven",
-    past: "ik hoefde, jij hoefde, hij hoefde, wij hoefden",
-    perfect: "ik heb gehoeven",
-    level: 2, cat: "essentials" },
-  { dutch: "heten", english: "to be called", type: "strong",
-    present: "ik heet, jij heet, hij heet, wij heten",
-    past: "ik heette, jij heette, hij heette, wij heetten",
-    perfect: "ik heb geheten",
-    level: 2, cat: "essentials" },
-  { dutch: "bestaan", english: "to exist", type: "strong",
-    present: "ik besta, jij bestaat, hij bestaat, wij bestaan",
-    past: "ik bestond, jij bestond, hij bestond, wij bestonden",
-    perfect: "ik heb bestaan",
-    level: 2, cat: "essentials" },
-  { dutch: "krijgen", english: "to get / to receive", type: "strong",
-    present: "ik krijg, jij krijgt, hij krijgt, wij krijgen",
-    past: "ik kreeg, jij kreeg, hij kreeg, wij kregen",
-    perfect: "ik heb gekregen",
-    level: 2, cat: "essentials" },
+  // ── LEVEL 1: Home & Housing ──
+  { scene: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&h=250&fit=crop",
+    hint: "Beschrijf de woonkamer.", dutch: "Een gezellige woonkamer met een bank en televisie", english: "Living room",
+    vocab: "de woonkamer — the living room | de bank — the sofa | de televisie — the TV | gezellig — cozy | zitten — to sit",
+    type: "home", level: 1, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=500&h=250&fit=crop",
+    hint: "Wat is dit voor kamer?", dutch: "De badkamer met een douche, wastafel en spiegel", english: "Bathroom",
+    vocab: "de badkamer — the bathroom | de douche — the shower | de wastafel — the sink | de spiegel — the mirror | de handdoek — the towel",
+    type: "home", level: 1, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1556909114-44e3e70034e2?w=500&h=250&fit=crop",
+    hint: "Beschrijf de keuken.", dutch: "De keuken met een koelkast, fornuis en aanrecht", english: "Kitchen",
+    vocab: "de keuken — the kitchen | de koelkast — the fridge | het fornuis — the stove | het aanrecht — the counter | koken — to cook",
+    type: "home", level: 1, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=500&h=250&fit=crop",
+    hint: "Wat is dit?", dutch: "Een slaapkamer met een bed, kussens en een nachtkastje", english: "Bedroom",
+    vocab: "de slaapkamer — the bedroom | het bed — the bed | het kussen — the pillow | het nachtkastje — the nightstand | slapen — to sleep",
+    type: "home", level: 1, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1558293842-c0fd3db86157?w=500&h=250&fit=crop",
+    hint: "Beschrijf de tuin.", dutch: "Een tuin met planten, bloemen en een schuur", english: "Garden",
+    vocab: "de tuin — the garden | de plant — the plant | de bloem — the flower | de schuur — the shed | water geven — to water",
+    type: "home", level: 1, cat: "home" },
 
-  // ═══ LEVEL 2: DAILY ═══
-  { dutch: "kopen", english: "to buy", type: "strong",
-    present: "ik koop, jij koopt, hij koopt, wij kopen",
-    past: "ik kocht, jij kocht, hij kocht, wij kochten",
-    perfect: "ik heb gekocht",
-    level: 2, cat: "daily" },
-  { dutch: "verkopen", english: "to sell", type: "strong",
-    present: "ik verkoop, jij verkoopt, hij verkoopt, wij verkopen",
-    past: "ik verkocht, jij verkocht, hij verkocht, wij verkochten",
-    perfect: "ik heb verkocht",
-    level: 2, cat: "daily" },
-  { dutch: "zoeken", english: "to search / to look for", type: "strong",
-    present: "ik zoek, jij zoekt, hij zoekt, wij zoeken",
-    past: "ik zocht, jij zocht, hij zocht, wij zochten",
-    perfect: "ik heb gezocht",
-    level: 2, cat: "daily" },
-  { dutch: "helpen", english: "to help", type: "strong",
-    present: "ik help, jij helpt, hij helpt, wij helpen",
-    past: "ik hielp, jij hielp, hij hielp, wij hielpen",
-    perfect: "ik heb geholpen",
-    level: 2, cat: "daily" },
-  { dutch: "houden", english: "to hold / to keep", type: "strong",
-    present: "ik houd, jij houdt, hij houdt, wij houden",
-    past: "ik hield, jij hield, hij hield, wij hielden",
-    perfect: "ik heb gehouden",
-    level: 2, cat: "daily" },
-  { dutch: "vergeten", english: "to forget", type: "strong",
-    present: "ik vergeet, jij vergeet, hij vergeet, wij vergeten",
-    past: "ik vergat, jij vergat, hij vergat, wij vergaten",
-    perfect: "ik ben/heb vergeten",
-    level: 2, cat: "daily" },
-  { dutch: "kijken", english: "to look / to watch", type: "strong",
-    present: "ik kijk, jij kijkt, hij kijkt, wij kijken",
-    past: "ik keek, jij keek, hij keek, wij keken",
-    perfect: "ik heb gekeken",
-    level: 2, cat: "daily" },
+  // ── LEVEL 2: Daily Life ──
+  { scene: "https://images.unsplash.com/photo-1466637574441-749b8f19452f?w=500&h=250&fit=crop",
+    hint: "Wat doen ze met het eten?", dutch: "Mensen bereiden het avondeten voor en dekken de tafel", english: "Preparing dinner",
+    vocab: "bereiden — to prepare | het avondeten — dinner | dekken — to set (table) | de tafel dekken — to set the table | het bestek — cutlery | het servies — tableware",
+    type: "daily life", level: 2, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=500&h=250&fit=crop",
+    hint: "Wat voor plek is dit?", dutch: "Een wasserette waar mensen hun kleren wassen en drogen", english: "Laundromat",
+    vocab: "de wasserette — the laundromat | wassen — to wash | drogen — to dry | de wasmachine — washing machine | de droger — the dryer | het wasmiddel — detergent",
+    type: "daily life", level: 2, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1587654780291-39c9404d7dd0?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een vrouw brengt haar kind naar de crèche", english: "Dropping off at daycare",
+    vocab: "de crèche — the daycare | brengen — to bring | het kind — the child | afscheid nemen — to say goodbye | ophalen — to pick up | de opvang — childcare",
+    type: "daily life", level: 2, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=500&h=250&fit=crop",
+    hint: "Wat doen deze mensen?", dutch: "Collega's vergaderen online via een videoconferentie", english: "Video conference",
+    vocab: "vergaderen — to meet | de videoconferentie — video conference | online — online | de collega — the colleague | bespreken — to discuss | het scherm — the screen",
+    type: "daily life", level: 2, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=500&h=250&fit=crop",
+    hint: "Wat doet hij?", dutch: "Een man rijdt met de auto naar zijn werk", english: "Commuting by car",
+    vocab: "de auto — the car | rijden — to drive | het verkeer — the traffic | de weg — the road | naar het werk — to work | de file — traffic jam",
+    type: "daily life", level: 2, cat: "daily" },
+  { scene: "https://images.unsplash.com/photo-1567521464027-f127ff144326?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een vrouw strijkt kleren in de woonkamer", english: "Ironing clothes",
+    vocab: "strijken — to iron | het strijkijzer — the iron | de kleren — the clothes | netjes — neat | het overhemd — the shirt | de strijkplank — ironing board",
+    type: "daily life", level: 2, cat: "daily" },
 
-  // ═══ LEVEL 2: MOVEMENT ═══
-  { dutch: "vertrekken", english: "to depart", type: "strong",
-    present: "ik vertrek, jij vertrekt, hij vertrekt, wij vertrekken",
-    past: "ik vertrok, jij vertrok, hij vertrok, wij vertrokken",
-    perfect: "ik ben vertrokken",
-    level: 2, cat: "movement" },
-  { dutch: "klimmen", english: "to climb", type: "strong",
-    present: "ik klim, jij klimt, hij klimt, wij klimmen",
-    past: "ik klom, jij klom, hij klom, wij klommen",
-    perfect: "ik heb/ben geklommen",
-    level: 2, cat: "movement" },
-  { dutch: "springen", english: "to jump", type: "strong",
-    present: "ik spring, jij springt, hij springt, wij springen",
-    past: "ik sprong, jij sprong, hij sprong, wij sprongen",
-    perfect: "ik heb/ben gesprongen",
-    level: 2, cat: "movement" },
-  { dutch: "trekken", english: "to pull", type: "strong",
-    present: "ik trek, jij trekt, hij trekt, wij trekken",
-    past: "ik trok, jij trok, hij trok, wij trokken",
-    perfect: "ik heb getrokken",
-    level: 2, cat: "movement" },
-  { dutch: "dragen", english: "to carry / to wear", type: "strong",
-    present: "ik draag, jij draagt, hij draagt, wij dragen",
-    past: "ik droeg, jij droeg, hij droeg, wij droegen",
-    perfect: "ik heb gedragen",
-    level: 2, cat: "movement" },
+  // ── LEVEL 2: Health & Services ──
+  { scene: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=500&h=250&fit=crop",
+    hint: "Beschrijf het bezoek.", dutch: "De verloskundige onderzoekt een zwangere vrouw", english: "Midwife appointment",
+    vocab: "de verloskundige — the midwife | zwanger — pregnant | het onderzoek — the examination | de baby — the baby | de controle — the check-up | de bevalling — the delivery",
+    type: "health", level: 2, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1450101499163-c8848e968838?w=500&h=250&fit=crop",
+    hint: "Wat regelt deze persoon?", dutch: "Een man vult formulieren in op de computer", english: "Filling in forms online",
+    vocab: "DigiD — digital identity | de afspraak — the appointment | het formulier — the form | aanvragen — to apply for | invullen — to fill in | inloggen — to log in",
+    type: "health", level: 2, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1551190822-a9ce113ac100?w=500&h=250&fit=crop",
+    hint: "Beschrijf de situatie.", dutch: "Een patiënt praat met de specialist in het ziekenhuis", english: "Specialist consultation",
+    vocab: "de specialist — the specialist | de verwijsbrief — referral letter | het ziekenhuis — the hospital | het onderzoek — examination | de behandeling — treatment | de diagnose — diagnosis",
+    type: "health", level: 2, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een vrouw vult de belastingaangifte in", english: "Filing taxes",
+    vocab: "de Belastingdienst — Tax Authority | de belastingaangifte — tax return | het formulier — the form | invullen — to fill in | de toeslag — the allowance | terugkrijgen — to get back",
+    type: "health", level: 2, cat: "health" },
+  { scene: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=500&h=250&fit=crop",
+    hint: "Waar is deze persoon?", dutch: "Een man vraagt informatie bij een overheidskantoor", english: "Government office",
+    vocab: "het kantoor — the office | de uitkering — the benefit | informatie — information | aanvragen — to apply | het formulier — the form | de afspraak — the appointment",
+    type: "health", level: 2, cat: "health" },
 
-  // ═══ LEVEL 2: COMMUNICATION ═══
-  { dutch: "roepen", english: "to call / to shout", type: "strong",
-    present: "ik roep, jij roept, hij roept, wij roepen",
-    past: "ik riep, jij riep, hij riep, wij riepen",
-    perfect: "ik heb geroepen",
-    level: 2, cat: "communication" },
-  { dutch: "zingen", english: "to sing", type: "strong",
-    present: "ik zing, jij zingt, hij zingt, wij zingen",
-    past: "ik zong, jij zong, hij zong, wij zongen",
-    perfect: "ik heb gezongen",
-    level: 2, cat: "communication" },
-  { dutch: "liegen", english: "to lie (untruth)", type: "strong",
-    present: "ik lieg, jij liegt, hij liegt, wij liegen",
-    past: "ik loog, jij loog, hij loog, wij logen",
-    perfect: "ik heb gelogen",
-    level: 2, cat: "communication" },
-  { dutch: "bieden", english: "to offer", type: "strong",
-    present: "ik bied, jij biedt, hij biedt, wij bieden",
-    past: "ik bood, jij bood, hij bood, wij boden",
-    perfect: "ik heb geboden",
-    level: 2, cat: "communication" },
+  // ── LEVEL 2: Work & Education ──
+  { scene: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=500&h=250&fit=crop",
+    hint: "Beschrijf de situatie.", dutch: "Studenten volgen een cursus Nederlands op het ROC", english: "Dutch language course",
+    vocab: "de cursus — the course | Nederlands leren — to learn Dutch | het ROC — regional training centre | de docent — the teacher | de les — the lesson | het examen — the exam",
+    type: "education", level: 2, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=500&h=250&fit=crop",
+    hint: "Wat doen deze mensen?", dutch: "Werknemers hebben een vergadering op kantoor", english: "Office meeting",
+    vocab: "de vergadering — the meeting | de werknemer — the employee | bespreken — to discuss | de presentatie — the presentation | het plan — the plan | afspreken — to agree",
+    type: "work", level: 2, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1450101499163-c8848e968838?w=500&h=250&fit=crop",
+    hint: "Wat doet hij?", dutch: "Een man tekent zijn arbeidscontract bij de werkgever", english: "Signing a contract",
+    vocab: "het arbeidscontract — employment contract | tekenen — to sign | de werkgever — the employer | het salaris — the salary | de voorwaarden — the conditions | beginnen — to start",
+    type: "work", level: 2, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&h=250&fit=crop",
+    hint: "Beschrijf de situatie.", dutch: "Een stagiaire leert het vak op de werkplek", english: "Internship at workplace",
+    vocab: "de stage — the internship | de stagiaire — the intern | leren — to learn | de werkplek — the workplace | begeleiden — to guide | de ervaring — the experience",
+    type: "work", level: 2, cat: "work" },
+  { scene: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500&h=250&fit=crop",
+    hint: "Wat leren ze?", dutch: "Leerlingen doen een toets op de basisschool", english: "Taking a school test",
+    vocab: "de toets — the test | de basisschool — primary school | het examen — the exam | de leerling — the student | de score — the score | het niveau — the level",
+    type: "education", level: 2, cat: "work" },
 
-  // ═══ LEVEL 2: LIFE ═══
-  { dutch: "sterven", english: "to die", type: "strong",
-    present: "ik sterf, jij sterft, hij sterft, wij sterven",
-    past: "ik stierf, jij stierf, hij stierf, wij stierven",
-    perfect: "ik ben gestorven",
-    level: 2, cat: "life" },
-  { dutch: "wassen", english: "to wash", type: "strong",
-    present: "ik was, jij wast, hij wast, wij wassen",
-    past: "ik waste, jij waste, hij waste, wij wasten",
-    perfect: "ik heb gewassen",
-    level: 2, cat: "life" },
-  { dutch: "breken", english: "to break", type: "strong",
-    present: "ik breek, jij breekt, hij breekt, wij breken",
-    past: "ik brak, jij brak, hij brak, wij braken",
-    perfect: "ik heb gebroken",
-    level: 2, cat: "life" },
-  { dutch: "sluiten", english: "to close / to lock", type: "strong",
-    present: "ik sluit, jij sluit, hij sluit, wij sluiten",
-    past: "ik sloot, jij sloot, hij sloot, wij sloten",
-    perfect: "ik heb gesloten",
-    level: 2, cat: "life" },
-  { dutch: "kiezen", english: "to choose", type: "strong",
-    present: "ik kies, jij kiest, hij kiest, wij kiezen",
-    past: "ik koos, jij koos, hij koos, wij kozen",
-    perfect: "ik heb gekozen",
-    level: 2, cat: "life" },
-  { dutch: "winnen", english: "to win", type: "strong",
-    present: "ik win, jij wint, hij wint, wij winnen",
-    past: "ik won, jij won, hij won, wij wonnen",
-    perfect: "ik heb gewonnen",
-    level: 2, cat: "life" },
-  { dutch: "beginnen", english: "to begin", type: "strong",
-    present: "ik begin, jij begint, hij begint, wij beginnen",
-    past: "ik begon, jij begon, hij begon, wij begonnen",
-    perfect: "ik ben begonnen",
-    level: 2, cat: "life" },
-  { dutch: "vergelijken", english: "to compare", type: "strong",
-    present: "ik vergelijk, jij vergelijkt, hij vergelijkt",
-    past: "ik vergeleek, jij vergeleek, wij vergeleken",
-    perfect: "ik heb vergeleken",
-    level: 2, cat: "life" },
+  // ── LEVEL 2: Social & Public ──
+  { scene: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=500&h=250&fit=crop",
+    hint: "Wat vieren ze?", dutch: "Mensen vieren Koningsdag met oranje kleding", english: "King's Day celebration",
+    vocab: "Koningsdag — King's Day | oranje — orange | vieren — to celebrate | de muziek — the music | de vrijmarkt — free market | het feest — the party",
+    type: "social", level: 2, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=500&h=250&fit=crop",
+    hint: "Wat doen ze?", dutch: "Twee mensen vullen samen formulieren in", english: "Filling in forms together",
+    vocab: "de inburgering — civic integration | het formulier — the form | invullen — to fill in | het examen — the exam | de cursus — the course | verplicht — mandatory",
+    type: "social", level: 2, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=500&h=250&fit=crop",
+    hint: "Beschrijf wat je ziet.", dutch: "Vrijwilligers helpen bij een buurtactiviteit", english: "Community volunteering",
+    vocab: "de vrijwilliger — the volunteer | de buurt — the neighbourhood | helpen — to help | de activiteit — the activity | meedoen — to participate | de bewoner — the resident",
+    type: "social", level: 2, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=500&h=250&fit=crop",
+    hint: "Waar zijn deze mensen?", dutch: "Mensen stemmen tijdens de verkiezingen", english: "Voting at elections",
+    vocab: "stemmen — to vote | de verkiezingen — the elections | het stembureau — the polling station | de kandidaat — the candidate | de partij — the party | de democratie — democracy",
+    type: "social", level: 2, cat: "social" },
+  { scene: "https://images.unsplash.com/photo-1543269865-cbf427effbad?w=500&h=250&fit=crop",
+    hint: "Beschrijf de situatie.", dutch: "Vrienden drinken koffie in een café", english: "Coffee with friends",
+    vocab: "het café — the café | koffie drinken — to drink coffee | de vriend — the friend | gezellig — cozy | afspreken — to meet up | praten — to talk",
+    type: "social", level: 2, cat: "social" },
+
+  // ── LEVEL 2: Home & Housing ──
+  { scene: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=500&h=250&fit=crop",
+    hint: "Wat doet deze persoon?", dutch: "Een man repareert iets in het huis", english: "Home repair",
+    vocab: "repareren — to repair | kapot — broken | het gereedschap — the tools | de loodgieter — the plumber | de klus — the chore | het onderhoud — maintenance",
+    type: "home", level: 2, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=500&h=250&fit=crop",
+    hint: "Wat doen ze?", dutch: "Een gezin verhuist naar een nieuw huis met dozen", english: "Moving house",
+    vocab: "verhuizen — to move | de doos — the box | inpakken — to pack | uitpakken — to unpack | het nieuwe huis — the new house | de verhuiswagen — the moving truck",
+    type: "home", level: 2, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=500&h=250&fit=crop",
+    hint: "Beschrijf de situatie.", dutch: "Een vrouw maakt de badkamer schoon", english: "Cleaning the bathroom",
+    vocab: "schoonmaken — to clean | de badkamer — the bathroom | het schoonmaakmiddel — cleaning product | dweilen — to mop | de dweil — the mop | het toilet — the toilet",
+    type: "home", level: 2, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&h=250&fit=crop",
+    hint: "Wat zoekt deze persoon?", dutch: "Een stel zoekt een huurwoning online", english: "Searching for a rental",
+    vocab: "de huurwoning — rental apartment | zoeken — to search | de huur — the rent | de makelaar — the real estate agent | bezichtigen — to view | het contract — the contract",
+    type: "home", level: 2, cat: "home" },
+  { scene: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=500&h=250&fit=crop",
+    hint: "Wat betaalt deze persoon?", dutch: "Een bewoner betaalt de energierekening en huur", english: "Paying bills",
+    vocab: "de rekening — the bill | betalen — to pay | de huur — the rent | de energierekening — energy bill | de kosten — the costs | automatische incasso — direct debit",
+    type: "home", level: 2, cat: "home" },
 ];
 
 // ── PACKS ──
@@ -1962,16 +2381,57 @@ const PACKS = {
   conjugations: {
     label: "Verb Tenses",
     icon: "⚗",
-    data: VERB_CONJUGATIONS,
+    data: VERB_CONJ,
     wordLabel: "Verb",
     isConjugation: true,
     categories: {
       all: "All Verbs",
       essentials: "Essentials & Modals",
-      daily: "Daily Actions",
-      movement: "Movement",
-      communication: "Communication",
-      life: "Life & Feelings"
+      strong: "Strong Verbs",
+      separable: "Separable Verbs"
+    }
+  },
+  prepositions: {
+    label: "Prepositions",
+    icon: "📍",
+    data: PREPOSITIONS,
+    wordLabel: "Preposition",
+    categories: {
+      all: "All Prepositions",
+      place: "Place",
+      time: "Time",
+      demonstratives: "Demonstratives",
+      direction: "Direction",
+      other: "Other"
+    }
+  },
+  huis: {
+    label: "Huis (House)",
+    icon: "🏠",
+    data: HUIS,
+    wordLabel: "Word",
+    categories: {
+      all: "All House Words",
+      rooms: "Rooms",
+      furniture: "Furniture & Fittings",
+      kitchen: "Kitchen",
+      bathroom: "Bathroom & Cleaning",
+      house: "House Types & Renting"
+    }
+  },
+  scenes: {
+    label: "Picture Cards",
+    icon: "🎨",
+    data: SCENES,
+    wordLabel: "Scene",
+    isScene: true,
+    categories: {
+      all: "All Scenes",
+      daily: "Daily Life",
+      health: "Health & Services",
+      work: "Work & Education",
+      social: "Social & Public",
+      home: "Home & Housing"
     }
   }
 };
@@ -2147,10 +2607,32 @@ function flipCard() {
 }
 
 function buildConjHTML(word) {
+  // Support both old {present/past/perfect} fields and new single {conj} string
+  // New format: "presens forms | OVT forms | VTT + (zijn/hebben)"
+  if (word.conj) {
+    const parts = word.conj.split('|').map(s => s.trim());
+    const [presens, ovt, vtt] = parts;
+    return `<div class="conj-info">
+      <div class="conj-row"><span class="conj-label">Presens</span><span class="conj-forms">${presens || '—'}</span></div>
+      <div class="conj-row"><span class="conj-label">O.V.T.</span><span class="conj-forms">${ovt || '—'}</span></div>
+      <div class="conj-row"><span class="conj-label">V.T.T.</span><span class="conj-forms">${vtt || '—'}</span></div>
+    </div>`;
+  }
   return `<div class="conj-info">
-    <div class="conj-row"><span class="conj-label">Presens</span><span class="conj-forms">${word.present}</span></div>
-    <div class="conj-row"><span class="conj-label">OVT</span><span class="conj-forms">${word.past}</span></div>
-    <div class="conj-row"><span class="conj-label">VTT</span><span class="conj-forms">${word.perfect}</span></div>
+    <div class="conj-row"><span class="conj-label">Presens</span><span class="conj-forms">${word.present || '—'}</span></div>
+    <div class="conj-row"><span class="conj-label">O.V.T.</span><span class="conj-forms">${word.past || '—'}</span></div>
+    <div class="conj-row"><span class="conj-label">V.T.T.</span><span class="conj-forms">${word.perfect || '—'}</span></div>
+  </div>`;
+}
+
+function buildSceneBackHTML(word) {
+  const pairs = word.vocab.split('|').map(p => {
+    const [nl, en] = p.trim().split('—').map(s => s.trim());
+    return `<div class="vocab-row"><span class="vocab-nl">${nl}</span><span class="vocab-en">— ${en}</span></div>`;
+  }).join('');
+  return `<div class="scene-vocab">
+    <div class="scene-desc">${word.dutch}</div>
+    ${pairs}
   </div>`;
 }
 
@@ -2160,17 +2642,36 @@ function updateCardContent() {
   const pack = PACKS[currentPack];
   const wLabel = pack.wordLabel;
   const isConj = pack.isConjugation;
+  const isScene = pack.isScene;
 
   const card = document.getElementById('card');
+  const container = document.getElementById('cardContainer');
   card.classList.toggle('conj-mode', !!isConj);
+  card.classList.toggle('scene-mode', !!isScene);
+  container.classList.toggle('scene-container', !!isScene);
 
   const frontLabel = document.querySelector('.card-front .card-label');
   const backLabel = document.querySelector('.card-back .card-label');
   const backExample = document.getElementById('backExample');
+  const frontWord = document.getElementById('frontWord');
+  const frontExtra = document.getElementById('frontExtra');
+
+  if (isScene) {
+    frontLabel.textContent = "Beschrijf de afbeelding";
+    frontWord.innerHTML = `<img class="scene-img" src="${word.scene}" alt="${word.english}" loading="lazy">`;
+    frontExtra.textContent = word.hint || "";
+    document.getElementById('backWord').textContent = word.english;
+    backLabel.textContent = "Beschrijving & Woordenschat";
+    backExample.innerHTML = buildSceneBackHTML(word);
+    return;
+  }
+
+  frontExtra.style.display = '';
+  frontWord.style.fontSize = '';
 
   if (direction === "nl-en") {
-    document.getElementById('frontWord').textContent = word.dutch;
-    document.getElementById('frontExtra').textContent = `(${word.type})`;
+    frontWord.textContent = word.dutch;
+    frontExtra.textContent = `(${word.type})`;
     frontLabel.textContent = `Dutch ${wLabel}`;
     document.getElementById('backWord').textContent = word.english;
     backLabel.textContent = isConj ? "Conjugations" : "English Translation";
@@ -2180,8 +2681,8 @@ function updateCardContent() {
       backExample.textContent = `"${word.example}"`;
     }
   } else {
-    document.getElementById('frontWord').textContent = word.english;
-    document.getElementById('frontExtra').textContent = `(${word.type})`;
+    frontWord.textContent = word.english;
+    frontExtra.textContent = `(${word.type})`;
     frontLabel.textContent = `English ${wLabel}`;
     document.getElementById('backWord').textContent = word.dutch;
     backLabel.textContent = isConj ? "Conjugations" : "Dutch Translation";
