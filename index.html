@@ -151,8 +151,8 @@
   .card-container {
     perspective: 1200px;
     width: 100%;
-    max-width: 480px;
-    height: 320px;
+    max-width: 560px;
+    height: 380px;
     margin: 0 auto 30px;
     cursor: pointer;
   }
@@ -243,10 +243,12 @@
 
   .card-word {
     font-family: 'Cinzel Decorative', cursive;
-    font-size: clamp(2.6rem, 7vw, 4rem);
+    font-size: clamp(1.4rem, 5vw, 4rem);
     font-weight: 700;
     line-height: 1.3;
     margin-bottom: 12px;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .card-front .card-word {
     color: #f5d98e;
@@ -495,36 +497,26 @@
     background: rgba(20, 10, 5, 0.8);
     color: #7a6a50;
     border: 1px solid #3a2a1a;
-    border-bottom: none;
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
     cursor: pointer;
     letter-spacing: 1px;
     transition: all 0.3s ease;
-    position: relative;
   }
   .pack-btn:hover {
     color: #c9a870;
     background: rgba(40, 24, 12, 0.9);
+    border-color: #5a4a3a;
   }
   .pack-btn.active {
     background: rgba(50, 30, 15, 0.95);
     color: #f5d98e;
     border-color: #8b6914;
-    box-shadow: 0 -2px 12px rgba(218, 165, 32, 0.15);
-  }
-  .pack-btn.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: rgba(50, 30, 15, 0.95);
+    box-shadow: 0 0 14px rgba(218, 165, 32, 0.2), inset 0 1px 0 rgba(218, 165, 32, 0.1);
   }
   .pack-divider {
     width: 100%;
     max-width: 500px;
-    margin: -1px auto 20px;
+    margin: 0 auto 20px;
     height: 1px;
     background: linear-gradient(90deg, transparent, #8b6914, transparent);
   }
@@ -540,7 +532,8 @@
   .level-selector {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-bottom: 16px;
   }
   .level-btn {
@@ -693,7 +686,7 @@
 
   /* Scene card styles */
   .card-container.scene-container {
-    height: 380px;
+    height: 440px;
   }
   .scene-mode .card-front {
     padding: 14px 20px;
@@ -781,8 +774,8 @@
 
   /* Responsive */
   @media (max-width: 520px) {
-    .card-container { height: 280px; }
-    .card-container.scene-container { height: 350px; }
+    .card-container { height: 320px; }
+    .card-container.scene-container { height: 400px; }
     .scene-svg { height: 150px; }
     .controls { gap: 10px; }
     .btn { padding: 10px 18px; font-size: 0.8rem; }
