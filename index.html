@@ -285,27 +285,26 @@
   }
 
   .audio-btn {
-    position: absolute;
-    bottom: 14px;
-    right: 16px;
     background: rgba(218, 165, 32, 0.12);
-    border: 1px solid rgba(218, 165, 32, 0.35);
+    border: 1.5px solid rgba(218, 165, 32, 0.45);
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    font-size: 1.1rem;
+    width: 52px;
+    height: 52px;
+    font-size: 1.5rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, transform 0.15s;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
     color: #daa520;
     line-height: 1;
     padding: 0;
+    flex-shrink: 0;
   }
   .audio-btn:hover {
     background: rgba(218, 165, 32, 0.28);
-    transform: scale(1.12);
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(218,165,32,0.4);
   }
   .audio-btn.speaking {
     background: rgba(218, 165, 32, 0.4);
@@ -317,18 +316,13 @@
   }
   @keyframes pulse-audio {
     from { box-shadow: 0 0 4px rgba(218,165,32,0.3); }
-    to   { box-shadow: 0 0 12px rgba(218,165,32,0.8); }
+    to   { box-shadow: 0 0 16px rgba(218,165,32,0.9); }
   }
-  .card-back .audio-btn {
-    border-color: rgba(155, 114, 207, 0.35);
-    background: rgba(155, 114, 207, 0.12);
-    color: #9b72cf;
-  }
-  .card-back .audio-btn:hover {
-    background: rgba(155, 114, 207, 0.28);
-  }
-  .card-back .audio-btn.speaking {
-    background: rgba(155, 114, 207, 0.4);
+
+  .audio-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 14px 0 6px;
   }
 
   /* Buttons */
@@ -836,7 +830,6 @@
         <div class="card-label">Dutch Verb</div>
         <div class="card-word" id="frontWord">zijn</div>
         <div class="card-extra" id="frontExtra">(irregular)</div>
-        <button class="audio-btn" id="audioFront" onclick="event.stopPropagation(); speakCurrent()" title="Uitspreken">🔊</button>
         <div class="flip-hint">~ tap to reveal ~</div>
       </div>
       <div class="card-face card-back">
@@ -844,9 +837,12 @@
         <div class="card-label">English Translation</div>
         <div class="card-word" id="backWord">to be</div>
         <div class="card-example" id="backExample">"Ik ben blij" — I am happy</div>
-        <button class="audio-btn" id="audioBack" onclick="event.stopPropagation(); speakCurrent()" title="Uitspreken">🔊</button>
       </div>
     </div>
+  </div>
+
+  <div class="audio-wrap">
+    <button class="audio-btn" id="audioBtn" onclick="speakCurrent()" title="Uitspreken">🔊</button>
   </div>
 
   <div class="controls" id="controls">
@@ -3701,11 +3697,11 @@ async function _fetchWiktionaryUrl(text) {
 
 function _setBtnState(state) {
   // state: 'loading' | 'speaking' | ''
-  document.querySelectorAll('.audio-btn').forEach(b => {
-    b.classList.toggle('speaking', state === 'speaking');
-    b.classList.toggle('loading',  state === 'loading');
-    b.textContent = state === 'loading' ? '⏳' : '🔊';
-  });
+  const b = document.getElementById('audioBtn');
+  if (!b) return;
+  b.classList.toggle('speaking', state === 'speaking');
+  b.classList.toggle('loading',  state === 'loading');
+  b.textContent = state === 'loading' ? '⏳' : '🔊';
 }
 
 function _speakTTS(text) {
@@ -3827,9 +3823,16 @@ function updateCard() {
 
   if (isFlipped) {
     isFlipped = false;
-    document.getElementById('card').classList.remove('flipped');
-    // Wait for the flip animation to finish before showing new content
-    setTimeout(updateCardContent, 350);
+    const cardEl = document.getElementById('card');
+    // Update content first (while back face is still showing),
+    // then instantly snap back to front — no flash of the old Dutch word
+    updateCardContent();
+    cardEl.style.transition = 'none';
+    cardEl.classList.remove('flipped');
+    // Re-enable transition on the next frame so future flips animate normally
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => { cardEl.style.transition = ''; });
+    });
   } else {
     updateCardContent();
   }
